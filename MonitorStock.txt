@@ -1,0 +1,21 @@
+#Latest update at:Sun Mar 03 20:42:03 CST 2013
+#Latest update at:Sun Mar 03 20:41:59 CST 2013
+#Latest update at:Sun Mar 03 19:02:28 CST 2013
+#Latest update at:Sun Mar 03 12:45:41 CST 2013
+#Latest update at:Sun Mar 03 12:45:41 CST 2013
+#Latest update at:Sun Mar 03 12:45:41 CST 2013
+#Latest update at:Sun Mar 03 12:45:40 CST 2013
+#Latest update at:Sun Mar 03 12:45:39 CST 2013
+#Latest update at:Thu Feb 28 23:18:25 CST 2013
+#Stair Strategy
+#stockId name      standardPrice currentNumber canSellNumber  tradeAlgorithm     stairZDF tradeNumber rank
+ 600036, 招商银行, 13.37,        0,            0,             Stair   			 AI                    0.05,     100,        0
+ 600035, 中国银行, 0.0,        0,            0,             Stair   			 AI                  0.0,     0,        0,   0
+ 600036, sdsd, 0.0,        0,            0,             Stair   			 AI                0.0,     0,        0,   0
+ 600036, sdsd, 0.0,        0,            0,             Stair   			 AI              0.0,     0,        0,   0
+ 600036, sdsd, 0.0,        0,            0,             Stair   			 AI            0.0,     0,        0,   0
+ 600036, sdsd, 0.0,        0,            0,             Stair   			 AI          0.0,     0,        0,   0
+ 600036, sdsd, 0.0,        0,            0,             Stair   			 AI        0.0,     0,        0,   0
+ 600036, aaa, 0.0,        0,            0,             Stair   			 AI      0.0,     0,        0,   0
+ 600036, dddd, 0.0,        0,            0,             Stair   			 AI    0.0,     0,        0,   0
+ 600036, eeee, 0.0,        0,            0,             Stair   			 AI  0.0,     0,        0,   0

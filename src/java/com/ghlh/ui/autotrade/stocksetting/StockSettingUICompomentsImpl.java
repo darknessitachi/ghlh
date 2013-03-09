@@ -14,7 +14,6 @@ public class StockSettingUICompomentsImpl implements UIComponentsI {
 	public ComponentsBean getComponentsBean() {
 		List buttons = new ArrayList();
 		buttons.add("新建");
-		buttons.add("修改");
 		buttons.add("保存");
 		buttons.add("取消");
 		buttons.add("删除");
@@ -27,38 +26,21 @@ public class StockSettingUICompomentsImpl implements UIComponentsI {
 		component.setCompomentType(UIComponentType.COMBOX_FIELD);
 		List comboList = new ArrayList();
 		comboList.add("下上楼梯");
-		comboList.add("上下楼梯");
-		comboList.add("爬格子");
+		comboList.add("一次交易");
 		component.setSelectList(comboList);
+		component.setDefaultValue("下上楼梯");
 		components.add(component);
 
 		component = new UIComponentMetadata();
 		component.setLabel("股票代码");
 		component.setCompomentType(UIComponentType.INT_FIELD);
 		component.setNotAllowNull(true);
-		component.setDefaultValue("600036");
 		components.add(component);
 
 		component = new UIComponentMetadata();
 		component.setLabel("股票名称");
 		component.setNotAllowNull(true);
 		component.setCompomentType(UIComponentType.TEXT_FIELD);
-		components.add(component);
-
-		component = new UIComponentMetadata();
-		component.setLabel("基准价格");
-		component.setCompomentType(UIComponentType.FLOAT_FIELD);
-		component.setDefaultValue("0");
-		components.add(component);
-
-		component = new UIComponentMetadata();
-		component.setLabel("能卖数量");
-		component.setCompomentType(UIComponentType.INT_FIELD);
-		components.add(component);
-
-		component = new UIComponentMetadata();
-		component.setLabel("总数量");
-		component.setCompomentType(UIComponentType.INT_FIELD);
 		components.add(component);
 
 		result.setComponents(components);
@@ -71,68 +53,85 @@ public class StockSettingUICompomentsImpl implements UIComponentsI {
 		List result = new ArrayList();
 		if (strategy.equals("下上楼梯")) {
 			UIComponentMetadata component = new UIComponentMetadata();
+			component.setLabel("基准价格");
+			component.setCompomentType(UIComponentType.FLOAT_FIELD);
+			component.setNotAllowNull(true);
+			result.add(component);
+
+			component = new UIComponentMetadata();
+			component.setLabel("能卖数量");
+			component.setCompomentType(UIComponentType.INT_FIELD);
+			component.setNotAllowNull(true);
+			component.setDefaultValue("0");
+			result.add(component);
+
+			component = new UIComponentMetadata();
+			component.setLabel("总数量");
+			component.setCompomentType(UIComponentType.INT_FIELD);
+			component.setNotAllowNull(true);
+			component.setDefaultValue("0");
+			result.add(component);
+
+			component = new UIComponentMetadata();
 			component.setLabel("台阶涨跌幅");
 			component.setCompomentType(UIComponentType.FLOAT_FIELD);
+			component.setNotAllowNull(true);
 			result.add(component);
 
 			component = new UIComponentMetadata();
 			component.setLabel("一次交易数量");
 			component.setCompomentType(UIComponentType.INT_FIELD);
+			component.setNotAllowNull(true);
 			result.add(component);
 
 			component = new UIComponentMetadata();
 			component.setLabel("当前台阶");
 			component.setCompomentType(UIComponentType.INT_FIELD);
+			component.setNotAllowNull(true);
+			component.setDefaultValue("0");
 			result.add(component);
-		
+
 			component = new UIComponentMetadata();
 			component.setLabel("最大台阶");
 			component.setCompomentType(UIComponentType.INT_FIELD);
+			component.setNotAllowNull(true);
 			result.add(component);
 		}
-		// String[] additionalLabels2 = { "世界", "美丽的", "干什么" };
-		// String[] additionalLabels3 = { "中国", "美国", "加拿大", "泰国" };
 
-		if (strategy.equals("上下楼梯")) {
+		if (strategy.equals("一次交易")) {
 			UIComponentMetadata component = new UIComponentMetadata();
-			component.setLabel("世界");
+			component.setLabel("交易命令");
+			component.setCompomentType(UIComponentType.COMBOX_FIELD);
+			List comboList = new ArrayList();
+			comboList.add("买入");
+			comboList.add("卖出");
+			component.setSelectList(comboList);
+			component.setDefaultValue("买入");
+			result.add(component);
+
+			component = new UIComponentMetadata();
+			component.setLabel("目标价格");
 			component.setCompomentType(UIComponentType.FLOAT_FIELD);
+			component.setNotAllowNull(true);
+			result.add(component);
+			
+
+			component = new UIComponentMetadata();
+			component.setLabel("交易数量");
+			component.setCompomentType(UIComponentType.INT_FIELD);
+			component.setNotAllowNull(true);
 			result.add(component);
 
 			component = new UIComponentMetadata();
-			component.setLabel("美丽的");
-			component.setCompomentType(UIComponentType.INT_FIELD);
-			result.add(component);
-
-			component = new UIComponentMetadata();
-			component.setLabel("干什么");
-			component.setCompomentType(UIComponentType.INT_FIELD);
+			component.setLabel("当前状态");
+			component.setCompomentType(UIComponentType.COMBOX_FIELD);
+			comboList = new ArrayList();
+			comboList.add("未交易");
+			comboList.add("成功");
+			component.setDefaultValue("未交易");
+			component.setSelectList(comboList);
 			result.add(component);
 		}
-
-		if (strategy.equals("爬格子")) {
-			UIComponentMetadata component = new UIComponentMetadata();
-			component.setLabel("中国");
-			component.setCompomentType(UIComponentType.FLOAT_FIELD);
-			result.add(component);
-
-			component = new UIComponentMetadata();
-			component.setLabel("美国");
-			component.setCompomentType(UIComponentType.INT_FIELD);
-			result.add(component);
-
-			component = new UIComponentMetadata();
-			component.setLabel("加拿大");
-			component.setCompomentType(UIComponentType.INT_FIELD);
-			result.add(component);
-
-			component = new UIComponentMetadata();
-			component.setLabel("泰国");
-			component.setCompomentType(UIComponentType.INT_FIELD);
-
-			result.add(component);
-		}
-
 		return result;
 
 	}
@@ -140,12 +139,14 @@ public class StockSettingUICompomentsImpl implements UIComponentsI {
 	public static String getStrategyName(String strategy) {
 		Map map = new HashMap();
 		map.put("Stair", "下上楼梯");
+		map.put("Once", "一次交易");
 		return map.get(strategy).toString();
 	}
-	
+
 	public static String getStrategy(String strategyName) {
 		Map map = new HashMap();
-		map.put("下上楼梯","Stair");
+		map.put("下上楼梯", "Stair");
+		map.put("一次交易", "Once");
 		return map.get(strategyName).toString();
 	}
 }

@@ -10,4 +10,14 @@ public interface TradeStrategy {
 			StockQuotesBean stockQuotesBean);
 
 	public String collectAdditionalInfoFromUIComponents(List uiComponents);
+
+	public String updateCurrentNumber(String additionInfo, int cmd,
+			int tradeNumber);
+
+	public void setAdditionalInfoToUIComponents(List uiComponents,
+			String additionInfo);
+
+	public boolean hasChangedValueInAdditionalUIComponents(List uiComponents,
+			MonitorStockBean currentMsb);
+
 }

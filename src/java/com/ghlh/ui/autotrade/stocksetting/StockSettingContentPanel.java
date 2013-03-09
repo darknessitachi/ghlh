@@ -8,6 +8,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -19,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -28,13 +31,15 @@ import org.apache.log4j.Logger;
 
 import com.ghlh.stockpool.FileStockPoolAccessor;
 import com.ghlh.stockpool.MonitorStockBean;
+import com.ghlh.strategy.TradeStrategy;
 import com.ghlh.ui.AbstractButtonActionListener;
 import com.ghlh.ui.autotrade.AbstractContentPanel;
 import com.ghlh.ui.autotrade.ContentPanelUtil;
+import com.ghlh.ui.bean.ComponentsBean;
 import com.ghlh.ui.bean.UIComponentMetadata;
 import com.ghlh.ui.bean.UIComponentType;
-import com.ghlh.ui.bean.ComponentsBean;
 import com.ghlh.util.MiscUtil;
+import com.ghlh.util.ReflectUtil;
 
 public class StockSettingContentPanel extends AbstractContentPanel {
 	private static Logger logger = Logger
@@ -63,7 +68,11 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 		stockTable.setColumnSelectionAllowed(false);
 		stockTable.setModel(new DefaultTableModel() {
 			public boolean isCellEditable(int row, int column) {
-				return false;
+				if (column == 3) {
+					return true;
+				} else {
+					return false;
+				}
 			}
 
 			public Class getColumnClass(int c) {
@@ -79,19 +88,50 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 						tableRowSelectionActionPerformed(event);
 					}
 				});
+		stockTable.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				clickMonitoring();
+			}
+		});
+	}
+
+	List<MonitorStockBean> msbList = null;
+
+	private void clickMonitoring() {
+		int row = stockTable.getSelectedRow();
+		if (stockTable.getSelectedColumn() == 3) {
+			boolean monitoring = (boolean) stockTable.getValueAt(row, 3);
+			String action = null;
+			if (monitoring) {
+				action = "新增";
+			} else {
+				action = "取消";
+			}
+			String message = "确认" + action + "股票自动交易监控吗?";
+			String title = "确认" + action + "股票自动交易";
+			int confirm = ((StockSettingButtonActionListener) this.getBal())
+					.showConfirmDialog(message, title);
+			if (confirm == 0) {
+				((StockSettingButtonActionListener) this.getBal())
+						.updateMonitoring(monitoring);
+				MonitorStockBean currentMsb = msbList.get(row);
+				currentMsb.setOnMonitoring(monitoring);
+			} else {
+				this.stockTable.setValueAt(new Boolean(!monitoring), row, 3);
+			}
+		}
 	}
 
 	private void initTableData() {
-		String[] columnNames = { "交易策略", "股票代码", "股票名称", "基准价格", "能卖数量", "总数量",
-				"是否监控" };
+		String[] columnNames = { "交易策略", "股票代码", "股票名称", "是否监控" };
 		((DefaultTableModel) this.stockTable.getModel())
 				.setColumnIdentifiers(columnNames);
 
 		try {
 			FileStockPoolAccessor accessor = new FileStockPoolAccessor();
-			List<MonitorStockBean> list = accessor.getMonitorStocks();
-			for (int i = 0; i < list.size(); i++) {
-				MonitorStockBean msb = (MonitorStockBean) list.get(i);
+			msbList = accessor.getMonitorStocks();
+			for (int i = 0; i < msbList.size(); i++) {
+				MonitorStockBean msb = (MonitorStockBean) msbList.get(i);
 				if (MiscUtil.isComment(msb.getStockId())) {
 					continue;
 				}
@@ -104,9 +144,48 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 	}
 
 	public void addStockInTable(MonitorStockBean msb) {
+		msbList.add(msb);
 		Vector rowV = convertMonitorStockBeanToVector(msb);
 		((DefaultTableModel) this.stockTable.getModel()).addRow(rowV);
 		((DefaultTableModel) this.stockTable.getModel()).fireTableDataChanged();
+	}
+
+	public void updateStockInTableRow(MonitorStockBean msb) {
+		int currentRow = this.stockTable.getSelectedRow();
+		if (currentRow >= 0) {
+			msbList.set(currentRow, msb);
+			updateTableRow(msb, currentRow);
+			((DefaultTableModel) this.stockTable.getModel())
+					.fireTableDataChanged();
+		}
+	}
+
+	public void deleteStockInTableRow() {
+		int currentRow = this.stockTable.getSelectedRow();
+		if (currentRow >= 0) {
+			this.msbList.remove(currentRow);
+			((DefaultTableModel) this.stockTable.getModel())
+					.removeRow(currentRow);
+			((DefaultTableModel) this.stockTable.getModel())
+					.fireTableDataChanged();
+		}
+	}
+
+	private void updateTableRow(MonitorStockBean msb, int currentRow) {
+		((DefaultTableModel) this.stockTable.getModel()).setValueAt(
+				StockSettingUICompomentsImpl.getStrategyName(msb
+						.getTradeAlgorithm()), currentRow, 0);
+		((DefaultTableModel) this.stockTable.getModel()).setValueAt(
+				msb.getStockId(), currentRow, 1);
+		((DefaultTableModel) this.stockTable.getModel()).setValueAt(
+				msb.getName(), currentRow, 2);
+	}
+
+	public void notSelectRow() {
+		if (this.stockTable != null) {
+			((DefaultTableModel) this.stockTable.getModel())
+					.fireTableDataChanged();
+		}
 	}
 
 	private Vector convertMonitorStockBeanToVector(MonitorStockBean msb) {
@@ -115,20 +194,63 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 				.getTradeAlgorithm()));
 		rowV.add(msb.getStockId());
 		rowV.add(msb.getName());
-		rowV.add(msb.getStandardPrice());
-		rowV.add(msb.getCanSellNumber());
-		rowV.add(msb.getCurrentNumber());
-		rowV.add(new Boolean(true));
+		rowV.add(new Boolean(msb.isOnMonitoring()));
 		return rowV;
 	}
 
 	public void tableRowSelectionActionPerformed(ListSelectionEvent event) {
 		int selectRow = this.stockTable.getSelectedRow();
 		if (selectRow >= 0) {
-			String strategy = this.stockTable.getValueAt(selectRow, 0)
-					.toString();
-			this.switchTradeStrategy(strategy);
+			int currentRow = ((StockSettingButtonActionListener) this.getBal())
+					.getCurrentRow();
+			if (selectRow != currentRow) {
+				int confirm = ((StockSettingButtonActionListener) this.getBal())
+						.confirmInputOrChange();
+				if (confirm == 0 || confirm == -1) {
+					String strategyName = this.stockTable.getValueAt(selectRow,
+							0).toString();
+					String currentStrategyName = ((JComboBox) this
+							.getUIcomponents().get(0)).getSelectedItem()
+							.toString();
+					if (!strategyName.equals(currentStrategyName)) {
+						((JComboBox) this.getUIcomponents().get(0))
+								.setSelectedItem(strategyName);
+						this.switchTradeStrategy(strategyName);
+					}
+					MonitorStockBean msb = (MonitorStockBean) msbList
+							.get(selectRow);
+
+					setValueToBasicUIComponents(msb);
+					setAdditionalInfoToUIComponents(strategyName, msb);
+					((StockSettingButtonActionListener) this.getBal())
+							.enterEditStatus(msb, selectRow);
+				} else {
+					currentRow = ((StockSettingButtonActionListener) this
+							.getBal()).getCurrentRow();
+					this.stockTable.getSelectionModel().setSelectionInterval(
+							currentRow, currentRow);
+
+				}
+			}
+		} else {
+			this.notSelectRow();
 		}
+	}
+
+	private void setAdditionalInfoToUIComponents(String strategyName,
+			MonitorStockBean msb) {
+		TradeStrategy ts = (TradeStrategy) ReflectUtil.getClassInstance(
+				"com.ghlh.strategy",
+				StockSettingUICompomentsImpl.getStrategy(strategyName),
+				"TradeStrategy");
+		ReflectUtil.excuteClassMethod(ts, "setAdditionalInfoToUIComponents",
+				new Class[] { List.class, String.class },
+				new Object[] { this.getUIcomponents(), msb.getAdditionInfo() });
+	}
+
+	private void setValueToBasicUIComponents(MonitorStockBean msb) {
+		((JTextField) this.getUIcomponents().get(1)).setText(msb.getStockId());
+		((JTextField) this.getUIcomponents().get(2)).setText(msb.getName());
 	}
 
 	public StockSettingContentPanel() {
@@ -208,7 +330,8 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 						additionalPos / 3);
 				c.weightx = 0.5;
 				c.anchor = GridBagConstraints.NORTHEAST;
-				UIComponentMetadata com = (UIComponentMetadata) additionalComponents.get(i);
+				UIComponentMetadata com = (UIComponentMetadata) additionalComponents
+						.get(i);
 				JLabel label = new JLabel(com.getLabel());
 				result.add(label, c);
 				c = getConstraints((additionalPos % 3) * 2 + 1,
@@ -230,12 +353,13 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 			String strategy = ((JComboBox) e.getSource()).getSelectedItem()
 					.toString();
 			switchTradeStrategy(strategy);
+
 		} catch (Exception ex) {
 			logger.error("perform ComboBox Action throw exception:", ex);
 		}
 	}
 
-	private void switchTradeStrategy(String strategy) {
+	public void switchTradeStrategy(String strategy) {
 		for (int i = 0; i < this.additionalAWTComponents.size(); i++) {
 			java.awt.Component component = (java.awt.Component) additionalAWTComponents
 					.get(i);
@@ -245,7 +369,8 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 			i--;
 		}
 		for (int i = 0; i < this.additionalComponents.size(); i++) {
-			UIComponentMetadata com = (UIComponentMetadata) additionalComponents.get(i);
+			UIComponentMetadata com = (UIComponentMetadata) additionalComponents
+					.get(i);
 			((AbstractButtonActionListener) this.getBal()).getComponents()
 					.remove(com);
 		}

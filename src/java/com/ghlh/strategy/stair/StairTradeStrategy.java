@@ -49,17 +49,17 @@ public class StairTradeStrategy implements TradeStrategy {
 	private void syncMonitorStock(MonitorStockBean monitorStockBean,
 			TradeResult tradeResult, AdditionalInfoBean additionalInfoBean) {
 		if (tradeResult.getCmd() == Constants.BUY) {
-			monitorStockBean.setCurrentNumber(monitorStockBean
+			additionalInfoBean.setCurrentNumber(additionalInfoBean
 					.getCurrentNumber() + tradeResult.getNumber());
 		}
 		if (tradeResult.getCmd() == Constants.SELL) {
-			monitorStockBean.setCurrentNumber(monitorStockBean
+			additionalInfoBean.setCurrentNumber(additionalInfoBean
 					.getCurrentNumber() - tradeResult.getNumber());
-			monitorStockBean.setCanSellNumber(monitorStockBean
+			additionalInfoBean.setCanSellNumber(additionalInfoBean
 					.getCanSellNumber() - tradeResult.getNumber());
 
 		}
-		monitorStockBean.setStandardPrice(tradeResult.getTradePrice());
+		additionalInfoBean.setStandardPrice(tradeResult.getTradePrice());
 		monitorStockBean
 				.setAdditionInfo(parseAdditionalInfoBeanBack(additionalInfoBean));
 	}
@@ -67,17 +67,17 @@ public class StairTradeStrategy implements TradeStrategy {
 	private boolean isReachSellCondition(MonitorStockBean monitorStockBean,
 			StockQuotesBean stockQuotesBean,
 			AdditionalInfoBean additionalInfoBean) {
-		double sellingPrice = monitorStockBean.getStandardPrice()
+		double sellingPrice = additionalInfoBean.getStandardPrice()
 				* (additionalInfoBean.getStairZDF() + 1);
 		boolean result = stockQuotesBean.getCurrentPrice() >= sellingPrice
-				&& monitorStockBean.getCanSellNumber() > 0;
+				&& additionalInfoBean.getCanSellNumber() > 0;
 		return result;
 	}
 
 	private boolean isReachBuyCondition(MonitorStockBean monitorStockBean,
 			StockQuotesBean stockQuotesBean,
 			AdditionalInfoBean additionalInfoBean) {
-		double buyingPrice = monitorStockBean.getStandardPrice()
+		double buyingPrice = additionalInfoBean.getStandardPrice()
 				* (1 - additionalInfoBean.getStairZDF());
 		boolean result = stockQuotesBean.getCurrentPrice() <= buyingPrice
 				&& additionalInfoBean.getRank() < additionalInfoBean
@@ -86,19 +86,28 @@ public class StairTradeStrategy implements TradeStrategy {
 	}
 
 	private AdditionalInfoBean parseAdditionalInfoBean(String additionalInfo) {
+		if (additionalInfo == null) {
+			return null;
+		}
 		AdditionalInfoBean result = new AdditionalInfoBean();
 		Pattern pattern = Pattern.compile(",");
 		String[] additionalInfoSegs = pattern.split(additionalInfo);
-		result.setStairZDF(Double.parseDouble(additionalInfoSegs[0].trim()));
-		result.setTradeNumber(Integer.parseInt(additionalInfoSegs[1].trim()));
-		result.setRank(Integer.parseInt(additionalInfoSegs[2].trim()));
-		result.setMaxRank(Integer.parseInt(additionalInfoSegs[3].trim()));
+		result.setStandardPrice(Double.parseDouble(additionalInfoSegs[0].trim()));
+		result.setCurrentNumber(Integer.parseInt(additionalInfoSegs[1].trim()));
+		result.setCanSellNumber(Integer.parseInt(additionalInfoSegs[2].trim()));
+		result.setStairZDF(Double.parseDouble(additionalInfoSegs[3].trim()));
+		result.setTradeNumber(Integer.parseInt(additionalInfoSegs[4].trim()));
+		result.setRank(Integer.parseInt(additionalInfoSegs[5].trim()));
+		result.setMaxRank(Integer.parseInt(additionalInfoSegs[6].trim()));
 		return result;
 	}
 
 	private String parseAdditionalInfoBeanBack(
 			AdditionalInfoBean additionalInfoBean) {
-		String line = additionalInfoBean.getStairZDF() + ",     "
+		String line = additionalInfoBean.getStandardPrice() + ",       "
+				+ additionalInfoBean.getCanSellNumber() + ",          "
+				+ additionalInfoBean.getCurrentNumber() + ",         "
+				+ additionalInfoBean.getStairZDF() + ",     "
 				+ additionalInfoBean.getTradeNumber() + ",        "
 				+ additionalInfoBean.getRank() + ",   "
 				+ additionalInfoBean.getMaxRank();
@@ -107,7 +116,16 @@ public class StairTradeStrategy implements TradeStrategy {
 
 	public String collectAdditionalInfoFromUIComponents(List uiComponents) {
 		AdditionalInfoBean additionalInfoBean = new AdditionalInfoBean();
-		additionalInfoBean.setStairZDF(Integer.parseInt(StringUtil
+		additionalInfoBean.setStandardPrice(Double.parseDouble(StringUtil
+				.getDefaultNumberWithZero(((JTextField) uiComponents.get(3))
+						.getText())));
+		additionalInfoBean.setCanSellNumber(Integer.parseInt(StringUtil
+				.getDefaultNumberWithZero(((JTextField) uiComponents.get(4))
+						.getText())));
+		additionalInfoBean.setCurrentNumber(Integer.parseInt(StringUtil
+				.getDefaultNumberWithZero(((JTextField) uiComponents.get(5))
+						.getText())));
+		additionalInfoBean.setStairZDF(Double.parseDouble(StringUtil
 				.getDefaultNumberWithZero(((JTextField) uiComponents.get(6))
 						.getText())));
 		additionalInfoBean.setTradeNumber(Integer.parseInt(StringUtil
@@ -120,6 +138,53 @@ public class StairTradeStrategy implements TradeStrategy {
 				.getDefaultNumberWithZero(((JTextField) uiComponents.get(9))
 						.getText())));
 		return parseAdditionalInfoBeanBack(additionalInfoBean);
+	}
+
+	public boolean hasChangedValueInAdditionalUIComponents(List uiComponents,
+			MonitorStockBean currentMsb) {
+		String additionalInfo = currentMsb.getAdditionInfo();
+		Pattern pattern = Pattern.compile(",");
+		String[] additionalInfoSegs = pattern.split(additionalInfo);
+		for (int i = 3; i <= 9; i++) {
+			String text = ((JTextField) uiComponents.get(i)).getText();
+			if (!additionalInfoSegs[i - 3].trim().equals(text)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public String updateCurrentNumber(String additionInfo, int cmd,
+			int tradeNumber) {
+		AdditionalInfoBean additionalBean = parseAdditionalInfoBean(additionInfo);
+		if (cmd == Constants.SELL) {
+			additionalBean.setCurrentNumber(additionalBean.getCurrentNumber()
+					- tradeNumber);
+		} else if (cmd == Constants.BUY) {
+			additionalBean.setCurrentNumber(additionalBean.getCurrentNumber()
+					- tradeNumber);
+		}
+		String result = parseAdditionalInfoBeanBack(additionalBean);
+		return result;
+	}
+
+	public void setAdditionalInfoToUIComponents(List uiComponents,
+			String additionInfo) {
+		AdditionalInfoBean additionalInfoBean = parseAdditionalInfoBean(additionInfo);
+		((JTextField) uiComponents.get(3)).setText(additionalInfoBean
+				.getStandardPrice() + "");
+		((JTextField) uiComponents.get(4)).setText(additionalInfoBean
+				.getCanSellNumber() + "");
+		((JTextField) uiComponents.get(5)).setText(additionalInfoBean
+				.getCurrentNumber() + "");
+		((JTextField) uiComponents.get(6)).setText(additionalInfoBean
+				.getStairZDF() + "");
+		((JTextField) uiComponents.get(7)).setText(additionalInfoBean
+				.getTradeNumber() + "");
+		((JTextField) uiComponents.get(8)).setText(additionalInfoBean.getRank()
+				+ "");
+		((JTextField) uiComponents.get(9)).setText(additionalInfoBean
+				.getMaxRank() + "");
 	}
 
 	private class AdditionalInfoBean {
@@ -162,5 +227,33 @@ public class StairTradeStrategy implements TradeStrategy {
 			this.maxRank = maxRank;
 		}
 
+		private double standardPrice;
+
+		public double getStandardPrice() {
+			return standardPrice;
+		}
+
+		public void setStandardPrice(double standardPrice) {
+			this.standardPrice = standardPrice;
+		}
+
+		public int getCanSellNumber() {
+			return canSellNumber;
+		}
+
+		public void setCanSellNumber(int canSellNumber) {
+			this.canSellNumber = canSellNumber;
+		}
+
+		public int getCurrentNumber() {
+			return currentNumber;
+		}
+
+		public void setCurrentNumber(int currentNumber) {
+			this.currentNumber = currentNumber;
+		}
+
+		private int canSellNumber;
+		private int currentNumber;
 	}
 }

@@ -28,24 +28,44 @@ public class StandardPriceAndFixedZDEStrategy implements TradeStrategy {
 
 	private boolean isReachSellCondition(MonitorStockBean monitorStockBean,
 			StockQuotesBean stockQuotesBean) {
-		double sellingPrice = monitorStockBean.getStandardPrice();
-		// * (monitorStockBean.getZf() + 1);
-		boolean result = stockQuotesBean.getCurrentPrice() > sellingPrice
-				&& monitorStockBean.getCurrentNumber() > 0;
-		return result;
+		// double sellingPrice = monitorStockBean.getStandardPrice();
+		// // * (monitorStockBean.getZf() + 1);
+		// boolean result = stockQuotesBean.getCurrentPrice() > sellingPrice
+		// && monitorStockBean.getCurrentNumber() > 0;
+		return false;// result;
 	}
 
 	private boolean isReachBuyCondition(MonitorStockBean monitorStockBean,
 			StockQuotesBean stockQuotesBean) {
-		double buyingPrice = monitorStockBean.getStandardPrice();
-		// * (1 - monitorStockBean.getDf());
-		boolean result = stockQuotesBean.getCurrentPrice() < buyingPrice
-				&& monitorStockBean.getCurrentNumber() == 0;
-		return result;
+		// double buyingPrice = monitorStockBean.getStandardPrice();
+		// // * (1 - monitorStockBean.getDf());
+		// boolean result = stockQuotesBean.getCurrentPrice() < buyingPrice
+		// && monitorStockBean.getCurrentNumber() == 0;
+		// return result;
+		return false;
 	}
 
 	public String collectAdditionalInfoFromUIComponents(List uiComponents) {
 		return null;
+	}
+
+	@Override
+	public String updateCurrentNumber(String additionInfo, int cmd,
+			int tradeNumber) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void setAdditionalInfoToUIComponents(List uiComponents,
+			String additionInfo) {
+	
+	}
+
+	@Override
+	public boolean hasChangedValueInAdditionalUIComponents(List uiComponents,
+			MonitorStockBean currentMsb) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

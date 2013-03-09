@@ -62,12 +62,14 @@ public class StockTradeMonitor {
 		if (tradeResult.getCmd() == Constants.SELL) {
 			stockTrader.sellStock(tradeResult.getStockId(),
 					tradeResult.getNumber());
-			monitorStockBean.setCurrentNumber(0);
+//			monitorStockBean.writeBackCurrentNumber(tradeResult.getCmd(),
+//					tradeResult.getNumber());
 			traded = true;
 		} else if (tradeResult.getCmd() == Constants.BUY) {
 			stockTrader.buyStock(tradeResult.getStockId(),
 					tradeResult.getNumber());
-			monitorStockBean.setCurrentNumber(tradeResult.getNumber());
+//			monitorStockBean.writeBackCurrentNumber(tradeResult.getCmd(),
+//					tradeResult.getNumber());
 			traded = true;
 		}
 		return traded;

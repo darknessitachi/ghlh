@@ -17,4 +17,13 @@ public class MathUtil {
 			return false;
 		}
 	}
+	
+	public static boolean isFloat(String abc) {
+		try {
+			Float.parseFloat(abc);
+			return true;
+		} catch (Exception ex) {
+			return false;
+		}
+	}
 }

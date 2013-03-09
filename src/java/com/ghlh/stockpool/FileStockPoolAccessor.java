@@ -35,13 +35,10 @@ public class FileStockPoolAccessor implements StockPoolAccessor {
 					new InputStreamReader(new FileInputStream(monitorStockFile)));
 			String line = bufferedReader.readLine();
 			while (line != null && !line.trim().equals("")) {
-				MonitorStockBean msb = new MonitorStockBean();
-				if (MiscUtil.isComment(line)) {
-					msb.setStockId(line);
-				} else {
-					msb = parseMonitorStock(line);
+				if (!MiscUtil.isComment(line)) {
+					MonitorStockBean msb = parseMonitorStock(line);
+					result.add(msb);
 				}
-				result.add(msb);
 				line = bufferedReader.readLine();
 			}
 			bufferedReader.close();
@@ -59,15 +56,10 @@ public class FileStockPoolAccessor implements StockPoolAccessor {
 		Pattern pattern = Pattern.compile(",");
 		String[] monitorStockInfo = pattern.split(line);
 		MonitorStockBean monitorStockBean = new MonitorStockBean();
-		monitorStockBean.setStockId(monitorStockInfo[0].trim());
-		monitorStockBean.setName(monitorStockInfo[1].trim());
-		monitorStockBean.setStandardPrice(Double
-				.parseDouble(monitorStockInfo[2].trim()));
-		monitorStockBean.setCurrentNumber(Integer.parseInt(monitorStockInfo[3]
-				.trim()));
-		monitorStockBean.setCanSellNumber(Integer.parseInt(monitorStockInfo[4]
-				.trim()));
-		monitorStockBean.setTradeAlgorithm(monitorStockInfo[5].trim());
+		monitorStockBean.setOnMonitoring(Boolean.valueOf(monitorStockInfo[0].trim()));
+		monitorStockBean.setStockId(monitorStockInfo[1].trim());
+		monitorStockBean.setName(monitorStockInfo[2].trim());
+		monitorStockBean.setTradeAlgorithm(monitorStockInfo[3].trim());
 		monitorStockBean.setAdditionInfo(additionalInfo);
 		return monitorStockBean;
 	}
@@ -81,6 +73,19 @@ public class FileStockPoolAccessor implements StockPoolAccessor {
 			throws StockPoolAccessorException {
 		List<MonitorStockBean> list = getMonitorStocks();
 		list.add(monitorStockBean);
+		writeMonitorStocks(list);
+	}
+
+	public void updateMonitorStock(MonitorStockBean monitorStockBean, int index)
+			throws StockPoolAccessorException {
+		List<MonitorStockBean> list = getMonitorStocks();
+		list.set(index, monitorStockBean);
+		writeMonitorStocks(list);
+	}
+
+	public void deleteMonitorStock(int index) throws StockPoolAccessorException {
+		List<MonitorStockBean> list = getMonitorStocks();
+		list.remove(index);
 		writeMonitorStocks(list);
 	}
 
@@ -111,11 +116,9 @@ public class FileStockPoolAccessor implements StockPoolAccessor {
 	}
 
 	String assessbleStockPoolRecord(MonitorStockBean msb) {
-		String line = " " + msb.getStockId() + ", " + msb.getName() + ", "
-				+ msb.getStandardPrice() + ",        " + msb.getCurrentNumber()
-				+ ",            " + msb.getCanSellNumber() + ",             "
-				+ msb.getTradeAlgorithm() + "   			 AI  "
-				+ msb.getAdditionInfo();
+		String line = " " + msb.isOnMonitoring() + ", " + msb.getStockId()
+				+ ", " + msb.getName() + ",  " + msb.getTradeAlgorithm()
+				+ "         AI" + msb.getAdditionInfo();
 		return line;
 	}
 

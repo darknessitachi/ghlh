@@ -8,6 +8,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -31,15 +33,18 @@ import org.apache.log4j.Logger;
 
 import com.ghlh.stockpool.FileStockPoolAccessor;
 import com.ghlh.stockpool.MonitorStockBean;
-import com.ghlh.strategy.TradeStrategy;
+import com.ghlh.stockquotes.InternetStockQuotesInquirer;
+import com.ghlh.stockquotes.StockQuotesBean;
+import com.ghlh.strategy.AdditionInfoUtil;
 import com.ghlh.ui.AbstractButtonActionListener;
+import com.ghlh.ui.StatusField;
 import com.ghlh.ui.autotrade.AbstractContentPanel;
 import com.ghlh.ui.autotrade.ContentPanelUtil;
 import com.ghlh.ui.bean.ComponentsBean;
 import com.ghlh.ui.bean.UIComponentMetadata;
 import com.ghlh.ui.bean.UIComponentType;
+import com.ghlh.util.GUIUtil;
 import com.ghlh.util.MiscUtil;
-import com.ghlh.util.ReflectUtil;
 
 public class StockSettingContentPanel extends AbstractContentPanel {
 	private static Logger logger = Logger
@@ -90,7 +95,10 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 				});
 		stockTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
+				// System.out.println(e.getSource().toString());
+				// if (e.getSource().toString().indexOf("invalid") > 0) {
 				clickMonitoring();
+				// }
 			}
 		});
 	}
@@ -109,8 +117,7 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 			}
 			String message = "确认" + action + "股票自动交易监控吗?";
 			String title = "确认" + action + "股票自动交易";
-			int confirm = ((StockSettingButtonActionListener) this.getBal())
-					.showConfirmDialog(message, title);
+			int confirm = GUIUtil.showConfirmDialog(message, title);
 			if (confirm == 0) {
 				((StockSettingButtonActionListener) this.getBal())
 						.updateMonitoring(monitoring);
@@ -207,28 +214,20 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 				int confirm = ((StockSettingButtonActionListener) this.getBal())
 						.confirmInputOrChange();
 				if (confirm == 0 || confirm == -1) {
-					String strategyName = this.stockTable.getValueAt(selectRow,
-							0).toString();
-					String currentStrategyName = ((JComboBox) this
-							.getUIcomponents().get(0)).getSelectedItem()
-							.toString();
-					if (!strategyName.equals(currentStrategyName)) {
-						((JComboBox) this.getUIcomponents().get(0))
-								.setSelectedItem(strategyName);
-						this.switchTradeStrategy(strategyName);
-					}
+					putCertainMSBIntoEdit(selectRow);
 					MonitorStockBean msb = (MonitorStockBean) msbList
 							.get(selectRow);
-
-					setValueToBasicUIComponents(msb);
-					setAdditionalInfoToUIComponents(strategyName, msb);
 					((StockSettingButtonActionListener) this.getBal())
 							.enterEditStatus(msb, selectRow);
 				} else {
 					currentRow = ((StockSettingButtonActionListener) this
 							.getBal()).getCurrentRow();
-					this.stockTable.getSelectionModel().setSelectionInterval(
-							currentRow, currentRow);
+					if (currentRow == -1) {
+						this.notSelectRow();
+					} else {
+						this.stockTable.getSelectionModel()
+								.setSelectionInterval(currentRow, currentRow);
+					}
 
 				}
 			}
@@ -237,15 +236,27 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 		}
 	}
 
-	private void setAdditionalInfoToUIComponents(String strategyName,
-			MonitorStockBean msb) {
-		TradeStrategy ts = (TradeStrategy) ReflectUtil.getClassInstance(
-				"com.ghlh.strategy",
-				StockSettingUICompomentsImpl.getStrategy(strategyName),
-				"TradeStrategy");
-		ReflectUtil.excuteClassMethod(ts, "setAdditionalInfoToUIComponents",
-				new Class[] { List.class, String.class },
-				new Object[] { this.getUIcomponents(), msb.getAdditionInfo() });
+	public void resumeEditStatus() {
+		int selectRow = this.stockTable.getSelectedRow();
+		putCertainMSBIntoEdit(selectRow);
+
+	}
+
+	private void putCertainMSBIntoEdit(int selectRow) {
+		String strategyName = this.stockTable.getValueAt(selectRow, 0)
+				.toString();
+		MonitorStockBean msb = (MonitorStockBean) msbList.get(selectRow);
+		String currentStrategyName = ((JComboBox) this.getUIcomponents().get(0))
+				.getSelectedItem().toString();
+		if (!strategyName.equals(currentStrategyName)) {
+			((JComboBox) this.getUIcomponents().get(0))
+					.setSelectedItem(strategyName);
+			this.switchTradeStrategy(strategyName);
+		}
+		setValueToBasicUIComponents(msb);
+		AdditionInfoUtil.setAdditionalInfoToUIComponents(
+				this.getUIcomponents(), msb.getAdditionInfo(),
+				msb.getTradeAlgorithm());
 	}
 
 	private void setValueToBasicUIComponents(MonitorStockBean msb) {
@@ -280,7 +291,29 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 		content.add(flowLayoutPanel, BorderLayout.CENTER);
 
 		initButtonActionListener(compomentBean, flowLayoutPanel);
+		JTextField stockIdField = (JTextField) this.getUIcomponents().get(1);
+		stockIdField.addFocusListener(new FocusListener() {
+			public void focusGained(FocusEvent fe) {
+			}
 
+			public void focusLost(FocusEvent fe) {
+				processStockIdFocusLost(fe);
+			}
+		});
+	}
+
+	private void processStockIdFocusLost(FocusEvent fe) {
+		JTextField stockIdField = (JTextField) fe.getSource();
+		String stockId = stockIdField.getText();
+		StockQuotesBean sqb = InternetStockQuotesInquirer.queryStock(stockId);
+		if (sqb == null) {
+			StatusField.getInstance().setWarningMessage("股票代码不合理， 请重输");
+			stockIdField.requestFocus();
+		} else {
+			JTextField stockNameField = (JTextField) this.getUIcomponents()
+					.get(2);
+			stockNameField.setText(sqb.getName());
+		}
 	}
 
 	public JPanel getComponentsPanel(ComponentsBean componentBean) {

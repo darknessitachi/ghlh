@@ -49,19 +49,11 @@ public class StandardPriceAndFixedZDEStrategy implements TradeStrategy {
 		return null;
 	}
 
-	@Override
-	public String updateCurrentNumber(String additionInfo, int cmd,
-			int tradeNumber) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public void setAdditionalInfoToUIComponents(List uiComponents,
 			String additionInfo) {
-	
+
 	}
 
-	@Override
 	public boolean hasChangedValueInAdditionalUIComponents(List uiComponents,
 			MonitorStockBean currentMsb) {
 		// TODO Auto-generated method stub

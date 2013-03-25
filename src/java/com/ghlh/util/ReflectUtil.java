@@ -7,12 +7,16 @@ import org.apache.log4j.Logger;
 import com.ghlh.ui.autotrade.AbstractContentPanel;
 
 public class ReflectUtil {
-	private static Logger logger = Logger.getLogger(AbstractContentPanel.class);
+	private static Logger logger = Logger.getLogger(ReflectUtil.class);
 
 	public static Object getClassInstance(String packageName,
 			String moduleName, String classBasicName) {
 		String fullClassName = packageName + "." + moduleName.toLowerCase()
 				+ "." + moduleName + classBasicName;
+		return getClassInstance(fullClassName);
+	}
+
+	private static Object getClassInstance(String fullClassName) {
 		try {
 			Class cls = Class.forName(fullClassName);
 			Object result = cls.newInstance();
@@ -23,6 +27,12 @@ public class ReflectUtil {
 					"getClassInstance through error, className = "
 							+ fullClassName);
 		}
+	}
+	
+	public static Object getClassInstance(String packageName,
+			 String className) {
+		String fullClassName = packageName + "." + className;
+		return getClassInstance(fullClassName);
 	}
 
 	public static void excuteClassMethodNoReturn(Object object,

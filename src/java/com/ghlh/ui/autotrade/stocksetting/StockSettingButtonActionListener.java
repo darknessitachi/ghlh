@@ -5,18 +5,18 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
 
 import com.ghlh.stockpool.FileStockPoolAccessor;
 import com.ghlh.stockpool.MonitorStockBean;
+import com.ghlh.strategy.AdditionInfoUtil;
 import com.ghlh.strategy.TradeStrategy;
 import com.ghlh.ui.AbstractButtonActionListener;
-import com.ghlh.ui.Launcher;
 import com.ghlh.ui.StatusField;
 import com.ghlh.ui.bean.UIComponentMetadata;
+import com.ghlh.util.GUIUtil;
 import com.ghlh.util.ReflectUtil;
 
 public class StockSettingButtonActionListener extends
@@ -26,14 +26,6 @@ public class StockSettingButtonActionListener extends
 
 	public StockSettingButtonActionListener() {
 		this.setStatus("自动交易股票设置");
-	}
-
-	public int showConfirmDialog(String message, String title) {
-		int result = JOptionPane.showOptionDialog(Launcher.get_frame(),
-				message, title, JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE, null, null, null);
-		return result;
-
 	}
 
 	public void button1ActionPerformed(ActionEvent e) {
@@ -68,7 +60,7 @@ public class StockSettingButtonActionListener extends
 				message = "您确认放弃当前修改吗";
 				title = "放弃修改确认";
 			}
-			confirm = showConfirmDialog(message, title);
+			confirm = GUIUtil.showConfirmDialog(message, title);
 		}
 		return confirm;
 	}
@@ -113,7 +105,14 @@ public class StockSettingButtonActionListener extends
 	public void button3ActionPerformed(ActionEvent e) {
 		int confirm = confirmInputOrChange();
 		if (confirm == 0 || confirm == -1) {
-			this.enterNewStatus();
+			if (this.getStatus().equals(STATUS_NEW)) {
+				this.enterNewStatus();
+				StatusField.getInstance().setPromptMessage("新建取消");
+			} else {
+				((StockSettingContentPanel) this.getContentPanel())
+						.resumeEditStatus();
+				StatusField.getInstance().setPromptMessage("编辑取消");
+			}
 		}
 	}
 
@@ -147,12 +146,10 @@ public class StockSettingButtonActionListener extends
 		result.setStockId(((JTextField) this.getUIComponents().get(1))
 				.getText());
 		result.setName(((JTextField) this.getUIComponents().get(2)).getText());
-		TradeStrategy ts = (TradeStrategy) ReflectUtil.getClassInstance(
-				"com.ghlh.strategy", strategyName, "TradeStrategy");
-		String additionalInfo = (String) ReflectUtil.excuteClassMethod(ts,
-				"collectAdditionalInfoFromUIComponents",
-				new Class[] { List.class },
-				new Object[] { this.getUIComponents() });
+		String additionalInfo = AdditionInfoUtil
+				.collectAdditionalInfoFromUIComponents(this.getUIComponents(),
+						strategyName);
+
 		result.setAdditionInfo(additionalInfo);
 
 		return result;
@@ -161,7 +158,7 @@ public class StockSettingButtonActionListener extends
 	public void button4ActionPerformed(ActionEvent e) {
 		String message = "确认删除此股票吗";
 		String title = "股票删除确认";
-		int confirm = showConfirmDialog(message, title);
+		int confirm = GUIUtil.showConfirmDialog(message, title);
 		if (confirm == 0) {
 			try {
 				new FileStockPoolAccessor().deleteMonitorStock(this.currentRow);
@@ -188,6 +185,7 @@ public class StockSettingButtonActionListener extends
 			setDefaultValueToUIComponent(i);
 		}
 		((StockSettingContentPanel) this.getContentPanel()).notSelectRow();
+		this.currentRow = -1;
 		this.setStatus(STATUS_NEW);
 	}
 
@@ -264,14 +262,9 @@ public class StockSettingButtonActionListener extends
 		if (!this.currentMsb.getName().equals(name)) {
 			return true;
 		}
-		TradeStrategy ts = (TradeStrategy) ReflectUtil.getClassInstance(
-				"com.ghlh.strategy", this.currentMsb.getTradeAlgorithm(),
-				"TradeStrategy");
-		boolean result = (boolean) ReflectUtil.excuteClassMethod(ts,
-				"hasChangedValueInAdditionalUIComponents", new Class[] {
-						List.class, MonitorStockBean.class }, new Object[] {
-						this.getUIComponents(), this.currentMsb });
-
+		boolean result = AdditionInfoUtil
+				.hasChangedValueInAdditionalUIComponents(
+						this.getUIComponents(), this.currentMsb);
 		return result;
 	}
 
@@ -307,7 +300,6 @@ public class StockSettingButtonActionListener extends
 		}
 	}
 
-	private final static String STOCK_SETTING = "股票设置";
 	private final static String STATUS_NEW = "new";
 	private final static String STATUS_EDIT = "edit";
 

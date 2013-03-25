@@ -1,4 +1,5 @@
 package com.ghlh.ui.autotrade.softwaresetting;
+        
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ import com.ghlh.ui.bean.UIComponentType;
 
 public class SoftwareSettingUICompomentsImpl implements UIComponentsI {
 	public ComponentsBean getComponentsBean() {
+		
 		List buttons = new ArrayList();
 		buttons.add("±£´æ");
 		ComponentsBean result = new ComponentsBean();

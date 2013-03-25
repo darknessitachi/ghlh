@@ -21,6 +21,7 @@ import javax.swing.plaf.UIResource;
 
 import com.ghlh.icons.StockIconsFactory;
 import com.ghlh.ui.autotrade.MainPanel;
+import com.ghlh.ui.autotradestart.StartMainPanel;
 import com.jidesoft.action.CommandBar;
 import com.jidesoft.action.CommandMenuBar;
 import com.jidesoft.action.DefaultDockableBarHolder;
@@ -150,9 +151,9 @@ public class Launcher extends DefaultDockableBarHolder {
 				.getImageIcon(StockIconsFactory.TabConfig32);
 		ImageIcon decisionImage = StockIconsFactory
 				.getImageIcon(StockIconsFactory.TabDecision32);
-		//_tabbedPane.addTab("博客订阅", feedImage, _feedPanel);
-		_tabbedPane.addTab("自动买卖", decisionImage, _decisionPanel);
-		_tabbedPane.addTab("系统配置", configImage, _configPanel);
+		_tabbedPane.addTab("博客订阅", feedImage, _feedPanel);
+		_tabbedPane.addTab("自动交易设置", decisionImage, _decisionPanel);
+		_tabbedPane.addTab("自动交易启动", configImage, _configPanel);
 
 		_tabbedPane.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
@@ -161,6 +162,7 @@ public class Launcher extends DefaultDockableBarHolder {
 		});
 
 		_decisionPanel.add(new MainPanel().getMainPanel());
+		_configPanel.add(new StartMainPanel().getContentPanel());
 		FeedReader _reader = new FeedReader(new String[] {
 				"http://blog.sina.com.cn/rss/2716358792.xml"
 				//"http://blog.sina.com.cn/rss/2716358792.xml",
@@ -168,7 +170,7 @@ public class Launcher extends DefaultDockableBarHolder {
 				//"http://blog.sina.com.cn/rss/1278228085.xml",
 		// "http://luodaisohu.blog.sohu.com/rss"
 				}, "http://blog.sina.com.cn/rss/2716358792.xml");
-		//_feedPanel.add(_reader);
+		_feedPanel.add(_reader);
 
 		// add status bar
 		_statusBar = createStatusBar();

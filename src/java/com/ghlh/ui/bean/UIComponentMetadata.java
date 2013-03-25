@@ -53,5 +53,25 @@ public class UIComponentMetadata {
 	public void setNotAllowNull(boolean notAllowNull) {
 		this.notAllowNull = notAllowNull;
 	}
+	
+	private String fieldName;
+	
+	public String getFieldName() {
+		return fieldName;
+	}
+
+	public void setFieldName(String fieldName) {
+		this.fieldName = fieldName;
+	}
+
+	private String fieldType;
+
+	public String getFieldType() {
+		return fieldType;
+	}
+
+	public void setFieldType(String fieldType) {
+		this.fieldType = fieldType;
+	}
 
 }

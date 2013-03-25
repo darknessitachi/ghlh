@@ -52,9 +52,7 @@ public abstract class AbstractContentPanel implements ContentPanel {
 	protected void initButtonActionListener(ComponentsBean compomentBean,
 			JPanel componentPanel) {
 		try {
-			bal = (ButtonActionListener) ReflectUtil.getClassInstance(
-					"com.ghlh.ui.autotrade", compomentBean.getMenuCmd(),
-					"ButtonActionListener");
+			bal = getBal(compomentBean);
 			bal.setUICompoments(uiComponents);
 			List components = new ArrayList();
 			if (compomentBean.getComponents() != null) {
@@ -69,6 +67,12 @@ public abstract class AbstractContentPanel implements ContentPanel {
 		} catch (Throwable e) {
 			logger.error("Loading ButtonActionListener throw exception:", e);
 		}
+	}
+
+	protected ButtonActionListener getBal(ComponentsBean compomentBean) {
+		return (ButtonActionListener) ReflectUtil.getClassInstance(
+				"com.ghlh.ui.autotrade", compomentBean.getMenuCmd(),
+				"ButtonActionListener");
 	}
 
 	protected JPanel getButtonPanel(List buttons) {

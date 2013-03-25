@@ -4,7 +4,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 
-import com.ghlh.ui.FloatOnlyDocument;
+import com.ghlh.ui.DoubleOnlyDocument;
 import com.ghlh.ui.IntOnlyDocument;
 import com.ghlh.ui.bean.UIComponentMetadata;
 import com.ghlh.ui.bean.UIComponentType;
@@ -23,9 +23,9 @@ public class ContentPanelUtil {
 				((JTextField) result).setText(com.getDefaultValue());
 			}
 		}
-		if (com.getCompomentType() == UIComponentType.FLOAT_FIELD) {
+		if (com.getCompomentType() == UIComponentType.DOUBLE_FIELD) {
 			result = new JTextField(10);
-			((JTextField) result).setDocument(new FloatOnlyDocument());
+			((JTextField) result).setDocument(new DoubleOnlyDocument());
 			if (com.getDefaultValue() != null) {
 				((JTextField) result).setText(com.getDefaultValue());
 			}

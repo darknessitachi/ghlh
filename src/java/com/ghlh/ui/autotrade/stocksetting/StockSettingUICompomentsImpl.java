@@ -1,14 +1,16 @@
 package com.ghlh.ui.autotrade.stocksetting;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
 
+import com.ghlh.strategy.StrategyAddiComMetaReader;
 import com.ghlh.ui.autotrade.UIComponentsI;
+import com.ghlh.ui.bean.ComponentsBean;
 import com.ghlh.ui.bean.UIComponentMetadata;
 import com.ghlh.ui.bean.UIComponentType;
-import com.ghlh.ui.bean.ComponentsBean;
 
 public class StockSettingUICompomentsImpl implements UIComponentsI {
 	public ComponentsBean getComponentsBean() {
@@ -24,11 +26,14 @@ public class StockSettingUICompomentsImpl implements UIComponentsI {
 		UIComponentMetadata component = new UIComponentMetadata();
 		component.setLabel("自动交易策略");
 		component.setCompomentType(UIComponentType.COMBOX_FIELD);
+		Map map = StrategyAddiComMetaReader.getInstance()
+				.getStrategyNameAsKey();
+		Set strategyNames = map.keySet();
 		List comboList = new ArrayList();
-		comboList.add("下上楼梯");
-		comboList.add("一次交易");
+		comboList.addAll(strategyNames);
 		component.setSelectList(comboList);
-		component.setDefaultValue("下上楼梯");
+		component.setDefaultValue(StrategyAddiComMetaReader.getInstance()
+				.getDefaultStrategyName());
 		components.add(component);
 
 		component = new UIComponentMetadata();
@@ -44,109 +49,82 @@ public class StockSettingUICompomentsImpl implements UIComponentsI {
 		components.add(component);
 
 		result.setComponents(components);
-		result.setAdditionalCompoments(this.getAdditionalComponent("下上楼梯"));
+		result.setAdditionalCompoments(this
+				.getAdditionalComponent(StrategyAddiComMetaReader.getInstance()
+						.getDefaultStrategyName()));
 		result.setMenuCmd("StockSetting");
 		return result;
 	}
 
-	public List getAdditionalComponent(String strategy) {
-		List result = new ArrayList();
-		if (strategy.equals("下上楼梯")) {
-			UIComponentMetadata component = new UIComponentMetadata();
-			component.setLabel("基准价格");
-			component.setCompomentType(UIComponentType.FLOAT_FIELD);
-			component.setNotAllowNull(true);
-			result.add(component);
-
-			component = new UIComponentMetadata();
-			component.setLabel("能卖数量");
-			component.setCompomentType(UIComponentType.INT_FIELD);
-			component.setNotAllowNull(true);
-			component.setDefaultValue("0");
-			result.add(component);
-
-			component = new UIComponentMetadata();
-			component.setLabel("总数量");
-			component.setCompomentType(UIComponentType.INT_FIELD);
-			component.setNotAllowNull(true);
-			component.setDefaultValue("0");
-			result.add(component);
-
-			component = new UIComponentMetadata();
-			component.setLabel("台阶涨跌幅");
-			component.setCompomentType(UIComponentType.FLOAT_FIELD);
-			component.setNotAllowNull(true);
-			result.add(component);
-
-			component = new UIComponentMetadata();
-			component.setLabel("一次交易数量");
-			component.setCompomentType(UIComponentType.INT_FIELD);
-			component.setNotAllowNull(true);
-			result.add(component);
-
-			component = new UIComponentMetadata();
-			component.setLabel("当前台阶");
-			component.setCompomentType(UIComponentType.INT_FIELD);
-			component.setNotAllowNull(true);
-			component.setDefaultValue("0");
-			result.add(component);
-
-			component = new UIComponentMetadata();
-			component.setLabel("最大台阶");
-			component.setCompomentType(UIComponentType.INT_FIELD);
-			component.setNotAllowNull(true);
-			result.add(component);
+	private int getFieldType(String fieldType) {
+		int result = 0;
+		if (fieldType.equals("text")) {
+			result = UIComponentType.TEXT_FIELD;
 		}
-
-		if (strategy.equals("一次交易")) {
-			UIComponentMetadata component = new UIComponentMetadata();
-			component.setLabel("交易命令");
-			component.setCompomentType(UIComponentType.COMBOX_FIELD);
-			List comboList = new ArrayList();
-			comboList.add("买入");
-			comboList.add("卖出");
-			component.setSelectList(comboList);
-			component.setDefaultValue("买入");
-			result.add(component);
-
-			component = new UIComponentMetadata();
-			component.setLabel("目标价格");
-			component.setCompomentType(UIComponentType.FLOAT_FIELD);
-			component.setNotAllowNull(true);
-			result.add(component);
-			
-
-			component = new UIComponentMetadata();
-			component.setLabel("交易数量");
-			component.setCompomentType(UIComponentType.INT_FIELD);
-			component.setNotAllowNull(true);
-			result.add(component);
-
-			component = new UIComponentMetadata();
-			component.setLabel("当前状态");
-			component.setCompomentType(UIComponentType.COMBOX_FIELD);
-			comboList = new ArrayList();
-			comboList.add("未交易");
-			comboList.add("成功");
-			component.setDefaultValue("未交易");
-			component.setSelectList(comboList);
-			result.add(component);
+		if (fieldType.indexOf("combo") == 0) {
+			result = UIComponentType.COMBOX_FIELD;
+		}
+		if (fieldType.equals("int")) {
+			result = UIComponentType.INT_FIELD;
+		}
+		if (fieldType.equals("double")) {
+			result = UIComponentType.DOUBLE_FIELD;
 		}
 		return result;
+	}
 
+	private UIComponentMetadata parseUIComponentMetadata(String line) {
+		UIComponentMetadata result = new UIComponentMetadata();
+		Pattern pattern = Pattern.compile(",");
+		String[] metadataItems = pattern.split(line);
+		result.setLabel(metadataItems[0].trim());
+		result.setCompomentType(getFieldType(metadataItems[1].trim()));
+		generateComboList(metadataItems[1].trim(), result);
+		result.setNotAllowNull(Boolean.parseBoolean(metadataItems[2].trim()));
+		if (metadataItems[3] != null && !metadataItems[3].trim().equals("")) {
+			result.setDefaultValue(metadataItems[3].trim());
+		}
+		result.setFieldName(metadataItems[4].trim());
+		result.setFieldType(metadataItems[5].trim());
+
+		return result;
+	}
+
+	private void generateComboList(String line, UIComponentMetadata result) {
+		if (result.getCompomentType() == UIComponentType.COMBOX_FIELD) {
+			String itemString = line.trim().substring(
+					line.trim().indexOf("(") + 1, line.trim().length() - 1);
+			Pattern pattern = Pattern.compile("#");
+			String[] items = pattern.split(itemString);
+			List comboList = new ArrayList();
+			for (int i = 0; i < items.length; i++) {
+				comboList.add(items[i]);
+			}
+			result.setSelectList(comboList);
+		}
+	}
+
+	public List getAdditionalComponent(String strategyName) {
+		List result = new ArrayList();
+		String strategy = getStrategy(strategyName);
+		List additionalComs = (List) StrategyAddiComMetaReader.getInstance()
+				.getStrategyCom().get(strategy);
+		for (int i = 0; i < additionalComs.size(); i++) {
+			String line = (String) additionalComs.get(i);
+			UIComponentMetadata com = parseUIComponentMetadata(line);
+			result.add(com);
+		}
+		return result;
 	}
 
 	public static String getStrategyName(String strategy) {
-		Map map = new HashMap();
-		map.put("Stair", "下上楼梯");
-		map.put("Once", "一次交易");
+		Map map = StrategyAddiComMetaReader.getInstance().getStrategies();
 		return map.get(strategy).toString();
 	}
 
 	public static String getStrategy(String strategyName) {
-		Map map = new HashMap();
-		map.put("下上楼梯", "Stair");
-		map.put("一次交易", "Once");
+		Map map = StrategyAddiComMetaReader.getInstance()
+				.getStrategyNameAsKey();
 		return map.get(strategyName).toString();
 	}
 }

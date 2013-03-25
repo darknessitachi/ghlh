@@ -1,0 +1,16 @@
+strategy=Stair
+strategyName=����¥��
+component=��׼�۸�,double,true,0,standardPrice,double
+component=��������,int,true,0,canSellNumber,int
+component=������,int,true,0,currentNumber,int
+component=̨���ǵ��,double,true,,stairZDF,double
+component=һ�ν�������,int,true,,tradeNumber,int
+component=��ǰ̨��,int,true,0,rank,int
+component=���̨��,int,true,,rank,int
+strategy=Once
+
+strategyName=һ�ν���
+component=��������,combo(����#����),true,����,cmd,String
+component=Ŀ��۸�,double,true,,targetPrice,double
+component=��������,int,true,,number,int
+component=��ǰ״̬,combo(δ����#�ɹ�),true,δ����,status,String

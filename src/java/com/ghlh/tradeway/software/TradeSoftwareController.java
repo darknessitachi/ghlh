@@ -9,7 +9,7 @@ import com.eaio.nativecall.NativeCall;
 import com.ghlh.util.TimeUtil;
 
 public class TradeSoftwareController {
-	public final static int CMD_PAUSE_INTERVAL = 100;
+	public final static int CMD_PAUSE_INTERVAL = 500;
 	public final static int ACTION_PAUSE_INTERVAL = 500;
 
 	private IntCall exec;
@@ -34,7 +34,7 @@ public class TradeSoftwareController {
 		exec = new IntCall("AutoHotkey.dll", "ahkExec");
 	}
 
-	private void activateTradeSoft() {
+	public void activateTradeSoft() {
 		String cmdName = "ActivateTradeSoftwareWindow";
 		executeTradeSoftwareCMD(cmdName, new HashMap<String, Object>());
 	}

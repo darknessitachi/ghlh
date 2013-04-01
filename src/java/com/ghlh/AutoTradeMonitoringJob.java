@@ -1,5 +1,7 @@
 package com.ghlh;
 
+import java.util.Calendar;
+
 import org.apache.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -13,17 +15,8 @@ public class AutoTradeMonitoringJob implements Job {
 			.getLogger(AutoTradeMonitoringJob.class);
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-		// logger.error("CronJob Start job at " +
-		// Calendar.getInstance().getTime());
+		logger.error("Enter monitoring at " + Calendar.getInstance().getTime());
 		new StockTradeMonitoringJob().monitoring();
-		// while (AutoTradeSwitch.getInstance().isStart()) {
-		// if (MarketIsRestFlag.getInstance().isMarketRest()) {
-		// System.out.println("анЪа");
-		// break;
-		// }
-		// TimeUtil.pause(1000);
-		// System.out.println("testing");
-		// System.out.println("execute job = " + Thread.currentThread());
-		// }
+		logger.error("Exit monitoring at " + Calendar.getInstance().getTime());
 	}
 }

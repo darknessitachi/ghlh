@@ -27,7 +27,7 @@ public class AutoTradeTestingButtonActionListener extends
 				String stockId = ((JTextField) this.getUIComponents().get(0))
 						.getText();
 				int number = Integer.parseInt(((JTextField) this
-						.getUIComponents().get(1)).getText());
+						.getUIComponents().get(2)).getText());
 				StatusField.getInstance().setWarningMessage(
 						"交易指令即将发出， 请不用动鼠标键盘");
 				TimeUtil.pause(1000);
@@ -53,7 +53,7 @@ public class AutoTradeTestingButtonActionListener extends
 			String stockId = ((JTextField) this.getUIComponents().get(0))
 					.getText();
 			int number = Integer.parseInt(((JTextField) this.getUIComponents()
-					.get(1)).getText());
+					.get(2)).getText());
 			int confirmHasStock = showHasTestSellStock(stockId, number);
 			if (confirmHasStock == 0) {
 
@@ -82,7 +82,7 @@ public class AutoTradeTestingButtonActionListener extends
 
 	private boolean validateData() {
 		String stockId = ((JTextField) this.getUIComponents().get(0)).getText();
-		String number = ((JTextField) this.getUIComponents().get(1)).getText();
+		String number = ((JTextField) this.getUIComponents().get(2)).getText();
 		if (stockId == null || stockId.length() != 6) {
 			StatusField.getInstance().setWarningMessage("不合理的股票代码， 请重输");
 			return false;

@@ -56,7 +56,8 @@ public class FileStockPoolAccessor implements StockPoolAccessor {
 		Pattern pattern = Pattern.compile(",");
 		String[] monitorStockInfo = pattern.split(line);
 		MonitorStockBean monitorStockBean = new MonitorStockBean();
-		monitorStockBean.setOnMonitoring(Boolean.valueOf(monitorStockInfo[0].trim()));
+		monitorStockBean.setOnMonitoring(Boolean.valueOf(monitorStockInfo[0]
+				.trim()));
 		monitorStockBean.setStockId(monitorStockInfo[1].trim());
 		monitorStockBean.setName(monitorStockInfo[2].trim());
 		monitorStockBean.setTradeAlgorithm(monitorStockInfo[3].trim());

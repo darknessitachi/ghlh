@@ -81,6 +81,8 @@ public class StockSettingButtonActionListener extends
 
 	private void saveForEdit() {
 		MonitorStockBean msb = collectMonitorStockBean();
+		msb.setOnMonitoring(((StockSettingContentPanel) this.getContentPanel())
+				.isSelectedMSBOnMonitoring());
 		try {
 			new FileStockPoolAccessor()
 					.updateMonitorStock(msb, this.currentRow);

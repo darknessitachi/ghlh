@@ -1,21 +1,6 @@
-#Latest update at:Sun Mar 03 20:42:03 CST 2013
-#Latest update at:Sun Mar 03 20:41:59 CST 2013
-#Latest update at:Sun Mar 03 19:02:28 CST 2013
-#Latest update at:Sun Mar 03 12:45:41 CST 2013
-#Latest update at:Sun Mar 03 12:45:41 CST 2013
-#Latest update at:Sun Mar 03 12:45:41 CST 2013
-#Latest update at:Sun Mar 03 12:45:40 CST 2013
-#Latest update at:Sun Mar 03 12:45:39 CST 2013
-#Latest update at:Thu Feb 28 23:18:25 CST 2013
-#Stair Strategy
-#stockId name      standardPrice currentNumber canSellNumber  tradeAlgorithm     stairZDF tradeNumber rank
- 600036, 招商银行, 13.37,        0,            0,             Stair   			 AI                    0.05,     100,        0
- 600035, 中国银行, 0.0,        0,            0,             Stair   			 AI                  0.0,     0,        0,   0
- 600036, sdsd, 0.0,        0,            0,             Stair   			 AI                0.0,     0,        0,   0
- 600036, sdsd, 0.0,        0,            0,             Stair   			 AI              0.0,     0,        0,   0
- 600036, sdsd, 0.0,        0,            0,             Stair   			 AI            0.0,     0,        0,   0
- 600036, sdsd, 0.0,        0,            0,             Stair   			 AI          0.0,     0,        0,   0
- 600036, sdsd, 0.0,        0,            0,             Stair   			 AI        0.0,     0,        0,   0
- 600036, aaa, 0.0,        0,            0,             Stair   			 AI      0.0,     0,        0,   0
- 600036, dddd, 0.0,        0,            0,             Stair   			 AI    0.0,     0,        0,   0
- 600036, eeee, 0.0,        0,            0,             Stair   			 AI  0.0,     0,        0,   0
+#Latest update at:Mon Apr 01 09:39:17 CST 2013
+ true, 600008, 首创股份,  Once         AI卖出,        8.5,        大于,        1000,        未交易
+ true, 600008, 首创股份,  Once         AI买入,        7.58,        小于,        500,        成功
+ true, 600008, 首创股份,  Once         AI卖出,        7.0,        小于,        1000,        未交易
+ true, 600567, 山鹰纸业,  Once         AI买入,        2.6,        小于,        2000,        成功
+ true, 600567, 山鹰纸业,  Once         AI卖出,        2.89,        大于,        700,        未交易

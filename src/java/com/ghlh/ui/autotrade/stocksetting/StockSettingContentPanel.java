@@ -125,6 +125,15 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 		}
 	}
 
+	public boolean isSelectedMSBOnMonitoring() {
+		int row = stockTable.getSelectedRow();
+		boolean result = false;
+		if (row >= 0) {
+			result = (boolean) stockTable.getValueAt(row, 3);
+		}
+		return result;
+	}
+
 	private void initTableData() {
 		String[] columnNames = { "交易策略", "股票代码", "股票名称", "是否监控" };
 		((DefaultTableModel) this.stockTable.getModel())

@@ -31,5 +31,9 @@ public class SoftwareTrader implements StockTrader {
 		cmdParameters.put("count", new Integer(count));
 		return cmdParameters;
 	}
+	
+	public void activateTradeSoft(){
+		TradeSoftwareController.getInstance().activateTradeSoft();
+	}
 
 }

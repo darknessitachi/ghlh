@@ -40,6 +40,11 @@ public class AutoTradeStockQuartzServer {
 			scheduleJob(13, 0, "AfternoonAutoTradeMonitoring",
 					AutoTradeMonitoringJob.class);
 
+			scheduleJob(11, 40, "NoonTradeSoftwareActivate",
+					TradeSoftwareActivateJob.class);
+			scheduleJob(23, 40, "NightnTradeSoftwareActivate",
+					TradeSoftwareActivateJob.class);
+
 		} catch (SchedulerException ex) {
 			logger.error("Make auto trade scheduler throw: ", ex);
 		}

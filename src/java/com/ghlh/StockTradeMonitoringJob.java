@@ -53,8 +53,6 @@ public class StockTradeMonitoringJob {
 					AutoTradeSwitch.getInstance().setMonitorInfo(
 							monitorStockBean.getStockId() + " "
 									+ monitorStockBean.getName());
-					System.out.println(monitorStockBean.getStockId() + " "
-							+ monitorStockBean.getName());
 
 					StockQuotesBean stockQuotesBean = InternetStockQuotesInquirer
 							.queryStock(monitorStockBean.getStockId());

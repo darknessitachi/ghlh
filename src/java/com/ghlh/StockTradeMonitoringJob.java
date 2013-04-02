@@ -72,6 +72,7 @@ public class StockTradeMonitoringJob {
 					boolean traded = processStockTrade(tradeResult,
 							monitorStockBean);
 					if (traded) {
+						logger.error(tradeResult);
 						stockPoolAccessor.writeMonitorStocks(monitorStocksList);
 					}
 					TimeUtil.pause(200);

@@ -18,6 +18,8 @@ import com.ghlh.strategy.TradeStrategy;
 import com.ghlh.tradeway.SoftwareTrader;
 import com.ghlh.tradeway.StockTrader;
 import com.ghlh.ui.StatusField;
+import com.ghlh.ui.autotrade.MainPanel;
+import com.ghlh.ui.autotrade.stocksetting.StockSettingContentPanel;
 import com.ghlh.ui.autotradestart.AutoTradeSwitch;
 import com.ghlh.util.ReflectUtil;
 import com.ghlh.util.StockMarketUtil;
@@ -73,6 +75,9 @@ public class StockTradeMonitoringJob {
 							monitorStockBean);
 					if (traded) {
 						logger.error(tradeResult);
+						((StockSettingContentPanel) MainPanel.getInstance()
+								.getStockSettingUI())
+								.refreshUIMsbList(monitorStocksList);
 						stockPoolAccessor.writeMonitorStocks(monitorStocksList);
 					}
 					TimeUtil.pause(200);

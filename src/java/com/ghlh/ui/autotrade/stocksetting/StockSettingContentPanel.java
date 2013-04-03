@@ -101,6 +101,10 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 
 	List<MonitorStockBean> msbList = null;
 
+	public void refreshUIMsbList(List<MonitorStockBean> msbList) {
+		this.msbList = msbList;
+	}
+
 	private void clickMonitoring() {
 		int row = stockTable.getSelectedRow();
 		if (stockTable.getSelectedColumn() == 3) {

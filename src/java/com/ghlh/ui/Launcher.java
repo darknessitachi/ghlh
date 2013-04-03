@@ -161,14 +161,14 @@ public class Launcher extends DefaultDockableBarHolder {
 			}
 		});
 
-		_decisionPanel.add(new MainPanel().getMainPanel());
+		_decisionPanel.add(MainPanel.getInstance().getMainPanel());
 		_configPanel.add(new StartMainPanel().getContentPanel());
-		FeedReader _reader = new FeedReader(new String[] {
-				"http://blog.sina.com.cn/rss/2716358792.xml"
-				//"http://blog.sina.com.cn/rss/2716358792.xml",
-				//"http://blog.sina.com.cn/rss/1216826604.xml",
-				//"http://blog.sina.com.cn/rss/1278228085.xml",
-		// "http://luodaisohu.blog.sohu.com/rss"
+		FeedReader _reader = new FeedReader(
+				new String[] { "http://blog.sina.com.cn/rss/2716358792.xml"
+				// "http://blog.sina.com.cn/rss/2716358792.xml",
+				// "http://blog.sina.com.cn/rss/1216826604.xml",
+				// "http://blog.sina.com.cn/rss/1278228085.xml",
+				// "http://luodaisohu.blog.sohu.com/rss"
 				}, "http://blog.sina.com.cn/rss/2716358792.xml");
 		_feedPanel.add(_reader);
 

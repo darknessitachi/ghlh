@@ -21,7 +21,15 @@ public class MainPanel {
 
 	private List test = null;
 
-	public MainPanel() {
+	private static MainPanel instance = new MainPanel();
+
+	public static MainPanel getInstance() {
+		return instance;
+	}
+
+	private ContentPanel stockSettingUI;
+
+	private MainPanel() {
 		mainPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		CommandTree ct = new CommandTree();
 		ct.setMainPanel(this);
@@ -30,8 +38,8 @@ public class MainPanel {
 				.getContent());
 		treeCmdMap.put("AutoTradeTesting", this.getAutoTradeTestingUI()
 				.getContent());
-
-		treeCmdMap.put("StockSetting", this.getStockSettingUI().getContent());
+		stockSettingUI = this.getStockSettingUI();
+		treeCmdMap.put("StockSetting", stockSettingUI.getContent());
 
 		contentPanel.setLayout(new BorderLayout());
 		contentPanel.add(this.getSoftwareSettingUI().getContent(),
@@ -53,10 +61,15 @@ public class MainPanel {
 		return cp;
 	}
 
-	private ContentPanel getStockSettingUI() {
-		ComponentsBean cb = UIComponentsFactory.getInstance()
-				.getComponentsBean("StockSetting");
-		ContentPanel cp = new StockSettingContentPanel(cb);
+	public ContentPanel getStockSettingUI() {
+		ContentPanel cp = null;
+		if (stockSettingUI == null) {
+			ComponentsBean cb = UIComponentsFactory.getInstance()
+					.getComponentsBean("StockSetting");
+			cp = new StockSettingContentPanel(cb);
+		} else {
+			cp = this.stockSettingUI;
+		}
 		return cp;
 
 		/*

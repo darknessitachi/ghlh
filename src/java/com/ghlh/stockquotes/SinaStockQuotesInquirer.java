@@ -17,17 +17,22 @@ public class SinaStockQuotesInquirer extends InternetStockQuotesInquirer {
 	}
 
 	protected String getStockQuotesURL(String stockId) {
-		boolean isSZ = isFromShenzhenMarket(stockId);
-		if (isSZ) {
-			stockId = "sz" + stockId;
-		} else {
-			stockId = "sh" + stockId;
+		if (stockId.charAt(0) != 's') {
+			boolean isSZ = isFromShenzhenMarket(stockId);
+			if (isSZ) {
+				stockId = "sz" + stockId;
+			} else {
+				stockId = "sh" + stockId;
+			}
 		}
 		String stockQuotesURL = "http://hq.sinajs.cn/list=" + stockId;
 		return stockQuotesURL;
 	}
 
 	protected StockQuotesBean parseStockQuotes(String stockInfo) {
+		if (stockInfo.indexOf(',') < 0) {
+			return null;
+		}
 		StockQuotesBean result = new StockQuotesBean();
 		Pattern pattern = Pattern.compile(",");
 		String[] stockInfoPieces = pattern.split(stockInfo);

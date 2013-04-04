@@ -46,6 +46,7 @@ public class StockSettingUICompomentsImpl implements UIComponentsI {
 		component.setLabel("¹ÉÆ±Ãû³Æ");
 		component.setNotAllowNull(true);
 		component.setCompomentType(UIComponentType.TEXT_FIELD);
+		//component.setFieldLength(15);
 		components.add(component);
 
 		result.setComponents(components);

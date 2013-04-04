@@ -68,7 +68,7 @@ public class StairStrategyTest {
 		assertEquals(tr.getStockId(), "600036");
 
 		assertEquals(msb.getAdditionInfo(),
-				"9.5,       100,          0,         0.05,     100,        1,   4");
+				"9.5,        0,        100,        0.05,        100,        1,        4");
 
 		sqb.setCurrentPrice(9.4);
 		tr = ss.processStockTrade(msb, sqb);
@@ -95,7 +95,7 @@ public class StairStrategyTest {
 		assertEquals(tr.getStockId(), "600036");
 
 		assertEquals(msb.getAdditionInfo(),
-				"10.0,       0,          0,         0.05,     100,        0,   4");
+				"10.0,        0,        0,        0.05,        100,        0,        4");
 
 	}
 
@@ -119,7 +119,7 @@ public class StairStrategyTest {
 		assertEquals(tr.getStockId(), "600036");
 
 		assertEquals(msb.getAdditionInfo(),
-				"9.0,       300,          100,         0.05,     100,        2,   4");
+				"9.0,        100,        300,        0.05,        100,        2,        4");
 
 		sqb.setCurrentPrice(8.9);
 		tr = ss.processStockTrade(msb, sqb);
@@ -146,7 +146,7 @@ public class StairStrategyTest {
 		assertEquals(tr.getStockId(), "600036");
 
 		assertEquals(msb.getAdditionInfo(),
-				"9.5,       100,          100,         0.05,     100,        1,   4");
+				"9.5,        100,        100,        0.05,        100,        1,        4");
 	}
 
 	@Test
@@ -169,7 +169,7 @@ public class StairStrategyTest {
 		assertEquals(tr.getStockId(), "600036");
 
 		assertEquals(msb.getAdditionInfo(),
-				"8.54,       700,          300,         0.05,     100,        3,   4");
+				"8.54,        300,        700,        0.05,        100,        3,        4");
 
 		sqb.setCurrentPrice(8.55);
 		tr = ss.processStockTrade(msb, sqb);
@@ -218,7 +218,7 @@ public class StairStrategyTest {
 		assertEquals(tr.getStockId(), "600036");
 
 		assertEquals(msb.getAdditionInfo(),
-				"8.11,       1500,          700,         0.05,     100,        4,   4");
+				"8.11,        700,        1500,        0.05,        100,        4,        4");
 
 		sqb.setCurrentPrice(8);
 		tr = ss.processStockTrade(msb, sqb);
@@ -245,7 +245,7 @@ public class StairStrategyTest {
 		assertEquals(tr.getStockId(), "600036");
 
 		assertEquals(msb.getAdditionInfo(),
-				"8.54,       700,          700,         0.05,     100,        3,   4");
+				"8.54,        700,        700,        0.05,        100,        3,        4");
 
 	}
 

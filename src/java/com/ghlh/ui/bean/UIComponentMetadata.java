@@ -73,5 +73,15 @@ public class UIComponentMetadata {
 	public void setFieldType(String fieldType) {
 		this.fieldType = fieldType;
 	}
+	
+	private int fieldLength;
+
+	public int getFieldLength() {
+		return fieldLength;
+	}
+
+	public void setFieldLength(int fieldLength) {
+		this.fieldLength = fieldLength;
+	}
 
 }

@@ -8,11 +8,9 @@ import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextField;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import com.ghlh.ui.ButtonActionListener;
-import com.ghlh.ui.autotrade.stocksetting.StockSettingButtonActionListener;
+import com.ghlh.ui.autotrade.autotradetesting.AutoTradeTestingContentPanelImpl;
 import com.ghlh.ui.autotrade.stocksetting.StockSettingContentPanel;
 import com.ghlh.ui.bean.ComponentsBean;
 
@@ -51,7 +49,7 @@ public class MainPanel {
 	private ContentPanel getAutoTradeTestingUI() {
 		ComponentsBean cb = UIComponentsFactory.getInstance()
 				.getComponentsBean("AutoTradeTesting");
-		ContentPanel cp = new DefaultContentPanelImpl(cb);
+		ContentPanel cp = new AutoTradeTestingContentPanelImpl(cb);
 		return cp;
 	}
 

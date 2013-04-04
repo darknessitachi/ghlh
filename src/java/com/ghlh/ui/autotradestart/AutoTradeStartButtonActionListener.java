@@ -34,14 +34,7 @@ public class AutoTradeStartButtonActionListener extends
 				AutoTradeSwitch.getInstance().setStart(true);
 				((JButton) this.getjButtons().get(0)).setEnabled(false);
 				((JButton) this.getjButtons().get(1)).setEnabled(true);
-				if (StockMarketUtil.isMarketOpenning()) {
-					AutoTradeStockQuartzServer.getInstance().addRightNowJob();
-					StatusField.getInstance().setPromptMessage(
-							"自动交易监控已启动， 正在监控交易中");
-				} else {
-					StatusField.getInstance().setPromptMessage(
-							"自动交易监控已启动， 现在休市中");
-				}
+				AutoTradeStockQuartzServer.getInstance().addRightNowJob();
 				AutoTradeStockQuartzServer.getInstance().startJob();
 			}
 		}

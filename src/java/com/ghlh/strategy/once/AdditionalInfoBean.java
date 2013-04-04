@@ -38,4 +38,14 @@ public class AdditionalInfoBean {
 
 	private int number;
 	private String status;
+	
+	private String relationShipWithTargetPrice;
+
+	public String getRelationShipWithTargetPrice() {
+		return relationShipWithTargetPrice;
+	}
+
+	public void setRelationShipWithTargetPrice(String relationShipWithTargetPrice) {
+		this.relationShipWithTargetPrice = relationShipWithTargetPrice;
+	}
 }

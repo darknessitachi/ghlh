@@ -13,11 +13,17 @@ public class AutoTradeMonitoringJob implements Job {
 			.getLogger(AutoTradeMonitoringJob.class);
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-		//logger.error("CronJob Start job at " + Calendar.getInstance().getTime());
-		//new StockTradeMonitoringJob().startMonitoring();
-		while(AutoTradeSwitch.getInstance().isStart()){
-			TimeUtil.pause(1000);
-			System.out.println("testing");
-		}
+		// logger.error("CronJob Start job at " +
+		// Calendar.getInstance().getTime());
+		new StockTradeMonitoringJob().monitoring();
+		// while (AutoTradeSwitch.getInstance().isStart()) {
+		// if (MarketIsRestFlag.getInstance().isMarketRest()) {
+		// System.out.println("анЪа");
+		// break;
+		// }
+		// TimeUtil.pause(1000);
+		// System.out.println("testing");
+		// System.out.println("execute job = " + Thread.currentThread());
+		// }
 	}
 }

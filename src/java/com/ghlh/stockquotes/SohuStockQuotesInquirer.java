@@ -8,6 +8,9 @@ public class SohuStockQuotesInquirer extends InternetStockQuotesInquirer {
 
 	protected String queryStockInfo(String stockQuotesURL) {
 		String line = HttpUtil.accessInternet(stockQuotesURL);
+		if (line.indexOf("[") < 0) {
+			return null;
+		}
 		if (line != null) {
 			line = line.substring(line.indexOf("[") + 1, line.indexOf("]"));
 			line = line.substring(line.indexOf("[") + 2);

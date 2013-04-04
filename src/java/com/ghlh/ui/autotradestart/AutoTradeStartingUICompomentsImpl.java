@@ -20,6 +20,7 @@ public class AutoTradeStartingUICompomentsImpl implements UIComponentsI {
 		UIComponentMetadata component1 = new UIComponentMetadata();
 		component1.setLabel("当前监控股票代码");
 		component1.setCompomentType(UIComponentType.TEXT_FIELD);
+		component1.setFieldLength(50);
 		components.add(component1);
 		result.setComponents(components);
 		return result;

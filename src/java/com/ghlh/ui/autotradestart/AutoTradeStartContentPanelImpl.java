@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import org.apache.log4j.Logger;
 
 import com.ghlh.ui.ButtonActionListener;
+import com.ghlh.ui.autotrade.ContentPanelUtil;
 import com.ghlh.ui.autotrade.DefaultContentPanelImpl;
 import com.ghlh.ui.bean.ComponentsBean;
 import com.ghlh.ui.bean.UIComponentMetadata;
@@ -44,7 +45,8 @@ public class AutoTradeStartContentPanelImpl extends DefaultContentPanelImpl {
 			UIComponentMetadata com = (UIComponentMetadata) components.get(i);
 			result.add(new JLabel(com.getLabel()), c);
 			c = getConstraints((i % 3) * 2 + 1, i / 3);
-			JTextField component = new JTextField(30);
+			JTextField component = (JTextField) ContentPanelUtil
+					.getJComponent(com);
 			AutoTradeSwitch.getInstance().setMonitorField(component);
 			component.setBackground(Color.black);
 			component.setForeground(Color.WHITE);

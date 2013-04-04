@@ -20,39 +20,47 @@ public class AutoTradeStockQuartzServer {
 
 	private Scheduler scheduler = null;
 
+	private void scheduleJob(int hour, int mins, String jobName, Class jobClass) {
+		try {
+			JobDetail job = new JobDetail(jobName + "Job",
+					Scheduler.DEFAULT_GROUP, jobClass);
+			Trigger trigger = TriggerUtils.makeDailyTrigger(jobName + "Triger",
+					hour, mins);
+			scheduler.scheduleJob(job, trigger);
+		} catch (SchedulerException ex) {
+			logger.error("Make auto job : " + jobName + "throw: ", ex);
+		}
+	}
+
 	private AutoTradeStockQuartzServer() {
 		try {
 			scheduler = StdSchedulerFactory.getDefaultScheduler();
-			JobDetail morningAutoTradeJob = new JobDetail(
-					"MorningAutoTradeMonitoringJob", Scheduler.DEFAULT_GROUP,
+			scheduleJob(9, 30, "MorningAutoTradeMonitoring",
 					AutoTradeMonitoringJob.class);
-			Trigger morningAutoTradeTrigger = TriggerUtils.makeDailyTrigger(
-					"MorningAutoTradeMonitoringJob", 9, 30);
-			scheduler.scheduleJob(morningAutoTradeJob, morningAutoTradeTrigger);
-			Trigger afternoonAutoTradeTrigger = TriggerUtils.makeDailyTrigger(
-					"SendThanksSMJob", 13, 0);
-			JobDetail afternoonAutoTradeJob = new JobDetail(
-					"AfternoonAutoTradeMonitoringJob", Scheduler.DEFAULT_GROUP,
+			scheduleJob(13, 0, "AfternoonAutoTradeMonitoring",
 					AutoTradeMonitoringJob.class);
-			scheduler.scheduleJob(afternoonAutoTradeJob,
-					afternoonAutoTradeTrigger);
+
 		} catch (SchedulerException ex) {
 			logger.error("Make auto trade scheduler throw: ", ex);
 		}
 	}
 
-	public void addRightNowJob() {
+	private void scheduleRightNowJob(Class jobClass, String jobName) {
 		try {
-			Trigger rightNowStart = TriggerUtils.makeImmediateTrigger(
-					"RightNow", 1, 1);
-			JobDetail rightNowAutoTradeJob = new JobDetail(
-					"RightNowAutoTradeMonitoringJob", Scheduler.DEFAULT_GROUP,
-					AutoTradeMonitoringJob.class);
+			Trigger rightNowStart = TriggerUtils.makeImmediateTrigger(jobName
+					+ "Trigger", 0, 0);
+			JobDetail rightNowAutoTradeJob = new JobDetail(jobName + "Job",
+					Scheduler.DEFAULT_GROUP, jobClass);
 			scheduler.scheduleJob(rightNowAutoTradeJob, rightNowStart);
 		} catch (SchedulerException ex) {
-			logger.error("Make auto trade scheduler throw: ", ex);
+			logger.error("Make RightNowAutoTradeMonitoringJob job : throw: ",
+					ex);
 		}
+	}
 
+	public void addRightNowJob() {
+		scheduleRightNowJob(AutoTradeMonitoringJob.class,
+				"RightNowAutoTradeMonitoring");
 	}
 
 	public void startJob() {

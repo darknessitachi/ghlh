@@ -54,7 +54,7 @@ public class MonitorStockBean {
 						new Integer(tradeNumber) });
 		this.additionInfo = additionalInfo;
 	}
-	
+
 	private boolean onMonitoring;
 
 	public boolean isOnMonitoring() {
@@ -63,5 +63,10 @@ public class MonitorStockBean {
 
 	public void setOnMonitoring(boolean onMonitoring) {
 		this.onMonitoring = onMonitoring;
+	}
+
+	public String toString() {
+		return onMonitoring + " " + stockId + " " + name + " " + tradeAlgorithm
+				+ additionInfo;
 	}
 }

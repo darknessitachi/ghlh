@@ -8,12 +8,16 @@ import com.ghlh.strategy.TradeResult;
 import com.ghlh.strategy.TradeStrategy;
 
 public class StairTradeStrategy implements TradeStrategy {
+	private String getStrategyName() {
+		return "Stair";
+	}
+
 	public TradeResult processStockTrade(MonitorStockBean monitorStockBean,
 			StockQuotesBean stockQuotesBean) {
 		TradeResult tradeResult = new TradeResult();
 		AdditionalInfoBean additionalInfoBean = (AdditionalInfoBean) AdditionInfoUtil
 				.parseAdditionalInfoBean(monitorStockBean.getAdditionInfo(),
-						"stair");
+						getStrategyName());
 		tradeResult.setStockId(monitorStockBean.getStockId());
 		tradeResult.setTradePrice(stockQuotesBean.getCurrentPrice());
 		if (isReachSellCondition(monitorStockBean, stockQuotesBean,
@@ -57,7 +61,8 @@ public class StairTradeStrategy implements TradeStrategy {
 		}
 		additionalInfoBean.setStandardPrice(tradeResult.getTradePrice());
 		monitorStockBean.setAdditionInfo(AdditionInfoUtil
-				.parseAdditionalInfoBeanBack(additionalInfoBean, "stair"));
+				.parseAdditionalInfoBeanBack(additionalInfoBean,
+						getStrategyName()));
 	}
 
 	private boolean isReachSellCondition(MonitorStockBean monitorStockBean,

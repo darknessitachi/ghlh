@@ -21,11 +21,16 @@ public class AutoTradeTestingUICompomentsImpl implements UIComponentsI {
 		component1.setLabel("股票代码");
 		component1.setCompomentType(UIComponentType.INT_FIELD);
 		UIComponentMetadata component2 = new UIComponentMetadata();
-		component2.setLabel("数量");
-		component2.setCompomentType(UIComponentType.INT_FIELD);
+		component2.setLabel("股票名称");
+		component2.setCompomentType(UIComponentType.TEXT_FIELD);
+
+		UIComponentMetadata component3 = new UIComponentMetadata();
+		component3.setLabel("数量");
+		component3.setCompomentType(UIComponentType.INT_FIELD);
 
 		components.add(component1);
 		components.add(component2);
+		components.add(component3);
 
 		result.setComponents(components);
 		result.setMenuCmd("AutoTradeTesting");

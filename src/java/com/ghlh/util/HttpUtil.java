@@ -13,13 +13,12 @@ import com.ghlh.stockquotes.StockQuotesException;
 
 public class HttpUtil {
 	public static Logger logger = Logger.getLogger(HttpUtil.class);
-	private static HttpClient client = new HttpClient();
-	private static HttpMethod method = null;
 
 	public static String accessInternet(String stockQuotesURL) {
 		String line = null;
 		try {
-			method = new GetMethod(stockQuotesURL);
+			HttpClient client = new HttpClient();
+			HttpMethod method = new GetMethod(stockQuotesURL);
 			client.executeMethod(method);
 			InputStream in = method.getResponseBodyAsStream();
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));

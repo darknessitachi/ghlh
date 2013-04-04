@@ -13,7 +13,11 @@ public class ContentPanelUtil {
 	public static JComponent getJComponent(UIComponentMetadata com) {
 		JComponent result = null;
 		if (com.getCompomentType() == UIComponentType.TEXT_FIELD) {
-			result = new JTextField("test", 10);
+			int length = com.getFieldLength();
+			if (length == 0) {
+				length = 10;
+			}
+			result = new JTextField("test", length);
 			((JTextField) result).setText(com.getDefaultValue());
 		}
 		if (com.getCompomentType() == UIComponentType.INT_FIELD) {

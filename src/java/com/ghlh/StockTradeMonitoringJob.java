@@ -30,37 +30,36 @@ public class StockTradeMonitoringJob {
 	StockTrader stockTrader = new SoftwareTrader();
 	TradeContext tradeContext = null;
 	StockPoolAccessor stockPoolAccessor = new FileStockPoolAccessor();
+	private int monitoringCount = 0;
 
-	public void monitor() {
+	public void monitoring() {
+		if (isMarketRest()) {
+			return;
+		}
 		try {
 			List<MonitorStockBean> monitorStocksList = stockPoolAccessor
 					.getMonitorStocks();
-			boolean setStatus = false;
 			while (AutoTradeSwitch.getInstance().isStart()) {
-				if (!StockMarketUtil.isMarketOpenning()) {
-					AutoTradeSwitch.getInstance().setMonitorInfo(
-							"自动交易监控已启动， 现在休市中(交易结束休市)...");
-					StatusField.getInstance().setPromptMessage(
-							"自动交易监控已启动， 现在休市中(交易结束休市)...");
+				if (isMarketBreak()) {
 					break;
-				} else {
-					if (!setStatus) {
-						setStatus = true;
-						StatusField.getInstance().setPromptMessage(
-								"自动交易监控已启动，现在监控中(在交易时间外启动的)...");
-					}
 				}
+				setMonitoringStatus();
 				for (int i = 0; i < monitorStocksList.size(); i++) {
 					MonitorStockBean monitorStockBean = (MonitorStockBean) monitorStocksList
 							.get(i);
-
+					if (!monitorStockBean.isOnMonitoring()) {
+						continue;
+					}
 					AutoTradeSwitch.getInstance().setMonitorInfo(
 							monitorStockBean.getStockId() + " "
 									+ monitorStockBean.getName());
+					System.out.println(monitorStockBean.getStockId() + " "
+							+ monitorStockBean.getName());
+
 					StockQuotesBean stockQuotesBean = InternetStockQuotesInquirer
 							.queryStock(monitorStockBean.getStockId());
 					if (stockQuotesBean == null) {
-						break;
+						continue;
 					}
 					String tradeAlgorithm = monitorStockBean
 							.getTradeAlgorithm();
@@ -77,9 +76,9 @@ public class StockTradeMonitoringJob {
 					if (traded) {
 						stockPoolAccessor.writeMonitorStocks(monitorStocksList);
 					}
-					TimeUtil.pause(Constants.MONITORING_PAUSE_SECONDS * 500);
+					TimeUtil.pause(200);
 				}
-
+				TimeUtil.pause(200);
 			}
 			if (!AutoTradeSwitch.getInstance().isStart()) {
 				AutoTradeSwitch.getInstance().showStopSuccessful();
@@ -89,6 +88,43 @@ public class StockTradeMonitoringJob {
 		}
 	}
 
+	private boolean isMarketRest() {
+		boolean result = false;
+		String cause = StockMarketUtil.getMarketRestCause();
+		if (cause != null) {
+			String message = "自动交易监控已启动， " + cause;
+			setStatus(message);
+			result = true;
+		}
+		return result;
+	}
+
+	private boolean isMarketBreak() {
+		boolean result = false;
+		String cause = StockMarketUtil.getCloseCause();
+		if (cause != null) {
+			String message = "自动交易监控已启动， " + cause;
+			setStatus(message);
+			result = true;
+		}
+		return result;
+	}
+
+	private void setStatus(String message) {
+		AutoTradeSwitch.getInstance().setMonitorInfo(message);
+		StatusField.getInstance().setPromptMessage(message);
+	}
+
+	private void setMonitoringStatus() {
+		int pointCount = monitoringCount % 6;
+		String sPoint = "";
+		for (int i = 0; i < pointCount; i++) {
+			sPoint += ".";
+		}
+		monitoringCount++;
+		StatusField.getInstance().setPromptMessage("自动交易监控已启动， 现在监控中" + sPoint);
+	}
+
 	private boolean processStockTrade(TradeResult tradeResult,
 			MonitorStockBean monitorStockBean)
 			throws StockPoolAccessorException {
@@ -96,14 +132,10 @@ public class StockTradeMonitoringJob {
 		if (tradeResult.getCmd() == Constants.SELL) {
 			stockTrader.sellStock(tradeResult.getStockId(),
 					tradeResult.getNumber());
-			// monitorStockBean.writeBackCurrentNumber(tradeResult.getCmd(),
-			// tradeResult.getNumber());
 			traded = true;
 		} else if (tradeResult.getCmd() == Constants.BUY) {
 			stockTrader.buyStock(tradeResult.getStockId(),
 					tradeResult.getNumber());
-			// monitorStockBean.writeBackCurrentNumber(tradeResult.getCmd(),
-			// tradeResult.getNumber());
 			traded = true;
 		}
 		return traded;

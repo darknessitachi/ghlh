@@ -15,4 +15,8 @@ public class TimeUtil {
 			logger.error("Pause throw exception : ", ex);
 		}
 	}
+
+	public static void pauseSeconds(long second) {
+		pause(second * 1000);
+	}
 }

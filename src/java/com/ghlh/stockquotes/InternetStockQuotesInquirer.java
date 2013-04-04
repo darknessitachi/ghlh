@@ -14,6 +14,9 @@ public abstract class InternetStockQuotesInquirer implements
 			return null;
 		}
 		StockQuotesBean result = parseStockQuotes(stockInfo);
+		if (result == null) {
+			return null;
+		}
 		result.setStockId(stockId);
 		return result;
 	}
@@ -36,6 +39,9 @@ public abstract class InternetStockQuotesInquirer implements
 	private static StockQuotesInquirer sohuSQ = new SohuStockQuotesInquirer();
 
 	public static StockQuotesBean queryStock(String stockId) {
+		if (stockId == null || stockId.equals("")) {
+			return null;
+		}
 		StockQuotesBean result = null;
 		try {
 			result = sinaSQ.getStockQuotesBean(stockId);
@@ -47,5 +53,12 @@ public abstract class InternetStockQuotesInquirer implements
 		}
 		return result;
 
+	}
+
+	public static void main(String[] args) {
+		while (true) {
+			StockQuotesBean sqb = queryStock("600036");
+			System.out.println(sqb);
+		}
 	}
 }

@@ -1,0 +1,5 @@
+Download MySQL:
+http://dev.mysql.com/downloads/installer/5.6.html  
+OTN account: lqj.liu@qq.com/Yinuo7511763
+
+SqlYog: http://code.google.com/p/sqlyog/downloads/list

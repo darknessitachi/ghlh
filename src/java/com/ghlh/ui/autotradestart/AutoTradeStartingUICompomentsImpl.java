@@ -18,10 +18,15 @@ public class AutoTradeStartingUICompomentsImpl implements UIComponentsI {
 		List components = new ArrayList();
 
 		UIComponentMetadata component1 = new UIComponentMetadata();
-		component1.setLabel("当前系统监控时间");
-		component1.setCompomentType(UIComponentType.TEXTAREA);
-		//component1.setFieldLength(50);
+		component1.setLabel("当前系统监控股票:");
+		component1.setCompomentType(UIComponentType.TEXT_FIELD);
+		component1.setFieldLength(50);
 		components.add(component1);
+		UIComponentMetadata component2 = new UIComponentMetadata();
+		component2.setLabel("当前系统监控事件:");
+		component2.setCompomentType(UIComponentType.TEXT_AREA);
+		components.add(component2);
+		
 		result.setComponents(components);
 		return result;
 	}

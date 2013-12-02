@@ -42,7 +42,7 @@ public class ContentPanelUtil {
 			}
 		}
 
-		if (com.getCompomentType() == UIComponentType.TEXTAREA) {
+		if (com.getCompomentType() == UIComponentType.TEXT_AREA) {
 			int length = com.getFieldLength();
 			if (length == 0) {
 				length = 10;

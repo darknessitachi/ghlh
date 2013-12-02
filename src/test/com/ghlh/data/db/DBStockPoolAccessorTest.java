@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.ghlh.data.FileStockPoolAccessor;
 import com.ghlh.data.MonitorStockBean;
 import com.ghlh.data.StockPoolAccessor;
 
@@ -12,7 +13,7 @@ public class DBStockPoolAccessorTest {
 	@Test
 	public void test() {
 		try {
-			StockPoolAccessor dbStockPoolAccessorTest = new GhlhDAO();
+			StockPoolAccessor dbStockPoolAccessorTest = new FileStockPoolAccessor();
 			MonitorStockBean monitorStockBean = new MonitorStockBean();
 			monitorStockBean.setStockId("600036");
 			monitorStockBean.setName("’–…Ã“¯––");

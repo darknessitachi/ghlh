@@ -6,10 +6,12 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.List;
 
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
 
@@ -38,23 +40,39 @@ public class AutoTradeStartContentPanelImpl extends DefaultContentPanelImpl {
 		result.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		result.setLayout(new GridBagLayout());
 
-		for (int i = 0; i < components.size(); i++) {
-			GridBagConstraints c = getConstraints((i % 3) * 2, i / 3);
-			c.weightx = 0.5;
-			c.anchor = GridBagConstraints.NORTHEAST;
-			UIComponentMetadata com = (UIComponentMetadata) components.get(i);
-			result.add(new JLabel(com.getLabel()), c);
-			c = getConstraints((i % 3) * 2 + 1, i / 3);
-			JTextArea component = (JTextArea) ContentPanelUtil
-					.getJComponent(com);
-			AutoTradeSwitch.getInstance().setMonitorField(component);
-			component.setBackground(Color.black);
-			component.setForeground(Color.WHITE);
-			component.setEnabled(false);
-			JScrollPane jsp = new JScrollPane(component);
-			result.add(jsp, c);
-			this.getUIcomponents().add(component);
-		}
+		UIComponentMetadata com = (UIComponentMetadata) components.get(0);
+		GridBagConstraints c = getConstraints(0, 0);
+		c.weightx = 0.5;
+		c.anchor = GridBagConstraints.NORTHEAST;
+		result.add(new JLabel(com.getLabel()), c);
+
+		c = getConstraints(1, 0);
+		JComponent component = (JComponent) ContentPanelUtil.getJComponent(com);
+		component.setBackground(Color.black);
+		component.setForeground(Color.WHITE);
+		component.setEnabled(false);
+		AutoTradeMonitor.getInstance().setMonitorStockField(
+				(JTextField) component);
+
+		result.add(component, c);
+		this.getUIcomponents().add(component);
+
+		com = (UIComponentMetadata) components.get(1);
+		c = getConstraints(0, 1);
+		c.weightx = 0.5;
+		c.anchor = GridBagConstraints.NORTHEAST;
+		result.add(new JLabel(com.getLabel()), c);
+
+		c = getConstraints(1, 1);
+		component = (JComponent) ContentPanelUtil.getJComponent(com);
+		component.setBackground(Color.black);
+		component.setForeground(Color.WHITE);
+		component.setEnabled(false);
+		AutoTradeMonitor.getInstance().setMonitorArea((JTextArea) component);
+		JScrollPane jsp = new JScrollPane(component);
+		result.add(jsp, c);
+		this.getUIcomponents().add(component);
+
 		return result;
 	}
 }

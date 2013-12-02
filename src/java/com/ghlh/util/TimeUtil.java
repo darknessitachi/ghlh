@@ -19,4 +19,5 @@ public class TimeUtil {
 	public static void pauseSeconds(long second) {
 		pause(second * 1000);
 	}
+
 }

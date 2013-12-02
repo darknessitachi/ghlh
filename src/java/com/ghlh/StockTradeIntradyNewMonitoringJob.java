@@ -11,12 +11,9 @@ import org.apache.log4j.Logger;
 import com.ghlh.data.db.MonitorstockDAO;
 import com.ghlh.data.db.MonitorstockVO;
 import com.ghlh.data.db.StocktradeDAO;
-import com.ghlh.strategy.once.OnceConstants;
-import com.ghlh.strategy.once.OnceAfterOpenPriceDecidedStrategy;
-import com.ghlh.strategy.stair.StairConstants;
 import com.ghlh.strategy.stair.StairIntradayStrategy;
-import com.ghlh.strategy.stair.StairAfterOpenPriceDecidedStrategy;
 import com.ghlh.ui.StatusField;
+import com.ghlh.ui.autotradestart.AutoTradeMonitor;
 import com.ghlh.ui.autotradestart.AutoTradeSwitch;
 import com.ghlh.util.StockMarketUtil;
 import com.ghlh.util.TimeUtil;
@@ -47,9 +44,9 @@ public class StockTradeIntradyNewMonitoringJob {
 					if (!Boolean.valueOf(monitorstockVO.getOnmonitoring())) {
 						continue;
 					}
-					AutoTradeSwitch.getInstance().setMonitorInfo(
-							monitorstockVO.getStockid() + " "
-									+ monitorstockVO.getName());
+					AutoTradeMonitor.getInstance().setMonitorStock(
+							monitorstockVO.getStockid(),
+							monitorstockVO.getName());
 
 					String tradeAlgorithm = monitorstockVO.getTradealgorithm();
 					StairIntradayStrategy sis = new StairIntradayStrategy();
@@ -60,14 +57,12 @@ public class StockTradeIntradyNewMonitoringJob {
 				TimeUtil.pause(200);
 			}
 			if (!AutoTradeSwitch.getInstance().isStart()) {
-				AutoTradeSwitch.getInstance().showStopSuccessful();
+				AutoTradeMonitor.getInstance().showStopSuccessful();
 			}
 		} catch (Exception ex) {
 			logger.error("Stock Monitoring Trade throw : ", ex);
 		}
 	}
-
-
 
 	public Map getStockTrades(List monitorStocksList) {
 		Map stockTrade = new HashMap();
@@ -105,7 +100,7 @@ public class StockTradeIntradyNewMonitoringJob {
 	}
 
 	private void setStatus(String message) {
-		AutoTradeSwitch.getInstance().setMonitorInfo(message);
+		AutoTradeMonitor.getInstance().appendMonitorInfo(message);
 		StatusField.getInstance().setPromptMessage(message);
 	}
 

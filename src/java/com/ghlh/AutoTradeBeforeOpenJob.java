@@ -15,8 +15,11 @@ public class AutoTradeBeforeOpenJob implements Job {
 			.getLogger(AutoTradeBeforeOpenJob.class);
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-		logger.error("Enter monitoring at " + Calendar.getInstance().getTime());
-		new StockTradeBeforeOpenMonitoringJob().monitoring();
-		logger.error("Exit monitoring at " + Calendar.getInstance().getTime());
+		String message = "开始8:00盘前处理";
+		EventRecorder.recordEvent(this.getClass(), message);
+		String oneTimeType = "BeforeOpenStrategy";
+		OneTimeJobUtil.processOneTimeStrategy(oneTimeType);
+		message = "结束8:00盘前处理";
+		EventRecorder.recordEvent(this.getClass(), message);
 	}
 }

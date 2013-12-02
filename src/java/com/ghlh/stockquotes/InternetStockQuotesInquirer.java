@@ -1,31 +1,47 @@
 package com.ghlh.stockquotes;
 
-import org.apache.log4j.Logger;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.methods.GetMethod;
 
 public abstract class InternetStockQuotesInquirer implements
 		StockQuotesInquirer {
-	public static Logger logger = Logger
-			.getLogger(InternetStockQuotesInquirer.class);
+	private static HttpClient client = new HttpClient();
+	private static HttpMethod method = null;
+
+	private static StockQuotesInquirer instance = new SinaStockQuotesInquirer();
+
+	public static StockQuotesInquirer getInstance() {
+		return instance;
+	}
 
 	public StockQuotesBean getStockQuotesBean(String stockId) {
-		String stockQuotesURL = getStockQuotesURL(stockId);
-		String stockInfo = queryStockInfo(stockQuotesURL);
-		if (stockInfo == null) {
-			return null;
+		if(testingInjectStockQuotesBean != null){
+			return testingInjectStockQuotesBean;
 		}
-		StockQuotesBean result = parseStockQuotes(stockInfo);
-		if (result == null) {
-			return null;
+		StockQuotesBean result = null;
+		try {
+			boolean isSZ = isFromShenzhenMarket(stockId);
+			String url = getStockQuotesPageURL(stockId, isSZ);
+			String data = getStockQuotesInfoFromInternet(url);
+			result = parseStockQuotes(data);
+		} catch (StockQuotesException ex) {
+
 		}
-		result.setStockId(stockId);
 		return result;
 	}
 
-	protected abstract String queryStockInfo(String stockQuotesURL);
+	private StockQuotesBean testingInjectStockQuotesBean;
 
-	protected abstract String getStockQuotesURL(String stockId);
+	public void setTestingInjectStockQuotesBean(StockQuotesBean stockQuotesBean) {
+		this.testingInjectStockQuotesBean = stockQuotesBean;
+	}
 
-	protected boolean isFromShenzhenMarket(String stockId) {
+	private boolean isFromShenzhenMarket(String stockId) {
 		boolean result = false;
 		if (stockId.indexOf("0") == 0 || stockId.indexOf("3") == 0) {
 			result = true;
@@ -33,32 +49,26 @@ public abstract class InternetStockQuotesInquirer implements
 		return result;
 	}
 
-	protected abstract StockQuotesBean parseStockQuotes(String stockInfo);
-
-	private static StockQuotesInquirer sinaSQ = new SinaStockQuotesInquirer();
-	private static StockQuotesInquirer sohuSQ = new SohuStockQuotesInquirer();
-
-	public static StockQuotesBean queryStock(String stockId) {
-		if (stockId == null || stockId.equals("")) {
-			return null;
-		}
-		StockQuotesBean result = null;
+	private String getStockQuotesInfoFromInternet(String url)
+			throws StockQuotesException {
 		try {
-			result = sinaSQ.getStockQuotesBean(stockId);
-			if (result == null) {
-				result = sohuSQ.getStockQuotesBean(stockId);
-			}
+			method = new GetMethod(url);
+			client.executeMethod(method);
+			InputStream in = method.getResponseBodyAsStream();
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String result = br.readLine();
+			return result;
 		} catch (Exception ex) {
-			logger.error("queryStock throw : ", ex);
-		}
-		return result;
+			ex.printStackTrace();
+			throw new StockQuotesException(
+					"There is an exception while reading quotes from sohu ", ex);
 
-	}
-
-	public static void main(String[] args) {
-		while (true) {
-			StockQuotesBean sqb = queryStock("600036");
-			System.out.println(sqb);
 		}
 	}
+
+	protected abstract String getStockQuotesPageURL(String stockID, boolean isSZ);
+
+	protected abstract StockQuotesBean parseStockQuotes(String stockInfo)
+			throws StockQuotesException;
+
 }

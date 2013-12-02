@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
-import com.ghlh.stockpool.MonitorStockBean;
+import com.ghlh.data.db.MonitorstockVO;
 import com.ghlh.ui.autotrade.stocksetting.StockSettingUICompomentsImpl;
 import com.ghlh.ui.bean.UIComponentMetadata;
 import com.ghlh.util.ClassUtil;
@@ -77,8 +77,8 @@ public class AdditionInfoUtil {
 	}
 
 	public static boolean hasChangedValueInAdditionalUIComponents(
-			List uiComponents, MonitorStockBean currentMsb) {
-		String additionalInfo = currentMsb.getAdditionInfo();
+			List uiComponents, MonitorstockVO currentMsb) {
+		String additionalInfo = currentMsb.getAdditioninfo();
 		Pattern pattern = Pattern.compile(",");
 		String[] additionalInfoSegs = pattern.split(additionalInfo);
 		for (int i = 3; i < uiComponents.size(); i++) {
@@ -143,7 +143,7 @@ public class AdditionInfoUtil {
 						method, null, null);
 			} else {
 				line += ReflectUtil.excuteClassMethod(additionalInfoBean,
-						method, null, null) + ",        ";
+						method, null, null) + ",";
 			}
 		}
 		return line;

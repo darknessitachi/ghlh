@@ -29,8 +29,10 @@ import javax.swing.table.DefaultTableModel;
 
 import org.apache.log4j.Logger;
 
-import com.ghlh.stockpool.FileStockPoolAccessor;
-import com.ghlh.stockpool.MonitorStockBean;
+import com.ghlh.data.FileStockPoolAccessor;
+import com.ghlh.data.MonitorStockBean;
+import com.ghlh.data.db.MonitorstockDAO;
+import com.ghlh.data.db.MonitorstockVO;
 import com.ghlh.strategy.AdditionInfoUtil;
 import com.ghlh.ui.AbstractButtonActionListener;
 import com.ghlh.ui.autotrade.AbstractContentPanel;
@@ -99,9 +101,9 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 		});
 	}
 
-	List<MonitorStockBean> msbList = null;
+	List<MonitorstockVO> msbList = null;
 
-	public void refreshUIMsbList(List<MonitorStockBean> msbList) {
+	public void refreshUIMsbList(List<MonitorstockVO> msbList) {
 		this.msbList = msbList;
 	}
 
@@ -121,8 +123,8 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 			if (confirm == 0) {
 				((StockSettingButtonActionListener) this.getBal())
 						.updateMonitoring(monitoring);
-				MonitorStockBean currentMsb = msbList.get(row);
-				currentMsb.setOnMonitoring(monitoring);
+				MonitorstockVO currentMsb = msbList.get(row);
+				currentMsb.setOnmonitoring(monitoring + "");
 			} else {
 				this.stockTable.setValueAt(new Boolean(!monitoring), row, 3);
 			}
@@ -144,13 +146,10 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 				.setColumnIdentifiers(columnNames);
 
 		try {
-			FileStockPoolAccessor accessor = new FileStockPoolAccessor();
-			msbList = accessor.getMonitorStocks();
+			// FileStockPoolAccessor accessor = new FileStockPoolAccessor();
+			msbList = MonitorstockDAO.getMonitorStock();
 			for (int i = 0; i < msbList.size(); i++) {
-				MonitorStockBean msb = (MonitorStockBean) msbList.get(i);
-				if (MiscUtil.isComment(msb.getStockId())) {
-					continue;
-				}
+				MonitorstockVO msb = msbList.get(i);
 				Vector rowV = convertMonitorStockBeanToVector(msb);
 				((DefaultTableModel) this.stockTable.getModel()).addRow(rowV);
 			}
@@ -159,14 +158,14 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 		}
 	}
 
-	public void addStockInTable(MonitorStockBean msb) {
+	public void addStockInTable(MonitorstockVO msb) {
 		msbList.add(msb);
 		Vector rowV = convertMonitorStockBeanToVector(msb);
 		((DefaultTableModel) this.stockTable.getModel()).addRow(rowV);
 		((DefaultTableModel) this.stockTable.getModel()).fireTableDataChanged();
 	}
 
-	public void updateStockInTableRow(MonitorStockBean msb) {
+	public void updateStockInTableRow(MonitorstockVO msb) {
 		int currentRow = this.stockTable.getSelectedRow();
 		if (currentRow >= 0) {
 			msbList.set(currentRow, msb);
@@ -187,12 +186,12 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 		}
 	}
 
-	private void updateTableRow(MonitorStockBean msb, int currentRow) {
+	private void updateTableRow(MonitorstockVO msb, int currentRow) {
 		((DefaultTableModel) this.stockTable.getModel()).setValueAt(
 				StockSettingUICompomentsImpl.getStrategyName(msb
-						.getTradeAlgorithm()), currentRow, 0);
+						.getTradealgorithm()), currentRow, 0);
 		((DefaultTableModel) this.stockTable.getModel()).setValueAt(
-				msb.getStockId(), currentRow, 1);
+				msb.getStockid(), currentRow, 1);
 		((DefaultTableModel) this.stockTable.getModel()).setValueAt(
 				msb.getName(), currentRow, 2);
 	}
@@ -204,13 +203,13 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 		}
 	}
 
-	private Vector convertMonitorStockBeanToVector(MonitorStockBean msb) {
+	private Vector convertMonitorStockBeanToVector(MonitorstockVO msb) {
 		Vector rowV = new Vector();
 		rowV.add(StockSettingUICompomentsImpl.getStrategyName(msb
-				.getTradeAlgorithm()));
-		rowV.add(msb.getStockId());
+				.getTradealgorithm()));
+		rowV.add(msb.getStockid());
 		rowV.add(msb.getName());
-		rowV.add(new Boolean(msb.isOnMonitoring()));
+		rowV.add(new Boolean(msb.getOnmonitoring()));
 		return rowV;
 	}
 
@@ -224,8 +223,7 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 						.confirmInputOrChange();
 				if (confirm == 0 || confirm == -1) {
 					putCertainMSBIntoEdit(selectRow);
-					MonitorStockBean msb = (MonitorStockBean) msbList
-							.get(selectRow);
+					MonitorstockVO msb = msbList.get(selectRow);
 					((StockSettingButtonActionListener) this.getBal())
 							.enterEditStatus(msb, selectRow);
 				} else {
@@ -254,7 +252,7 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 	private void putCertainMSBIntoEdit(int selectRow) {
 		String strategyName = this.stockTable.getValueAt(selectRow, 0)
 				.toString();
-		MonitorStockBean msb = (MonitorStockBean) msbList.get(selectRow);
+		MonitorstockVO msb =  msbList.get(selectRow);
 		String currentStrategyName = ((JComboBox) this.getUIcomponents().get(0))
 				.getSelectedItem().toString();
 		if (!strategyName.equals(currentStrategyName)) {
@@ -264,12 +262,12 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 		}
 		setValueToBasicUIComponents(msb);
 		AdditionInfoUtil.setAdditionalInfoToUIComponents(
-				this.getUIcomponents(), msb.getAdditionInfo(),
-				msb.getTradeAlgorithm());
+				this.getUIcomponents(), msb.getAdditioninfo(),
+				msb.getTradealgorithm());
 	}
 
-	private void setValueToBasicUIComponents(MonitorStockBean msb) {
-		((JTextField) this.getUIcomponents().get(1)).setText(msb.getStockId());
+	private void setValueToBasicUIComponents(MonitorstockVO msb) {
+		((JTextField) this.getUIcomponents().get(1)).setText(msb.getStockid());
 		((JTextField) this.getUIcomponents().get(2)).setText(msb.getName());
 	}
 

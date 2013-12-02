@@ -1,6 +1,20 @@
 package com.ghlh.strategy.stair;
 
+import java.util.regex.Pattern;
+
 public class AdditionalInfoBean {
+	public AdditionalInfoBean() {
+
+	}
+
+	public AdditionalInfoBean(String additionalInfo) {
+		Pattern pattern = Pattern.compile(",");
+		String[] additionalInfoSegs = pattern.split(additionalInfo);
+		stairZDF = Double.parseDouble(additionalInfoSegs[0]);
+		stairMoney = Double.parseDouble(additionalInfoSegs[1]);
+		stairNumber = Integer.parseInt(additionalInfoSegs[2]);
+	}
+
 	private double stairZDF;
 
 	public double getStairZDF() {
@@ -11,61 +25,44 @@ public class AdditionalInfoBean {
 		this.stairZDF = stairZDF;
 	}
 
-	public int getTradeNumber() {
-		return tradeNumber;
+	public double getStairMoney() {
+		return stairMoney;
 	}
 
-	public void setTradeNumber(int tradeNumber) {
-		this.tradeNumber = tradeNumber;
+	public void setStairMoney(double stairMoney) {
+		this.stairMoney = stairMoney;
 	}
 
-	public int getRank() {
-		return rank;
+	private double stairMoney;
+	
+	
+	private int stairNumber;
+
+	public int getStairNumber() {
+		return stairNumber;
 	}
 
-	public void setRank(int rank) {
-		this.rank = rank;
+	public void setStairNumber(int stairNumber) {
+		this.stairNumber = stairNumber;
+	}
+	
+	private String firstBuyPriceStrategy;
+	public String getFirstBuyPriceStrategy() {
+		return firstBuyPriceStrategy;
 	}
 
-	private int tradeNumber;
-	private int rank;
-
-	private int maxRank;
-
-	public int getMaxRank() {
-		return maxRank;
+	public void setFirstBuyPriceStrategy(String firstBuyPriceStrategy) {
+		this.firstBuyPriceStrategy = firstBuyPriceStrategy;
 	}
 
-	public void setMaxRank(int maxRank) {
-		this.maxRank = maxRank;
+	public double getFirstBuyPrice() {
+		return firstBuyPrice;
 	}
 
-	private double standardPrice;
-
-	public double getStandardPrice() {
-		return standardPrice;
+	public void setFirstBuyPrice(double firstBuyPrice) {
+		this.firstBuyPrice = firstBuyPrice;
 	}
 
-	public void setStandardPrice(double standardPrice) {
-		this.standardPrice = standardPrice;
-	}
-
-	public int getCanSellNumber() {
-		return canSellNumber;
-	}
-
-	public void setCanSellNumber(int canSellNumber) {
-		this.canSellNumber = canSellNumber;
-	}
-
-	public int getCurrentNumber() {
-		return currentNumber;
-	}
-
-	public void setCurrentNumber(int currentNumber) {
-		this.currentNumber = currentNumber;
-	}
-
-	private int canSellNumber;
-	private int currentNumber;
+	private double firstBuyPrice;
+	
 }

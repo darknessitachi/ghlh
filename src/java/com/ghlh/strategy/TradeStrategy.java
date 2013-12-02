@@ -1,8 +1,6 @@
 package com.ghlh.strategy;
 
-import java.util.List;
-
-import com.ghlh.stockpool.MonitorStockBean;
+import com.ghlh.data.MonitorStockBean;
 import com.ghlh.stockquotes.StockQuotesBean;
 
 public interface TradeStrategy {

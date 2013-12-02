@@ -3,6 +3,7 @@ package com.ghlh.tradeway;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.ghlh.conf.ConfigurationAccessor;
 import com.ghlh.tradeway.software.TradeSoftwareController;
 
 public class SoftwareTrader implements StockTrader {
@@ -10,12 +11,29 @@ public class SoftwareTrader implements StockTrader {
 	private final static String BUY_CMD = "BuyStock";
 	private final static String SELL_CMD = "SellStock";
 
+	private static StockTrader instance = new SoftwareTrader();
+
+	public static StockTrader getInstance() {
+		return instance;
+	}
+
 	public void buyStock(String stockId, int number) {
-		tradeStock(stockId, number, BUY_CMD);
+		if (ConfigurationAccessor.getInstance().isOpenSoftwareTrade()) {
+			tradeStock(stockId, number, BUY_CMD);
+		}
 	}
 
 	public void sellStock(String stockId, int number) {
-		tradeStock(stockId, number, SELL_CMD);
+		if (ConfigurationAccessor.getInstance().isOpenSoftwareTrade()) {
+			tradeStock(stockId, number, SELL_CMD);
+		}
+	}
+	
+	public void buyStock(String stockId, int number, double price){
+		//@to-do
+	}
+	public void sellStock(String stockId, int number, double price){
+		//@to-do
 	}
 
 	private void tradeStock(String stockId, int number, String tradeCmd) {
@@ -31,9 +49,11 @@ public class SoftwareTrader implements StockTrader {
 		cmdParameters.put("count", new Integer(count));
 		return cmdParameters;
 	}
-	
-	public void activateTradeSoft(){
-		TradeSoftwareController.getInstance().activateTradeSoft();
+
+	public void activateTradeSoft() {
+		if (ConfigurationAccessor.getInstance().isOpenSoftwareTrade()) {
+			TradeSoftwareController.getInstance().activateTradeSoft();
+		}
 	}
 
 }

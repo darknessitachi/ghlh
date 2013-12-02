@@ -5,10 +5,10 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.ghlh.Constants;
-import com.ghlh.stockpool.MonitorStockBean;
+import com.ghlh.data.MonitorStockBean;
 import com.ghlh.stockquotes.StockQuotesBean;
 import com.ghlh.strategy.TradeResult;
-import com.ghlh.strategy.stair.StairTradeStrategy;
+import com.ghlh.strategy.stair2.StairTradeStrategy;
 
 public class StairStrategyTest {
 	public static StairTradeStrategy ss = new StairTradeStrategy();

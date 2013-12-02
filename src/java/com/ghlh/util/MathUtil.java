@@ -3,6 +3,7 @@ package com.ghlh.util;
 import java.math.BigDecimal;
 
 public class MathUtil {
+	
 	public static int getNSquareM(int n, int m) {
 		int result = 1;
 		for (int i = 0; i < m; i++) {
@@ -29,19 +30,39 @@ public class MathUtil {
 		}
 	}
 
-	private static double formatDouble(double abc, int servedNumber) {
+	public static final int TYPE_QUANSHE = 1;
+	public static final int TYPE_QUANJIN = 2;
+	public static final int TYPE_SISHEWURU = 3;
+
+	private static double formatDouble(double abc, int servedNumber, int type) {
 		BigDecimal bd = new BigDecimal(abc);
-		BigDecimal bd1 = bd.setScale(servedNumber, bd.ROUND_HALF_UP);
+		int flag = bd.ROUND_HALF_UP;
+		if (type == TYPE_QUANSHE) {
+			flag = bd.ROUND_DOWN;
+		} else if (type == TYPE_QUANJIN) {
+			flag = bd.ROUND_UP;
+		}
+
+		BigDecimal bd1 = bd.setScale(servedNumber, flag);
 		double result = bd1.doubleValue();
 		return result;
 	}
 
 	public static double formatDoubleWith4(double abc) {
-		return formatDouble(abc, 4);
+		System.out.println("abc");
+		return formatDouble(abc, 4, TYPE_SISHEWURU);
 	}
 
 	public static double formatDoubleWith2(double abc) {
-		return formatDouble(abc, 2);
+		return formatDouble(abc, 2, TYPE_SISHEWURU);
+	}
+
+	public static double formatDoubleWith2QuanShe(double abc) {
+		return formatDouble(abc, 2, TYPE_QUANSHE);
+	}
+
+	public static double formatDoubleWith2QuanJin(double abc) {
+		return formatDouble(abc, 2, TYPE_QUANJIN);
 	}
 
 }

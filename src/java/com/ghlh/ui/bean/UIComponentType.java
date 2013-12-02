@@ -5,5 +5,5 @@ public class UIComponentType {
 	public final static int COMBOX_FIELD = 2;
 	public final static int INT_FIELD = 3;
 	public final static int DOUBLE_FIELD = 4;
-
+	public final static int TEXTAREA = 5;
 }

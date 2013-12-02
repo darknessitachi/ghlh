@@ -48,9 +48,50 @@ public class StockQuotesBean {
 	private double zdf;
 	private double zde;
 
+	private double todayOpen;
+
+	public double getTodayOpen() {
+		return todayOpen;
+	}
+
+	public void setTodayOpen(double todayOpen) {
+		this.todayOpen = todayOpen;
+	}
+
+	public double getYesterdayClose() {
+		return yesterdayClose;
+	}
+
+	public void setYesterdayClose(double yesterdayClose) {
+		this.yesterdayClose = yesterdayClose;
+	}
+
+	public double getHighestPrice() {
+		return highestPrice;
+	}
+
+	public void setHighestPrice(double highestPrice) {
+		this.highestPrice = highestPrice;
+	}
+
+	public double getLowestPrice() {
+		return lowestPrice;
+	}
+
+	public void setLowestPrice(double lowestPrice) {
+		this.lowestPrice = lowestPrice;
+	}
+
+	private double yesterdayClose;
+	private double highestPrice;
+	private double lowestPrice;
+
 	public String toString() {
 		return "StockId = " + stockId + " Name = " + name + " CurrentPrice = "
-				+ currentPrice + " Zdf = " + zdf + " Zde = " + zde;
+				+ currentPrice + " Zdf = " + zdf + " Zde = " + zde
+				+ " TodayOpen = " + todayOpen + " YesterdayClose = "
+				+ yesterdayClose + " HighestPrice = " + highestPrice
+				+ " LowestPrice = " + lowestPrice;
 
 	}
 }

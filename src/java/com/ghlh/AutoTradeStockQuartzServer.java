@@ -35,16 +35,19 @@ public class AutoTradeStockQuartzServer {
 	private AutoTradeStockQuartzServer() {
 		try {
 			scheduler = StdSchedulerFactory.getDefaultScheduler();
+			scheduleJob(8, 0, "BeforeOpenAutoTradeJob",
+					AutoTradeBeforeOpenJob.class);
+			scheduleJob(9, 26, "AfterOpenPriceDecidedAutoTradeJob",
+					AutoTradeAfterOpenPriceDecidedJob.class);
+
 			scheduleJob(9, 30, "MorningAutoTradeMonitoring",
-					AutoTradeMonitoringJob.class);
+					AutoTradeIntradayJob.class);
 			scheduleJob(13, 0, "AfternoonAutoTradeMonitoring",
-					AutoTradeMonitoringJob.class);
-
-			scheduleJob(11, 40, "NoonTradeSoftwareActivate",
-					TradeSoftwareActivateJob.class);
-			scheduleJob(23, 40, "NightnTradeSoftwareActivate",
-					TradeSoftwareActivateJob.class);
-
+					AutoTradeIntradayJob.class);
+			for (int i = 0; i < 8; i++) {
+				scheduleJob(i * 3, 15, "TradeSoftwareActivate" + i,
+						TradeSoftwareActivateJob.class);
+			}
 		} catch (SchedulerException ex) {
 			logger.error("Make auto trade scheduler throw: ", ex);
 		}
@@ -64,7 +67,7 @@ public class AutoTradeStockQuartzServer {
 	}
 
 	public void addRightNowJob() {
-		scheduleRightNowJob(AutoTradeMonitoringJob.class,
+		scheduleRightNowJob(AutoTradeIntradayJob.class,
 				"RightNowAutoTradeMonitoring");
 	}
 

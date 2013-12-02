@@ -6,10 +6,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.List;
 
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.JTextArea;
+import javax.swing.JScrollPane;
 
 import org.apache.log4j.Logger;
 
@@ -45,13 +45,14 @@ public class AutoTradeStartContentPanelImpl extends DefaultContentPanelImpl {
 			UIComponentMetadata com = (UIComponentMetadata) components.get(i);
 			result.add(new JLabel(com.getLabel()), c);
 			c = getConstraints((i % 3) * 2 + 1, i / 3);
-			JTextField component = (JTextField) ContentPanelUtil
+			JTextArea component = (JTextArea) ContentPanelUtil
 					.getJComponent(com);
 			AutoTradeSwitch.getInstance().setMonitorField(component);
 			component.setBackground(Color.black);
 			component.setForeground(Color.WHITE);
 			component.setEnabled(false);
-			result.add(component, c);
+			JScrollPane jsp = new JScrollPane(component);
+			result.add(jsp, c);
 			this.getUIcomponents().add(component);
 		}
 		return result;

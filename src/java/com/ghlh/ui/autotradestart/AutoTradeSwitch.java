@@ -1,5 +1,6 @@
 package com.ghlh.ui.autotradestart;
 
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class AutoTradeSwitch {
@@ -22,14 +23,19 @@ public class AutoTradeSwitch {
 	private AutoTradeSwitch() {
 	}
 
-	private JTextField monitorField;
+	private JTextArea monitorField;
 
-	public void setMonitorField(JTextField monitorField) {
+	public void setMonitorField(JTextArea monitorField) {
 		this.monitorField = monitorField;
 	}
 
 	public void setMonitorInfo(String monitoringInfo) {
 		this.monitorField.setText(monitoringInfo);
+	}
+	
+	
+	public void appendMonitorInfo(String monitoringInfo) {
+		this.monitorField.append(monitoringInfo + "\n");
 	}
 	
 	public void showStopSuccessful() {

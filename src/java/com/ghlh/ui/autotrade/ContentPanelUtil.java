@@ -2,6 +2,7 @@ package com.ghlh.ui.autotrade;
 
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.ghlh.ui.DoubleOnlyDocument;
@@ -40,6 +41,16 @@ public class ContentPanelUtil {
 				((JComboBox) result).setSelectedItem(com.getDefaultValue());
 			}
 		}
+
+		if (com.getCompomentType() == UIComponentType.TEXTAREA) {
+			int length = com.getFieldLength();
+			if (length == 0) {
+				length = 10;
+			}
+			result = new JTextArea("", 30, 100);
+			((JTextArea) result).setText(com.getDefaultValue());
+		}
+
 		return result;
 	}
 }

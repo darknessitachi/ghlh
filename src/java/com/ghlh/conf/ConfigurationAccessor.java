@@ -43,7 +43,6 @@ public class ConfigurationAccessor {
 		return vendor.substring(vendor.indexOf("-") + 1);
 	}
 
-
 	public void saveTradeVendor(String vendor) {
 		prop = new Properties();
 		prop.setProperty("TradeVendor", vendor + "-"
@@ -62,5 +61,9 @@ public class ConfigurationAccessor {
 		map.put("упилж╓х╞", "zszq");
 		String result = map.get(vendor).toString();
 		return result;
+	}
+
+	public boolean isOpenSoftwareTrade() {
+		return false;
 	}
 }

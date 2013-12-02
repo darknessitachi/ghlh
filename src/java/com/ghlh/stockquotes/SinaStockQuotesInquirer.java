@@ -2,49 +2,60 @@ package com.ghlh.stockquotes;
 
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
-
-import com.ghlh.util.HttpUtil;
-import com.ghlh.util.MathUtil;
-
 public class SinaStockQuotesInquirer extends InternetStockQuotesInquirer {
-	public static Logger logger = Logger
-			.getLogger(SinaStockQuotesInquirer.class);
-
-	protected String queryStockInfo(String stockQuotesURL) {
-		String line = HttpUtil.accessInternet(stockQuotesURL);
-		return line;
+	protected String getStockQuotesPageURL(String stockId, boolean isSZ) {
+		String url = "http://hq.sinajs.cn/list=";
+		if (isSZ) {
+			url += "sz";
+		} else {
+			url += "sh";
+		}
+		url += stockId;
+		return url;
 	}
 
-	protected String getStockQuotesURL(String stockId) {
-		if (stockId.charAt(0) != 's') {
-			boolean isSZ = isFromShenzhenMarket(stockId);
-			if (isSZ) {
-				stockId = "sz" + stockId;
-			} else {
-				stockId = "sh" + stockId;
-			}
+	private final static int STOCKID_POSITION = 0;
+	private final static int NAME_POSITION = 0;
+	private final static int CURRENT_PRICE_POSITION = 1;
+	private final static int ZDF_POSITION = 3;
+	private final static int ZDE_POSITION = 4;
+
+	protected StockQuotesBean parseStockQuotes(String stockInfo)
+			throws StockQuotesException {
+		try {
+			StockQuotesBean result = new StockQuotesBean();
+			String stockId = stockInfo.substring(0, stockInfo.indexOf("=") - 1);
+			stockId = stockId.substring(stockId.length() - 6);
+			result.setStockId(stockId);
+
+			stockInfo = stockInfo.substring(stockInfo.indexOf("\"") + 1);
+			stockInfo = stockInfo.substring(0, stockInfo.indexOf("\""));
+
+			Pattern pattern = Pattern.compile(",");
+			String[] stockInfoPieces = pattern.split(stockInfo);
+			result.setName(stockInfoPieces[0]);
+			result.setTodayOpen(Double.parseDouble(stockInfoPieces[1]));
+			result.setYesterdayClose(Double.parseDouble(stockInfoPieces[2]));
+			result.setCurrentPrice(Double.parseDouble(stockInfoPieces[3]));
+			result.setHighestPrice(Double.parseDouble(stockInfoPieces[4]));
+			result.setLowestPrice(Double.parseDouble(stockInfoPieces[5]));
+			return result;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new StockQuotesException(
+					"There come up with error while parsing " + stockInfo, ex);
 		}
-		String stockQuotesURL = "http://hq.sinajs.cn/list=" + stockId;
-		return stockQuotesURL;
 	}
 
-	protected StockQuotesBean parseStockQuotes(String stockInfo) {
-		if (stockInfo.indexOf(',') < 0) {
-			return null;
+	public static void main(String[] args) {
+		try {
+			StockQuotesInquirer internetStockQuotesInquirer = new SinaStockQuotesInquirer();
+			StockQuotesBean stockQuotesBean = internetStockQuotesInquirer
+					.getStockQuotesBean("600616");
+			System.out.println(stockQuotesBean);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
-		StockQuotesBean result = new StockQuotesBean();
-		Pattern pattern = Pattern.compile(",");
-		String[] stockInfoPieces = pattern.split(stockInfo);
-		result.setName(stockInfoPieces[0].substring(stockInfoPieces[0]
-				.indexOf("\"") + 1));
-		result.setCurrentPrice(Double.parseDouble(stockInfoPieces[3]));
-		double zuoShou = Double.parseDouble(stockInfoPieces[2]);
-		result.setZde(MathUtil.formatDoubleWith4(result.getCurrentPrice()
-				- zuoShou));
-		if (zuoShou > 0) {
-			result.setZdf(MathUtil.formatDoubleWith4(result.getZde() / zuoShou));
-		}
-		return result;
 	}
 }

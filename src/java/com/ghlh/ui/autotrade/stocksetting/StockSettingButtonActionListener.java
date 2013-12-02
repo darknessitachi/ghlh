@@ -1,7 +1,7 @@
 package com.ghlh.ui.autotrade.stocksetting;
 
 import java.awt.event.ActionEvent;
-import java.util.List;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -9,15 +9,17 @@ import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
 
-import com.ghlh.stockpool.FileStockPoolAccessor;
-import com.ghlh.stockpool.MonitorStockBean;
+import com.common.util.IDGenerator;
+import com.ghlh.data.FileStockPoolAccessor;
+import com.ghlh.data.MonitorStockBean;
+import com.ghlh.data.db.GhlhDAO;
+import com.ghlh.data.db.MonitorstockDAO;
+import com.ghlh.data.db.MonitorstockVO;
 import com.ghlh.strategy.AdditionInfoUtil;
-import com.ghlh.strategy.TradeStrategy;
 import com.ghlh.ui.AbstractButtonActionListener;
 import com.ghlh.ui.StatusField;
 import com.ghlh.ui.bean.UIComponentMetadata;
 import com.ghlh.util.GUIUtil;
-import com.ghlh.util.ReflectUtil;
 
 public class StockSettingButtonActionListener extends
 		AbstractButtonActionListener {
@@ -80,28 +82,35 @@ public class StockSettingButtonActionListener extends
 	}
 
 	private void saveForEdit() {
-		MonitorStockBean msb = collectMonitorStockBean();
-		msb.setOnMonitoring(((StockSettingContentPanel) this.getContentPanel())
-				.isSelectedMSBOnMonitoring());
+		MonitorstockVO monitorStockVO = this.collectMonitorstockVO();
+		monitorStockVO.setOnmonitoring(((StockSettingContentPanel) this
+				.getContentPanel()).isSelectedMSBOnMonitoring() + "");
 		try {
-			new FileStockPoolAccessor()
-					.updateMonitorStock(msb, this.currentRow);
+			monitorStockVO.setId(currentMsb.getId());
+			monitorStockVO.setWhereId(true);
+			GhlhDAO.edit(monitorStockVO);
 		} catch (Exception ex) {
 			logger.error("click save throw exception:", ex);
 		}
 		((StockSettingContentPanel) this.getContentPanel())
-				.updateStockInTableRow(msb);
+				.updateStockInTableRow(monitorStockVO);
 	}
 
 	private void saveForNew() {
-		MonitorStockBean msb = collectMonitorStockBean();
+		MonitorstockVO monitorStockVO = this.collectMonitorstockVO();
+		monitorStockVO.setCreatedtimestamp(new Date());
+		monitorStockVO.setLastmodifiedtimestamp(new Date());
+
 		try {
-			new FileStockPoolAccessor().addMonitorStock(msb);
+			int id = IDGenerator.generateId(MonitorstockVO.TABLE_NAME);
+			monitorStockVO.setId(id);
+			GhlhDAO.create(monitorStockVO);
 		} catch (Exception ex) {
 			logger.error("click save throw exception:", ex);
 		}
 		((StockSettingContentPanel) this.getContentPanel())
-				.addStockInTable(msb);
+				.addStockInTable(monitorStockVO);
+
 	}
 
 	public void button3ActionPerformed(ActionEvent e) {
@@ -139,7 +148,7 @@ public class StockSettingButtonActionListener extends
 		return true;
 	}
 
-	private MonitorStockBean collectMonitorStockBean() {
+	private MonitorStockBean collectMonitorStockBean___() {
 		MonitorStockBean result = new MonitorStockBean();
 		String strategyName = ((JComboBox) this.getUIComponents().get(0))
 				.getSelectedItem().toString();
@@ -153,6 +162,23 @@ public class StockSettingButtonActionListener extends
 						strategyName);
 
 		result.setAdditionInfo(additionalInfo);
+
+		return result;
+	}
+
+	private MonitorstockVO collectMonitorstockVO() {
+		MonitorstockVO result = new MonitorstockVO();
+		String strategyName = ((JComboBox) this.getUIComponents().get(0))
+				.getSelectedItem().toString();
+		strategyName = StockSettingUICompomentsImpl.getStrategy(strategyName);
+		result.setTradealgorithm(strategyName);
+		result.setStockid(((JTextField) this.getUIComponents().get(1))
+				.getText());
+		result.setName(((JTextField) this.getUIComponents().get(2)).getText());
+		String additionalInfo = AdditionInfoUtil
+				.collectAdditionalInfoFromUIComponents(this.getUIComponents(),
+						strategyName);
+		result.setAdditioninfo(additionalInfo);
 
 		return result;
 	}
@@ -253,11 +279,11 @@ public class StockSettingButtonActionListener extends
 		String strategyName = ((JComboBox) this.getUIComponents().get(0))
 				.getSelectedItem().toString();
 		strategyName = StockSettingUICompomentsImpl.getStrategy(strategyName);
-		if (!this.currentMsb.getTradeAlgorithm().equals(strategyName)) {
+		if (!this.currentMsb.getTradealgorithm().equals(strategyName)) {
 			return true;
 		}
 		String stockId = ((JTextField) this.getUIComponents().get(1)).getText();
-		if (!this.currentMsb.getStockId().equals(stockId)) {
+		if (!this.currentMsb.getStockid().equals(stockId)) {
 			return true;
 		}
 		String name = ((JTextField) this.getUIComponents().get(2)).getText();
@@ -270,7 +296,7 @@ public class StockSettingButtonActionListener extends
 		return result;
 	}
 
-	public void enterEditStatus(MonitorStockBean currentMsb, int currentRow) {
+	public void enterEditStatus(MonitorstockVO currentMsb, int currentRow) {
 		((JButton) this.getjButtons().get(0)).setEnabled(true);
 		((JButton) this.getjButtons().get(1)).setEnabled(true);
 		((JButton) this.getjButtons().get(2)).setEnabled(true);
@@ -280,7 +306,7 @@ public class StockSettingButtonActionListener extends
 		this.setStatus(STATUS_EDIT);
 	}
 
-	private MonitorStockBean currentMsb;
+	private MonitorstockVO currentMsb;
 	private int currentRow;
 
 	public int getCurrentRow() {
@@ -293,10 +319,13 @@ public class StockSettingButtonActionListener extends
 	}
 
 	public void updateMonitoring(boolean onMonitoring) {
-		currentMsb.setOnMonitoring(onMonitoring);
+		currentMsb.setOnmonitoring(onMonitoring + "");
 		try {
-			new FileStockPoolAccessor().updateMonitorStock(currentMsb,
-					this.currentRow);
+			// new FileStockPoolAccessor().updateMonitorStock(currentMsb,
+			// this.currentRow);
+			
+			MonitorstockDAO.turnOnorOffMonitorStock(currentMsb.getId(),
+					onMonitoring);
 		} catch (Exception ex) {
 			logger.error("click save throw exception:", ex);
 		}

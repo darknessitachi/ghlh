@@ -1,6 +1,6 @@
 package com.ghlh.strategy;
 
-import com.ghlh.stockpool.MonitorStockBean;
+import com.ghlh.data.MonitorStockBean;
 import com.ghlh.stockquotes.StockQuotesBean;
 
 public class TradeContext {

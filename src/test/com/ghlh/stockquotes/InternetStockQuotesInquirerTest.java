@@ -14,8 +14,8 @@ public class InternetStockQuotesInquirerTest {
 					{ "300077", "国民技术" } };
 
 			for (int i = 0; i < stocks.length; i++) {
-				StockQuotesBean stockQuotesBean = InternetStockQuotesInquirer
-						.queryStock(stocks[i][0]);
+				StockQuotesBean stockQuotesBean = new SinaStockQuotesInquirer()
+						.getStockQuotesBean(stocks[i][0]);
 				assert (stockQuotesBean.getStockId().equals(stocks[i][0]));
 				assert (stockQuotesBean.getName().equals(stocks[i][1]));
 				assert (stockQuotesBean.getCurrentPrice() >= 0);

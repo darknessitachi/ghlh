@@ -6,7 +6,8 @@ import javax.swing.JButton;
 
 import org.apache.log4j.Logger;
 
-import com.ghlh.AutoTradeStockQuartzServer;
+import com.ghlh.autotrade.AutoTradeStockQuartzServer;
+import com.ghlh.autotrade.StockTradeIntradyMonitoringJob;
 import com.ghlh.ui.AbstractButtonActionListener;
 import com.ghlh.ui.StatusField;
 import com.ghlh.util.GUIUtil;
@@ -38,7 +39,7 @@ public class AutoTradeStartButtonActionListener extends
 				AutoTradeSwitch.getInstance().setStart(true);
 				((JButton) this.getjButtons().get(0)).setEnabled(false);
 				((JButton) this.getjButtons().get(1)).setEnabled(true);
-				AutoTradeStockQuartzServer.getInstance().addRightNowJob();
+				new StockTradeIntradyMonitoringJob().monitoring();
 				AutoTradeStockQuartzServer.getInstance().startJob();
 			}
 		}

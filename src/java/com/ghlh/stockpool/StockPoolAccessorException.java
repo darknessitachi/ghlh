@@ -1,6 +1,6 @@
 package com.ghlh.stockpool;
 
-import com.ghlh.DemoStockException;
+import com.ghlh.autotrade.DemoStockException;
 
 public class StockPoolAccessorException extends DemoStockException {
 

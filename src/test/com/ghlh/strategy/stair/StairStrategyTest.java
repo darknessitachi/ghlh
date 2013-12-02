@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.ghlh.Constants;
+import com.ghlh.autotrade.Constants;
 import com.ghlh.data.MonitorStockBean;
 import com.ghlh.stockquotes.StockQuotesBean;
 import com.ghlh.strategy.TradeResult;

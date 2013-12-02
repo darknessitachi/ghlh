@@ -1,6 +1,6 @@
 package com.ghlh.strategy.stair2;
 
-import com.ghlh.Constants;
+import com.ghlh.autotrade.Constants;
 import com.ghlh.data.MonitorStockBean;
 import com.ghlh.stockquotes.StockQuotesBean;
 import com.ghlh.strategy.AdditionInfoUtil;

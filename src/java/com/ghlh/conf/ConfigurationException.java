@@ -1,6 +1,6 @@
 package com.ghlh.conf;
 
-import com.ghlh.DemoStockException;
+import com.ghlh.autotrade.DemoStockException;
 
 public class ConfigurationException extends DemoStockException {
 	private static final long serialVersionUID = 1202194525031558648L;

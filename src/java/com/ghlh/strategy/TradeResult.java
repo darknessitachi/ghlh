@@ -1,6 +1,6 @@
 package com.ghlh.strategy;
 
-import com.ghlh.Constants;
+import com.ghlh.autotrade.Constants;
 
 public class TradeResult {
 	private int cmd;

@@ -14,6 +14,8 @@ import org.apache.log4j.Logger;
 
 import com.ghlh.stockquotes.InternetStockQuotesInquirer;
 import com.ghlh.stockquotes.StockQuotesBean;
+import com.ghlh.ui.StatusField;
+import com.ghlh.ui.autotradestart.AutoTradeMonitor;
 
 public class StockMarketUtil {
 	private static Logger logger = Logger.getLogger(StockMarketUtil.class);
@@ -104,6 +106,30 @@ public class StockMarketUtil {
 				logger.error("Read stragegies file: strategies.properties,"
 						+ " throw : ", e);
 			}
+		}
+		return result;
+	}
+
+	public static boolean isMarketRest() {
+		boolean result = false;
+		String cause = getMarketRestCause();
+		if (cause != null) {
+			String message = "自动交易监控已开启， " + cause;
+			AutoTradeMonitor.getInstance().appendMonitorInfo(message);
+			StatusField.getInstance().setPromptMessage(message);
+			result = true;
+		}
+		return result;
+	}
+
+	public static boolean isMarketBreak() {
+		boolean result = false;
+		String cause = getCloseCause();
+		if (cause != null) {
+			String message = "自动交易监控已开启， " + cause;
+			AutoTradeMonitor.getInstance().appendMonitorInfo(message);
+			StatusField.getInstance().setPromptMessage(message);
+			result = true;
 		}
 		return result;
 	}

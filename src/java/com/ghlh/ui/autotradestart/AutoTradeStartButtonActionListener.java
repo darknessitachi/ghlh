@@ -7,10 +7,12 @@ import javax.swing.JButton;
 import org.apache.log4j.Logger;
 
 import com.ghlh.autotrade.AutoTradeStockQuartzServer;
-import com.ghlh.autotrade.StockTradeIntradyMonitoringJob;
+import com.ghlh.autotrade.EventRecorder;
+import com.ghlh.autotrade.MonitoringJobForStartIntrady;
 import com.ghlh.ui.AbstractButtonActionListener;
 import com.ghlh.ui.StatusField;
 import com.ghlh.util.GUIUtil;
+import com.ghlh.util.StockMarketUtil;
 
 public class AutoTradeStartButtonActionListener extends
 		AbstractButtonActionListener {
@@ -39,8 +41,14 @@ public class AutoTradeStartButtonActionListener extends
 				AutoTradeSwitch.getInstance().setStart(true);
 				((JButton) this.getjButtons().get(0)).setEnabled(false);
 				((JButton) this.getjButtons().get(1)).setEnabled(true);
-				new StockTradeIntradyMonitoringJob().monitoring();
 				AutoTradeStockQuartzServer.getInstance().startJob();
+				if (!StockMarketUtil.isMarketRest()
+						&& !StockMarketUtil.isMarketBreak()) {
+					EventRecorder.recordEvent(this.getClass(), "盘中启动监控, 监控进行中");
+					StatusField.getInstance().setPromptMessage("自动交易监控已启动， 现在监控中");
+					Thread t = new Thread(new MonitoringJobForStartIntrady());
+					t.start();
+				}
 			}
 		}
 

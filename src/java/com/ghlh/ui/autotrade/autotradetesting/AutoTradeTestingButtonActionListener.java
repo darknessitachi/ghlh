@@ -32,8 +32,7 @@ public class AutoTradeTestingButtonActionListener extends
 						"交易指令即将发出， 请不用动鼠标键盘");
 				TimeUtil.pause(1000);
 
-				StockTrader stockTrader = new SoftwareTrader();
-				stockTrader.buyStock(stockId, number);
+				SoftwareTrader.getInstance().buyStock(stockId, number);
 
 				TimeUtil.pause(1000);
 
@@ -61,8 +60,7 @@ public class AutoTradeTestingButtonActionListener extends
 						"交易指令即将发出， 请不用动鼠标键盘");
 				TimeUtil.pause(1000);
 
-				StockTrader stockTrader = new SoftwareTrader();
-				stockTrader.sellStock(stockId, number);
+				SoftwareTrader.getInstance().sellStock(stockId, number);
 
 				TimeUtil.pause(1000);
 

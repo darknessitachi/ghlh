@@ -30,7 +30,10 @@ public class TradeUtil {
 	private static void dealBuyStockWith2Status(String stockId,
 			double basePrice, double sellPrice, String strategy, int number,
 			boolean isConfirm) {
-		SoftwareTrader.getInstance().buyStock(stockId, number, basePrice);
+		// before open, don't buy, the buy order will be placed after open and
+		// acording the price, otherwise, there would occupy the money
+		// SoftwareTrader.getInstance().buyStock(stockId, number, basePrice);
+
 		StocktradeVO stocktradeVO1 = new StocktradeVO();
 		stocktradeVO1.setId(IDGenerator.generateId("stocktrade"));
 		stocktradeVO1.setStockid(stockId);

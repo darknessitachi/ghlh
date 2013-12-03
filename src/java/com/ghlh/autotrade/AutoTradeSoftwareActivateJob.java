@@ -10,7 +10,7 @@ public class AutoTradeSoftwareActivateJob implements Job {
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		String message = "开始激活交易软件";
 		EventRecorder.recordEvent(this.getClass(), message);
-		new SoftwareTrader().activateTradeSoft();
+		SoftwareTrader.getInstance().activateTradeSoft();
 		message = "结束激活交易软件";
 		EventRecorder.recordEvent(this.getClass(), message);
 	}

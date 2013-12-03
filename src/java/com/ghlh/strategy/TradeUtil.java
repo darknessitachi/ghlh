@@ -3,6 +3,7 @@ package com.ghlh.strategy;
 import java.util.Date;
 
 import com.common.util.IDGenerator;
+import com.ghlh.autotrade.EventRecorder;
 import com.ghlh.data.db.GhlhDAO;
 import com.ghlh.data.db.StocktradeVO;
 import com.ghlh.tradeway.SoftwareTrader;
@@ -15,7 +16,7 @@ public class TradeUtil {
 		dealBuyStock(stockId, basePrice, sellPrice, strategy, number);
 	}
 
-	private static int getTradeNumber(double tradeMoney, double basePrice) {
+	public static int getTradeNumber(double tradeMoney, double basePrice) {
 		int number = (int) (tradeMoney / basePrice);
 		number = ((int) (number / 100)) * 100;
 		return number;

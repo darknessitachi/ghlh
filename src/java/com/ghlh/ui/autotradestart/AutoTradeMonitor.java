@@ -29,7 +29,9 @@ public class AutoTradeMonitor {
 
 	public void appendMonitorInfo(String monitoringInfo) {
 		Date timestamp = new Date();
-		this.monitorArea.append(timestamp + " " + monitoringInfo + "\n");
+		if (this.monitorArea != null) {
+			this.monitorArea.append(timestamp + " " + monitoringInfo + "\n");
+		}
 	}
 
 	public void showStopSuccessful() {

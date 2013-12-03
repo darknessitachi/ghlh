@@ -2,6 +2,7 @@ package com.ghlh.strategy.stair;
 
 import java.util.List;
 
+import com.ghlh.autotrade.EventRecorder;
 import com.ghlh.data.db.MonitorstockVO;
 import com.ghlh.data.db.StocktradeDAO;
 import com.ghlh.data.db.StocktradeVO;
@@ -68,6 +69,10 @@ public class StairBeforeOpenStrategy implements OneTimeStrategy{
 		for (int i = 0; i < stockTradeList.size(); i++) {
 			StocktradeVO stocktradeVO = (StocktradeVO) stockTradeList.get(i);
 			if (stocktradeVO.getSellprice() < possibleMaxPrice) {
+				String message = "盘前卖出股票并下单  : " + stocktradeVO.getStockid() + " 价格:"
+						+ stocktradeVO.getSellprice() + " 数量:"
+						+ stocktradeVO.getNumber();
+				EventRecorder.recordEvent(this.getClass(), message);
 				TradeUtil.dealSell(stocktradeVO);
 			}
 		}

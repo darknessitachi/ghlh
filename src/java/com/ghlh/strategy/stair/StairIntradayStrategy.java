@@ -2,6 +2,7 @@ package com.ghlh.strategy.stair;
 
 import java.util.List;
 
+import com.ghlh.autotrade.EventRecorder;
 import com.ghlh.data.db.MonitorstockVO;
 import com.ghlh.data.db.StocktradeDAO;
 import com.ghlh.data.db.StocktradeVO;
@@ -29,6 +30,11 @@ public class StairIntradayStrategy implements MonitoringStrategy {
 		for (int i = 0; i < possibleSell.size(); i++) {
 			StocktradeVO stocktradeVO = (StocktradeVO) possibleSell.get(i);
 			if (highestPrice >= stocktradeVO.getSellprice()) {
+				String message = "盘中监控股票  : " + monitorstockVO.getStockid()
+						+ " 已达卖出价" + highestPrice + "成交, 重新设置买入, 买入价:"
+						+ stocktradeVO.getBuyprice() + " 数量:"
+						+ stocktradeVO.getNumber();
+				EventRecorder.recordEvent(this.getClass(), message);
 				StocktradeDAO.updateStocktradeStatus(stocktradeVO.getId(),
 						TradeConstants.STATUS_FINISH);
 				reBuyStock(monitorstockVO, stocktradeVO);

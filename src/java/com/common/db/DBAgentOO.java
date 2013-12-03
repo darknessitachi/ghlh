@@ -127,7 +127,7 @@ public class DBAgentOO {
 				} else {
 					con = this.getConnection();
 				}
-				System.out.println("exec sql = " + sql);
+				//System.outprintln("exec sql = " + sql);
 				ps = con.prepareStatement(sql);
 
 				for (int i = 0; i < data.size(); i++) {
@@ -195,7 +195,7 @@ public class DBAgentOO {
 				} else {
 					con = this.getConnection();
 				}
-				System.out.println("exec sql = " + sql);
+				//System.outprintln("exec sql = " + sql);
 				ps = con.prepareStatement(sql);
 				for (int i = 0; i < whereData.size(); i++) {
 					Object value = whereData.elementAt(i);
@@ -285,7 +285,7 @@ public class DBAgentOO {
 					con = this.getConnection();
 				}
 				ps = con.prepareStatement(sql);
-				System.out.println("exec sql = " + sql);
+				//System.outprintln("exec sql = " + sql);
 				for (int i = 0; i < updateData.size(); i++) {
 					Object value = updateData.elementAt(i);
 					if (value instanceof java.util.Date) {
@@ -358,7 +358,7 @@ public class DBAgentOO {
 				} else {
 					con = this.getConnection();
 				}
-				System.out.println("exec sql = " + sql);
+				//System.outprintln("exec sql = " + sql);
 				ps = con.prepareStatement(sql);
 				for (int i = 0; i < whereData.size(); i++) {
 					Object value = whereData.elementAt(i);
@@ -472,7 +472,7 @@ public class DBAgentOO {
 	}
 
 	public List selectDataList(String sql) throws Exception {
-		System.out.println("sql = " + sql);
+		//System.outprintln("sql = " + sql);
 		Connection conn = null;
 		if (this.isInTransaction) {
 			conn = this.connection;
@@ -507,7 +507,7 @@ public class DBAgentOO {
 
 	public List<Object> selectData(String sql, String className, int startPos,
 			int size) throws Exception {
-		System.out.println("sql = " + sql);
+		//System.outprintln("sql = " + sql);
 		Connection conn = null;
 		if (this.isInTransaction) {
 			conn = this.connection;

@@ -48,7 +48,8 @@ public class StockTradeIntradyMonitoringJob {
 					break;
 				}
 				setMonitoringStatus();
-				monitoring(monitorStocksList, possbileSellMap, pendingBuyMap);
+				monitoringIntrady(monitorStocksList, possbileSellMap,
+						pendingBuyMap);
 				TimeUtil.pause(200);
 			}
 			if (!AutoTradeSwitch.getInstance().isStart()) {
@@ -59,7 +60,7 @@ public class StockTradeIntradyMonitoringJob {
 		}
 	}
 
-	private void monitoring(List monitorStocksList, Map possbileSellMap,
+	private void monitoringIntrady(List monitorStocksList, Map possbileSellMap,
 			Map pendingBuyMap) {
 		for (int i = 0; i < monitorStocksList.size(); i++) {
 			MonitorstockVO monitorstockVO = (MonitorstockVO) monitorStocksList
@@ -68,12 +69,10 @@ public class StockTradeIntradyMonitoringJob {
 				continue;
 			}
 			AutoTradeMonitor.getInstance().setMonitorStock(
-					monitorstockVO.getStockid(),
-					monitorstockVO.getName());
+					monitorstockVO.getStockid(), monitorstockVO.getName());
 
 			processBuyLogic(monitorstockVO, pendingBuyMap);
-			processSpecificLogic(possbileSellMap, pendingBuyMap,
-					monitorstockVO);
+			processSpecificLogic(possbileSellMap, pendingBuyMap, monitorstockVO);
 			TimeUtil.pause(200);
 		}
 	}
@@ -86,6 +85,10 @@ public class StockTradeIntradyMonitoringJob {
 		for (int j = 0; j < pendingBuy.size(); j++) {
 			StocktradeVO stVO = (StocktradeVO) pendingBuy.get(j);
 			if (sqb.getCurrentPrice() <= stVO.getBuyprice()) {
+				String message = "盘中监控股票  : " + monitorstockVO.getStockid()
+						+ " 已达买入价" + stVO.getBuyprice() + " 买入下单:" + " 数量:"
+						+ stVO.getNumber();
+				EventRecorder.recordEvent(this.getClass(), message);
 				SoftwareTrader.getInstance().buyStock(stVO.getStockid(),
 						stVO.getNumber());
 				StocktradeDAO.updateStocktradeStatus(stVO.getId(),

@@ -2,6 +2,7 @@ package com.ghlh.strategy.once;
 
 import java.util.List;
 
+import com.ghlh.autotrade.EventRecorder;
 import com.ghlh.data.db.MonitorstockVO;
 import com.ghlh.data.db.StocktradeDAO;
 import com.ghlh.stockquotes.InternetStockQuotesInquirer;
@@ -28,6 +29,14 @@ public class OnceAfterOpenPriceDecidedStrategy implements OneTimeStrategy {
 			double sellPrice = sqb.getCurrentPrice() * (1 + aib.getTargetZf());
 			sellPrice = MathUtil.formatDoubleWith2QuanShe(sellPrice);
 			if (aib.getBuyPriceStrategy().equals("开盘价")) {
+				String message = "盘前买入股票不下单  : "
+						+ monitorstockVO.getStockid()
+						+ " 价格:"
+						+ aib.getBuyPrice()
+						+ " 数量:"
+						+ TradeUtil.getTradeNumber(aib.getTradeMoney(),
+								aib.getBuyPrice()) + "(盘中监控实际下单)";
+				EventRecorder.recordEvent(this.getClass(), message);
 				TradeUtil.dealBuyStock(monitorstockVO.getStockid(),
 						aib.getTradeMoney(), sqb.getCurrentPrice(), sellPrice,
 						monitorstockVO.getTradealgorithm());

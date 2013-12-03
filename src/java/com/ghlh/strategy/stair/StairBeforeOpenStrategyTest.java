@@ -26,7 +26,7 @@ public class StairBeforeOpenStrategyTest {
 		InternetStockQuotesInquirer.getInstance()
 				.setTestingInjectStockQuotesBean(sqb);
 		new StairBeforeOpenStrategy().processStockTrade(monitorStockVO);
-		List stockTradeList = StocktradeDAO.getHoldStocks("601118",
+		List stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				StairConstants.STAIR_STRATEGY_NAME);
 		if (stockTradeList.size() > 0) {
 			fail("Something wrong");
@@ -36,7 +36,7 @@ public class StairBeforeOpenStrategyTest {
 		InternetStockQuotesInquirer.getInstance()
 				.setTestingInjectStockQuotesBean(sqb);
 		new StairBeforeOpenStrategy().processStockTrade(monitorStockVO);
-		stockTradeList = StocktradeDAO.getHoldStocks("601118",
+		stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				StairConstants.STAIR_STRATEGY_NAME);
 		if (stockTradeList.size() != 2) {
 			fail("Something wrong");
@@ -53,7 +53,7 @@ public class StairBeforeOpenStrategyTest {
 		InternetStockQuotesInquirer.getInstance()
 				.setTestingInjectStockQuotesBean(sqb);
 		new StairBeforeOpenStrategy().processStockTrade(monitorStockVO);
-		stockTradeList = StocktradeDAO.getHoldStocks("601118",
+		stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				StairConstants.STAIR_STRATEGY_NAME);
 		if (stockTradeList.size() != 3) {
 			fail("Something wrong");
@@ -69,7 +69,7 @@ public class StairBeforeOpenStrategyTest {
 		InternetStockQuotesInquirer.getInstance()
 				.setTestingInjectStockQuotesBean(sqb);
 		new StairBeforeOpenStrategy().processStockTrade(monitorStockVO);
-		List stockTradeList = StocktradeDAO.getHoldStocks("601118",
+		List stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				StairConstants.STAIR_STRATEGY_NAME);
 		for (int i = 0; i < stockTradeList.size(); i++) {
 			StocktradeVO stocktradeVO = (StocktradeVO) stockTradeList.get(i);
@@ -90,7 +90,7 @@ public class StairBeforeOpenStrategyTest {
 		InternetStockQuotesInquirer.getInstance()
 				.setTestingInjectStockQuotesBean(sqb);
 		new StairBeforeOpenStrategy().processStockTrade(monitorStockVO);
-		List stockTradeList = StocktradeDAO.getHoldStocks("601118",
+		List stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				StairConstants.STAIR_STRATEGY_NAME);
 		for (int i = 0; i < stockTradeList.size(); i++) {
 			StocktradeVO stocktradeVO = (StocktradeVO) stockTradeList.get(i);
@@ -117,7 +117,7 @@ public class StairBeforeOpenStrategyTest {
 		InternetStockQuotesInquirer.getInstance()
 				.setTestingInjectStockQuotesBean(sqb);
 		new StairBeforeOpenStrategy().processStockTrade(monitorStockVO);
-		List stockTradeList = StocktradeDAO.getHoldStocks("601118",
+		List stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				StairConstants.STAIR_STRATEGY_NAME);
 		for (int i = 0; i < stockTradeList.size(); i++) {
 			StocktradeVO stocktradeVO = (StocktradeVO) stockTradeList.get(i);
@@ -145,7 +145,7 @@ public class StairBeforeOpenStrategyTest {
 		InternetStockQuotesInquirer.getInstance()
 				.setTestingInjectStockQuotesBean(sqb);
 		new StairBeforeOpenStrategy().processStockTrade(monitorStockVO);
-		List stockTradeList = StocktradeDAO.getHoldStocks("601118",
+		List stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				StairConstants.STAIR_STRATEGY_NAME);
 		for (int i = 0; i < stockTradeList.size(); i++) {
 			StocktradeVO stocktradeVO = (StocktradeVO) stockTradeList.get(i);
@@ -176,7 +176,7 @@ public class StairBeforeOpenStrategyTest {
 		InternetStockQuotesInquirer.getInstance()
 				.setTestingInjectStockQuotesBean(sqb);
 		new StairBeforeOpenStrategy().processStockTrade(monitorStockVO);
-		List stockTradeList = StocktradeDAO.getHoldStocks("601118",
+		List stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				StairConstants.STAIR_STRATEGY_NAME);
 		for (int i = 0; i < stockTradeList.size(); i++) {
 			StocktradeVO stocktradeVO = (StocktradeVO) stockTradeList.get(i);
@@ -211,7 +211,7 @@ public class StairBeforeOpenStrategyTest {
 		InternetStockQuotesInquirer.getInstance()
 				.setTestingInjectStockQuotesBean(sqb);
 		new StairBeforeOpenStrategy().processStockTrade(monitorStockVO);
-		List stockTradeList = StocktradeDAO.getHoldStocks("601118",
+		List stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				StairConstants.STAIR_STRATEGY_NAME);
 		for (int i = 0; i < stockTradeList.size(); i++) {
 			StocktradeVO stocktradeVO = (StocktradeVO) stockTradeList.get(i);
@@ -241,7 +241,7 @@ public class StairBeforeOpenStrategyTest {
 		InternetStockQuotesInquirer.getInstance()
 				.setTestingInjectStockQuotesBean(sqb);
 		new StairBeforeOpenStrategy().processStockTrade(monitorStockVO);
-		List stockTradeList = StocktradeDAO.getHoldStocks("601118",
+		List stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				StairConstants.STAIR_STRATEGY_NAME);
 		for (int i = 0; i < stockTradeList.size(); i++) {
 			StocktradeVO stocktradeVO = (StocktradeVO) stockTradeList.get(i);
@@ -276,7 +276,7 @@ public class StairBeforeOpenStrategyTest {
 		InternetStockQuotesInquirer.getInstance()
 				.setTestingInjectStockQuotesBean(sqb);
 		new StairBeforeOpenStrategy().processStockTrade(monitorStockVO);
-		List stockTradeList = StocktradeDAO.getHoldStocks("601118",
+		List stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				StairConstants.STAIR_STRATEGY_NAME);
 		for (int i = 0; i < stockTradeList.size(); i++) {
 			StocktradeVO stocktradeVO = (StocktradeVO) stockTradeList.get(i);
@@ -303,7 +303,7 @@ public class StairBeforeOpenStrategyTest {
 		InternetStockQuotesInquirer.getInstance()
 				.setTestingInjectStockQuotesBean(sqb);
 		new StairBeforeOpenStrategy().processStockTrade(monitorStockVO);
-		List stockTradeList = StocktradeDAO.getHoldStocks("601118",
+		List stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				StairConstants.STAIR_STRATEGY_NAME);
 		for (int i = 0; i < stockTradeList.size(); i++) {
 			StocktradeVO stocktradeVO = (StocktradeVO) stockTradeList.get(i);
@@ -336,7 +336,7 @@ public class StairBeforeOpenStrategyTest {
 		InternetStockQuotesInquirer.getInstance()
 				.setTestingInjectStockQuotesBean(sqb);
 		new StairBeforeOpenStrategy().processStockTrade(monitorStockVO);
-		List stockTradeList = StocktradeDAO.getHoldStocks("601118",
+		List stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				StairConstants.STAIR_STRATEGY_NAME);
 		for (int i = 0; i < stockTradeList.size(); i++) {
 			StocktradeVO stocktradeVO = (StocktradeVO) stockTradeList.get(i);
@@ -373,7 +373,7 @@ public class StairBeforeOpenStrategyTest {
 		InternetStockQuotesInquirer.getInstance()
 				.setTestingInjectStockQuotesBean(sqb);
 		new StairBeforeOpenStrategy().processStockTrade(monitorStockVO);
-		List stockTradeList = StocktradeDAO.getHoldStocks("601118",
+		List stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				StairConstants.STAIR_STRATEGY_NAME);
 		if (stockTradeList.size() != 5) {
 			fail("something wrong");
@@ -405,7 +405,7 @@ public class StairBeforeOpenStrategyTest {
 		InternetStockQuotesInquirer.getInstance()
 				.setTestingInjectStockQuotesBean(sqb);
 		new StairBeforeOpenStrategy().processStockTrade(monitorStockVO);
-		List stockTradeList = StocktradeDAO.getHoldStocks("601118",
+		List stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				StairConstants.STAIR_STRATEGY_NAME);
 		if (stockTradeList.size() != 4) {
 			fail("something wrong");
@@ -443,6 +443,7 @@ public class StairBeforeOpenStrategyTest {
 		stocktradeVO1.setStockid("601118");
 		stocktradeVO1.setTradealgorithm(StairConstants.STAIR_STRATEGY_NAME);
 		stocktradeVO1.setBuydate(new Date());
+		stocktradeVO1.setStatus(TradeConstants.STATUS_HOLDING);
 		stocktradeVO1.setBuybaseprice(7.6);
 		stocktradeVO1.setBuyprice(7.6);
 		stocktradeVO1.setNumber(3200);
@@ -461,6 +462,7 @@ public class StairBeforeOpenStrategyTest {
 		stocktradeVO1.setTradealgorithm(StairConstants.STAIR_STRATEGY_NAME);
 		stocktradeVO1.setBuydate(new Date());
 		stocktradeVO1.setBuybaseprice(8);
+		stocktradeVO1.setStatus(TradeConstants.STATUS_HOLDING);
 		stocktradeVO1.setBuyprice(8);
 		stocktradeVO1.setNumber(3100);
 		stocktradeVO1.setSellprice(8.42);
@@ -481,6 +483,7 @@ public class StairBeforeOpenStrategyTest {
 		stocktradeVO1.setBuybaseprice(8.42);
 		stocktradeVO1.setBuyprice(8.42);
 		stocktradeVO1.setNumber(2900);
+		stocktradeVO1.setStatus(TradeConstants.STATUS_HOLDING);
 		stocktradeVO1.setSellprice(8.86);
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
@@ -497,6 +500,7 @@ public class StairBeforeOpenStrategyTest {
 		stocktradeVO1.setBuyprice(8.86);
 		stocktradeVO1.setNumber(2800);
 		stocktradeVO1.setSellprice(9.3);
+		stocktradeVO1.setStatus(TradeConstants.STATUS_HOLDING);
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
 		GhlhDAO.create(stocktradeVO1);

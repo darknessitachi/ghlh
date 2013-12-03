@@ -22,7 +22,7 @@ public class StairIntradayStrategyTest {
 		MonitorstockVO monitorstockVO = StairTestDataGenerator
 				.prepareMonitorstockVO(0.4, 4);
 		List stocktradeList = StocktradeDAO
-				.getHoldStocks(monitorstockVO.getStockid(),
+				.getUnfinishedTradeRecords(monitorstockVO.getStockid(),
 						monitorstockVO.getTradealgorithm());
 		StockQuotesBean sqb = StairTestDataGenerator.getMockStockQuotestBean();
 		sqb.setHighestPrice(9.3);

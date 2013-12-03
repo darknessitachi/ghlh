@@ -71,7 +71,7 @@ public class StockTradeIntradyMonitoringJob {
 		for (int i = 0; i < monitorStocksList.size(); i++) {
 			MonitorstockVO monitorstockVO = (MonitorstockVO) monitorStocksList
 					.get(i);
-			List holdStocks = StocktradeDAO.getHoldStocks(
+			List holdStocks = StocktradeDAO.getUnfinishedTradeRecords(
 					monitorstockVO.getStockid(),
 					monitorstockVO.getTradealgorithm());
 			stockTrade.put(monitorstockVO, holdStocks);

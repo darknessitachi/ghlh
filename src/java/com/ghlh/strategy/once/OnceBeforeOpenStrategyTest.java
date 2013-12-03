@@ -23,7 +23,7 @@ public class OnceBeforeOpenStrategyTest {
 		MonitorstockVO monitorstockVO = prepareMonitorstockVO();
 		OnceBeforeOpenStrategy onceBeforeOpenStrategy = new OnceBeforeOpenStrategy();
 		onceBeforeOpenStrategy.processStockTrade(monitorstockVO);
-		List stockTradeList = StocktradeDAO.getHoldStocks("601118",
+		List stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				OnceConstants.ONCE_STRATEGY_NAME);
 		if (stockTradeList.size() != 1) {
 			fail("Something wong");
@@ -39,7 +39,7 @@ public class OnceBeforeOpenStrategyTest {
 				.setTestingInjectStockQuotesBean(sqb);
 
 		onceBeforeOpenStrategy.processStockTrade(monitorstockVO);
-		stockTradeList = StocktradeDAO.getHoldStocks("601118",
+		stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				OnceConstants.ONCE_STRATEGY_NAME);
 		if (stockTradeList.size() != 1) {
 			fail("Something wong");
@@ -52,7 +52,7 @@ public class OnceBeforeOpenStrategyTest {
 		sqb.setCurrentPrice(10.2);
 		onceBeforeOpenStrategy.processStockTrade(monitorstockVO);
 
-		stockTradeList = StocktradeDAO.getHoldStocks("601118",
+		stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				OnceConstants.ONCE_STRATEGY_NAME);
 		if (stockTradeList.size() != 1) {
 			fail("Something wong");

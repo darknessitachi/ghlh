@@ -53,7 +53,7 @@ public class StairIntradayStrategy implements MonitoringStrategy {
 			for (int i = 0; i < stocktradeList.size(); i++) {
 				stocktradeList.remove(i);
 			}
-			List stocktradeList1 = StocktradeDAO.getHoldStocks(
+			List stocktradeList1 = StocktradeDAO.getUnfinishedTradeRecords(
 					monitorstockVO.getStockid(),
 					StairConstants.STAIR_STRATEGY_NAME);
 

@@ -17,7 +17,7 @@ public class OnceAfterOpenPriceDecidedStrategy implements OneTimeStrategy {
 			return;
 		}
 		List stockTradeList = StocktradeDAO
-				.getHoldStocks(monitorstockVO.getStockid(),
+				.getUnfinishedTradeRecords(monitorstockVO.getStockid(),
 						monitorstockVO.getTradealgorithm());
 		if (stockTradeList.size() == 0) {
 			AdditionalInfoBean aib = (AdditionalInfoBean) AdditionInfoUtil

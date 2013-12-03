@@ -34,7 +34,7 @@ public class OnceAfterOpenPriceDecidedStrategyTest {
 				.setTestingInjectStockQuotesBean(sqb);
 		OnceAfterOpenPriceDecidedStrategy onceJustOpenStrategy = new OnceAfterOpenPriceDecidedStrategy();
 		onceJustOpenStrategy.processStockTrade(monitorstockVO);
-		List stockTradeList = StocktradeDAO.getHoldStocks("601118",
+		List stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				OnceConstants.ONCE_STRATEGY_NAME);
 		if (stockTradeList.size() != 1) {
 			fail("Something wong");

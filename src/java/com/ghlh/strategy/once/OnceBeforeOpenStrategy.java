@@ -16,7 +16,7 @@ import com.ghlh.util.MathUtil;
 public class OnceBeforeOpenStrategy implements OneTimeStrategy {
 	public void processStockTrade(MonitorstockVO monitorstockVO) {
 		List stockTradeList = StocktradeDAO
-				.getHoldStocks(monitorstockVO.getStockid(),
+				.getUnfinishedTradeRecords(monitorstockVO.getStockid(),
 						monitorstockVO.getTradealgorithm());
 		if (stockTradeList.size() == 0) {
 			if (Boolean.parseBoolean(monitorstockVO.getOnmonitoring())) {

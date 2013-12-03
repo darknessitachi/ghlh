@@ -27,7 +27,7 @@ public class StairAfterOpenPriceDecidedStrategyTest {
 				.setTestingInjectStockQuotesBean(sqb);
 		StairAfterOpenPriceDecidedStrategy stairJustOpenStrategy = new StairAfterOpenPriceDecidedStrategy();
 		stairJustOpenStrategy.processStockTrade(monitorstockVO);
-		List stockTradeList = StocktradeDAO.getHoldStocks("601118",
+		List stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				StairConstants.STAIR_STRATEGY_NAME);
 		if (stockTradeList.size() != 3) {
 			fail("Something wong");
@@ -43,7 +43,7 @@ public class StairAfterOpenPriceDecidedStrategyTest {
 		cleanTestingData();
 		sqb.setYesterdayClose(9.3);
 		stairJustOpenStrategy.processStockTrade(monitorstockVO);
-		stockTradeList = StocktradeDAO.getHoldStocks("601118",
+		stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				StairConstants.STAIR_STRATEGY_NAME);
 		if (stockTradeList.size() != 2) {
 			fail("Something wong");

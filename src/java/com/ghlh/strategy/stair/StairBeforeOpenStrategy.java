@@ -21,7 +21,7 @@ public class StairBeforeOpenStrategy implements OneTimeStrategy{
 						StairConstants.STAIR_STRATEGY_NAME);
 		StockQuotesBean stockQuotesBean = InternetStockQuotesInquirer
 				.getInstance().getStockQuotesBean(stockId);
-		List stockTradeList = StocktradeDAO.getHoldStocks(stockId,
+		List stockTradeList = StocktradeDAO.getUnfinishedTradeRecords(stockId,
 				monitorstockVO.getTradealgorithm());
 		double currentPrice = stockQuotesBean.getCurrentPrice();
 		dealSell(stockId, stockTradeList, currentPrice);

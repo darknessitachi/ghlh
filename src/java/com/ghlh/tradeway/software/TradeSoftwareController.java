@@ -50,6 +50,9 @@ public class TradeSoftwareController {
 				.getInstance().getCMDScripts(cmdName);
 		for (int i = 0; i < scripts.size(); i++) {
 			String cmd = (String) scripts.get(i);
+			if(cmd.indexOf("price") > 0 && cmdParameters.get("price") == null){
+				continue;
+			}
 			if (cmd.indexOf("%") > 0) {
 				String parameterName = cmd.substring(cmd.indexOf("%") + 1);
 				parameterName = parameterName.substring(0,

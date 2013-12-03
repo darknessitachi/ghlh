@@ -64,6 +64,6 @@ public class ConfigurationAccessor {
 	}
 
 	public boolean isOpenSoftwareTrade() {
-		return false;
+		return true;
 	}
 }

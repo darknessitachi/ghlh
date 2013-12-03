@@ -1,5 +1,6 @@
 package com.ghlh.data.db;
 
+import java.util.Date;
 import java.util.List;
 
 import com.ghlh.strategy.TradeConstants;
@@ -16,7 +17,7 @@ public class StocktradeDAO {
 				TradeConstants.STATUS_POSSIBLE_SELL, false);
 	}
 
-	public static List getPossiblePendingBuyTradeRecords(String stockId,
+	public static List getPendingBuyTradeRecords(String stockId,
 			String strategy) {
 		return getTradeRecords(stockId, strategy,
 				TradeConstants.STATUS_PENDING_BUY, false);
@@ -39,6 +40,15 @@ public class StocktradeDAO {
 		sql += " ORDER BY buyPrice desc ";
 		List result = GhlhDAO.list(sql, "com.ghlh.data.db.StocktradeVO");
 		return result;
+	}
+
+	public static void updateStocktradeStatus(int id, int status) {
+		StocktradeVO stocktradeVO1 = new StocktradeVO();
+		stocktradeVO1.setId(id);
+		stocktradeVO1.setWhereId(true);
+		stocktradeVO1.setStatus(status);
+		stocktradeVO1.setSelldate(new Date());
+		GhlhDAO.edit(stocktradeVO1);
 	}
 
 }

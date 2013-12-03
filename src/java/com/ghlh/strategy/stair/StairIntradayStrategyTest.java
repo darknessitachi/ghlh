@@ -21,8 +21,11 @@ public class StairIntradayStrategyTest {
 		stairRestStrategyTest.test2StairsWith2PossibleBuyAnd2PossibleSell();
 		MonitorstockVO monitorstockVO = StairTestDataGenerator
 				.prepareMonitorstockVO(0.4, 4);
-		List stocktradeList = StocktradeDAO
-				.getUnfinishedTradeRecords(monitorstockVO.getStockid(),
+		List possibleSell = StocktradeDAO
+				.getPossibleSellTradeRecords(monitorstockVO.getStockid(),
+						monitorstockVO.getTradealgorithm());
+		List pendingBuy = StocktradeDAO
+				.getPendingBuyTradeRecords(monitorstockVO.getStockid(),
 						monitorstockVO.getTradealgorithm());
 		StockQuotesBean sqb = StairTestDataGenerator.getMockStockQuotestBean();
 		sqb.setHighestPrice(9.3);
@@ -30,11 +33,16 @@ public class StairIntradayStrategyTest {
 				.setTestingInjectStockQuotesBean(sqb);
 
 		new StairIntradayStrategy().processStockTrade(monitorstockVO,
-				stocktradeList);
-		if (stocktradeList.size() != 6) {
+				possibleSell, pendingBuy);
+		if (pendingBuy.size() != 4) {
 			fail("something wrong");
 		}
-
+		pendingBuy = StocktradeDAO
+				.getPendingBuyTradeRecords(monitorstockVO.getStockid(),
+						monitorstockVO.getTradealgorithm());
+		if (pendingBuy.size() != 4) {
+			fail("something wrong");
+		}
 		List stocktradeAfter = StocktradeDAO
 				.getOneStockTradeRecords(monitorstockVO.getStockid(),
 						monitorstockVO.getTradealgorithm());
@@ -43,9 +51,14 @@ public class StairIntradayStrategyTest {
 		}
 		for (int i = 0; i < stocktradeAfter.size(); i++) {
 			StocktradeVO stocktradeVO = (StocktradeVO) stocktradeAfter.get(i);
-			if (stocktradeVO.getSelldate() != null
-					&& stocktradeVO.getStatus() != TradeConstants.STATUS_FINISH) {
-				fail("something wrong");
+			if (stocktradeVO.getSelldate() != null) {
+				if (stocktradeVO.getStatus() != TradeConstants.STATUS_FINISH) {
+					fail("something wrong");
+				}
+			} else {
+				if (stocktradeVO.getStatus() != TradeConstants.STATUS_PENDING_BUY) {
+					fail("something wrong");
+				}
 			}
 		}
 

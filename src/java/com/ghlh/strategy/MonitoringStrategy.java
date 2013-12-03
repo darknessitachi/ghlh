@@ -5,5 +5,5 @@ import java.util.List;
 import com.ghlh.data.db.MonitorstockVO;
 
 public interface MonitoringStrategy {
-	void processStockTrade(MonitorstockVO monitorstockVO, List stocktradeList);
+	void processStockTrade(MonitorstockVO monitorstockVO, List possibleSellMap, List pendingBuy);
 }

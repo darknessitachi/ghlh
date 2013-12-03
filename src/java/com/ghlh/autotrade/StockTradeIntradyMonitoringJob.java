@@ -11,7 +11,12 @@ import org.apache.log4j.Logger;
 import com.ghlh.data.db.MonitorstockDAO;
 import com.ghlh.data.db.MonitorstockVO;
 import com.ghlh.data.db.StocktradeDAO;
+import com.ghlh.data.db.StocktradeVO;
+import com.ghlh.stockquotes.InternetStockQuotesInquirer;
+import com.ghlh.stockquotes.StockQuotesBean;
+import com.ghlh.strategy.TradeConstants;
 import com.ghlh.strategy.stair.StairIntradayStrategy;
+import com.ghlh.tradeway.SoftwareTrader;
 import com.ghlh.ui.StatusField;
 import com.ghlh.ui.autotradestart.AutoTradeMonitor;
 import com.ghlh.ui.autotradestart.AutoTradeSwitch;
@@ -32,30 +37,18 @@ public class StockTradeIntradyMonitoringJob {
 		}
 		try {
 			List monitorStocksList = this.monitorstockDAO.getMonitorStock();
-		
-			Map stockTrade = getStockTrades(monitorStocksList);
-			
+
+			Map possbileSellMap = new HashMap();
+			Map pendingBuyMap = new HashMap();
+			retrieveStockTrades(monitorStocksList, possbileSellMap,
+					pendingBuyMap);
+
 			while (AutoTradeSwitch.getInstance().isStart()) {
 				if (StockMarketUtil.isMarketBreak()) {
 					break;
 				}
 				setMonitoringStatus();
-				for (int i = 0; i < monitorStocksList.size(); i++) {
-					MonitorstockVO monitorstockVO = (MonitorstockVO) monitorStocksList
-							.get(i);
-					if (!Boolean.valueOf(monitorstockVO.getOnmonitoring())) {
-						continue;
-					}
-					AutoTradeMonitor.getInstance().setMonitorStock(
-							monitorstockVO.getStockid(),
-							monitorstockVO.getName());
-
-					String tradeAlgorithm = monitorstockVO.getTradealgorithm();
-					StairIntradayStrategy sis = new StairIntradayStrategy();
-					sis.processStockTrade(monitorstockVO,
-							(List) stockTrade.get(monitorstockVO));
-					TimeUtil.pause(200);
-				}
+				monitoring(monitorStocksList, possbileSellMap, pendingBuyMap);
 				TimeUtil.pause(200);
 			}
 			if (!AutoTradeSwitch.getInstance().isStart()) {
@@ -66,17 +59,70 @@ public class StockTradeIntradyMonitoringJob {
 		}
 	}
 
-	public Map getStockTrades(List monitorStocksList) {
+	private void monitoring(List monitorStocksList, Map possbileSellMap,
+			Map pendingBuyMap) {
+		for (int i = 0; i < monitorStocksList.size(); i++) {
+			MonitorstockVO monitorstockVO = (MonitorstockVO) monitorStocksList
+					.get(i);
+			if (!Boolean.valueOf(monitorstockVO.getOnmonitoring())) {
+				continue;
+			}
+			AutoTradeMonitor.getInstance().setMonitorStock(
+					monitorstockVO.getStockid(),
+					monitorstockVO.getName());
+
+			processBuyLogic(monitorstockVO, pendingBuyMap);
+			processSpecificLogic(possbileSellMap, pendingBuyMap,
+					monitorstockVO);
+			TimeUtil.pause(200);
+		}
+	}
+
+	private void processBuyLogic(MonitorstockVO monitorstockVO,
+			Map pendingBuyMap) {
+		StockQuotesBean sqb = InternetStockQuotesInquirer.getInstance()
+				.getStockQuotesBean(monitorstockVO.getStockid());
+		List pendingBuy = (List) pendingBuyMap.get(monitorstockVO);
+		for (int j = 0; j < pendingBuy.size(); j++) {
+			StocktradeVO stVO = (StocktradeVO) pendingBuy.get(j);
+			if (sqb.getCurrentPrice() <= stVO.getBuyprice()) {
+				SoftwareTrader.getInstance().buyStock(stVO.getStockid(),
+						stVO.getNumber());
+				StocktradeDAO.updateStocktradeStatus(stVO.getId(),
+						TradeConstants.STATUS_HOLDING);
+				pendingBuy.remove(j);
+				break;
+			}
+		}
+	}
+
+	private void processSpecificLogic(Map possbileSellMap, Map pendingBuyMap,
+			MonitorstockVO monitorstockVO) {
+		String tradeAlgorithm = monitorstockVO.getTradealgorithm();
+		if (tradeAlgorithm.equals("Stair")) {
+			StairIntradayStrategy sis = new StairIntradayStrategy();
+			sis.processStockTrade(monitorstockVO,
+					(List) possbileSellMap.get(monitorstockVO),
+					(List) pendingBuyMap.get(monitorstockVO));
+		}
+	}
+
+	private void retrieveStockTrades(List monitorStocksList,
+			Map possbileSellMap, Map pendingBuyMap) {
 		Map stockTrade = new HashMap();
 		for (int i = 0; i < monitorStocksList.size(); i++) {
 			MonitorstockVO monitorstockVO = (MonitorstockVO) monitorStocksList
 					.get(i);
-			List holdStocks = StocktradeDAO.getUnfinishedTradeRecords(
+			List possibleSell = StocktradeDAO.getPossibleSellTradeRecords(
 					monitorstockVO.getStockid(),
 					monitorstockVO.getTradealgorithm());
-			stockTrade.put(monitorstockVO, holdStocks);
+			possbileSellMap.put(monitorstockVO, possibleSell);
+			List pendingBuy = StocktradeDAO.getPendingBuyTradeRecords(
+					monitorstockVO.getStockid(),
+					monitorstockVO.getTradealgorithm());
+			pendingBuyMap.put(monitorstockVO, pendingBuy);
+
 		}
-		return stockTrade;
 	}
 
 	private void setMonitoringStatus() {

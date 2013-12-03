@@ -1,9 +1,7 @@
 package com.ghlh.strategy.stair;
 
-import java.util.Date;
 import java.util.List;
 
-import com.ghlh.data.db.GhlhDAO;
 import com.ghlh.data.db.MonitorstockVO;
 import com.ghlh.data.db.StocktradeDAO;
 import com.ghlh.data.db.StocktradeVO;
@@ -16,7 +14,7 @@ import com.ghlh.strategy.TradeUtil;
 
 public class StairIntradayStrategy implements MonitoringStrategy {
 	public void processStockTrade(MonitorstockVO monitorstockVO,
-			List stocktradeList) {
+			List possibleSell, List pendingBuy) {
 		if (!Boolean.valueOf(monitorstockVO.getOnmonitoring())) {
 			return;
 		}
@@ -28,37 +26,30 @@ public class StairIntradayStrategy implements MonitoringStrategy {
 				.getInstance().getStockQuotesBean(monitorstockVO.getStockid());
 		double highestPrice = stockQuotesBean.getHighestPrice();
 		boolean hasSell = false;
-		for (int i = 0; i < stocktradeList.size(); i++) {
-			StocktradeVO stocktradeVO = (StocktradeVO) stocktradeList.get(i);
-			if (stocktradeVO.getStatus() == TradeConstants.STATUS_POSSIBLE_SELL) {
-				if (highestPrice >= stocktradeVO.getSellprice()) {
-					StocktradeVO stocktradeVO1 = new StocktradeVO();
-					stocktradeVO1.setId(stocktradeVO.getId());
-					stocktradeVO1.setWhereId(true);
-					stocktradeVO1.setStatus(TradeConstants.STATUS_FINISH);
-					stocktradeVO1.setSelldate(new Date());
-					GhlhDAO.edit(stocktradeVO1);
-					reBuyStock(monitorstockVO, stocktradeVO);
-					hasSell = true;
-				}
+		for (int i = 0; i < possibleSell.size(); i++) {
+			StocktradeVO stocktradeVO = (StocktradeVO) possibleSell.get(i);
+			if (highestPrice >= stocktradeVO.getSellprice()) {
+				StocktradeDAO.updateStocktradeStatus(stocktradeVO.getId(),
+						TradeConstants.STATUS_FINISH);
+				reBuyStock(monitorstockVO, stocktradeVO);
+				refreshPendingBuyList(monitorstockVO, pendingBuy);
 			}
 		}
-		refreshStockTradeList(monitorstockVO, stocktradeList, hasSell);
-
 	}
 
-	private void refreshStockTradeList(MonitorstockVO monitorstockVO,
-			List stocktradeList, boolean hasSell) {
-		if (hasSell) {
-			for (int i = 0; i < stocktradeList.size(); i++) {
-				stocktradeList.remove(i);
-			}
-			List stocktradeList1 = StocktradeDAO.getUnfinishedTradeRecords(
-					monitorstockVO.getStockid(),
-					StairConstants.STAIR_STRATEGY_NAME);
-
-			stocktradeList.addAll(stocktradeList1);
+	private void refreshPendingBuyList(MonitorstockVO monitorstockVO,
+			List pendingBuy) {
+		int size = pendingBuy.size();
+		for (int i = 0; i < size; i++) {
+			pendingBuy.remove(0);
 		}
+
+		List newPendingBuy = StocktradeDAO
+				.getPendingBuyTradeRecords(monitorstockVO.getStockid(),
+						StairConstants.STAIR_STRATEGY_NAME);
+
+		pendingBuy.addAll(newPendingBuy);
+
 	}
 
 	private void reBuyStock(MonitorstockVO monitorstockVO,

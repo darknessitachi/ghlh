@@ -15,12 +15,6 @@ public class TradeUtil {
 		dealBuyStock(stockId, basePrice, sellPrice, strategy, number);
 	}
 
-//	public static void dealConfirmedBuyStock(String stockId, double tradeMoney,
-//			double basePrice, double sellPrice, String strategy) {
-//		int number = getTradeNumber(tradeMoney, basePrice);
-//		dealConfirmedBuyStock(stockId, basePrice, sellPrice, strategy, number);
-//	}
-
 	private static int getTradeNumber(double tradeMoney, double basePrice) {
 		int number = (int) (tradeMoney / basePrice);
 		number = ((int) (number / 100)) * 100;
@@ -32,12 +26,6 @@ public class TradeUtil {
 		dealBuyStockWith2Status(stockId, basePrice, sellPrice, strategy,
 				number, false);
 	}
-
-//	public static void dealConfirmedBuyStock(String stockId, double basePrice,
-//			double sellPrice, String strategy, int number) {
-//		dealBuyStockWith2Status(stockId, basePrice, sellPrice, strategy,
-//				number, true);
-//	}
 
 	private static void dealBuyStockWith2Status(String stockId,
 			double basePrice, double sellPrice, String strategy, int number,

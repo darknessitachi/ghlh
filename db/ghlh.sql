@@ -11,7 +11,13 @@ MySQL - 5.6.14 : Database - ghlh
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`ghlh` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
+USE `ghlh`;
+
 /*Table structure for table `monitorstock` */
+
+DROP TABLE IF EXISTS `monitorstock`;
 
 CREATE TABLE `monitorstock` (
   `id` int(11) NOT NULL,
@@ -26,6 +32,8 @@ CREATE TABLE `monitorstock` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Table structure for table `stocktrade` */
+
+DROP TABLE IF EXISTS `stocktrade`;
 
 CREATE TABLE `stocktrade` (
   `id` int(11) DEFAULT NULL,

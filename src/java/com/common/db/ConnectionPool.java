@@ -121,7 +121,7 @@ public class ConnectionPool {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			result = DriverManager
 					.getConnection("jdbc:mysql://localhost:3306/ghlh?"
-							+ "user=root&password=P@ss123");
+							+ "user=root&password=P@ss123&useUnicode=true&characterEncoding=UTF-8");
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

@@ -111,23 +111,23 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 		int row = stockTable.getSelectedRow();
 		if (stockTable.getSelectedColumn() == 3) {
 			boolean monitoring = (boolean) stockTable.getValueAt(row, 3);
-			String action = null;
-			if (monitoring) {
-				action = "新增";
-			} else {
-				action = "取消";
-			}
-			String message = "确认" + action + "股票自动交易监控吗?";
-			String title = "确认" + action + "股票自动交易";
-			int confirm = GUIUtil.showConfirmDialog(message, title);
-			if (confirm == 0) {
-				((StockSettingButtonActionListener) this.getBal())
-						.updateMonitoring(monitoring);
-				MonitorstockVO currentMsb = msbList.get(row);
-				currentMsb.setOnmonitoring(monitoring + "");
-			} else {
-				this.stockTable.setValueAt(new Boolean(!monitoring), row, 3);
-			}
+			// String action = null;
+			// if (monitoring) {
+			// action = "新增";
+			// } else {
+			// action = "取消";
+			// }
+			// String message = "确认" + action + "股票自动交易监控吗?";
+			// String title = "确认" + action + "股票自动交易";
+			// int confirm = GUIUtil.showConfirmDialog(message, title);
+			// if (confirm == 0) {
+			((StockSettingButtonActionListener) this.getBal())
+					.updateMonitoring(monitoring);
+			MonitorstockVO currentMsb = msbList.get(row);
+			currentMsb.setOnmonitoring(monitoring + "");
+			// } else {
+			// this.stockTable.setValueAt(new Boolean(!monitoring), row, 3);
+			// }
 		}
 	}
 
@@ -252,7 +252,7 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 	private void putCertainMSBIntoEdit(int selectRow) {
 		String strategyName = this.stockTable.getValueAt(selectRow, 0)
 				.toString();
-		MonitorstockVO msb =  msbList.get(selectRow);
+		MonitorstockVO msb = msbList.get(selectRow);
 		String currentStrategyName = ((JComboBox) this.getUIcomponents().get(0))
 				.getSelectedItem().toString();
 		if (!strategyName.equals(currentStrategyName)) {

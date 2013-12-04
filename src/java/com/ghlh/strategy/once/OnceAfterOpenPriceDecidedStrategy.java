@@ -26,19 +26,19 @@ public class OnceAfterOpenPriceDecidedStrategy implements OneTimeStrategy {
 							monitorstockVO.getTradealgorithm());
 			StockQuotesBean sqb = InternetStockQuotesInquirer.getInstance()
 					.getStockQuotesBean(monitorstockVO.getStockid());
-			double sellPrice = sqb.getCurrentPrice() * (1 + aib.getTargetZf());
+			double sellPrice = sqb.getTodayOpen() * (1 + aib.getTargetZf());
 			sellPrice = MathUtil.formatDoubleWith2QuanShe(sellPrice);
 			if (aib.getBuyPriceStrategy().equals("开盘价")) {
 				String message = "盘前买入股票不下单  : "
 						+ monitorstockVO.getStockid()
-						+ " 价格:"
-						+ aib.getBuyPrice()
+						+ " 价格(开盘价):"
+						+ sqb.getTodayOpen()
 						+ " 数量:"
 						+ TradeUtil.getTradeNumber(aib.getTradeMoney(),
 								aib.getBuyPrice()) + "(盘中监控实际下单)";
 				EventRecorder.recordEvent(this.getClass(), message);
 				TradeUtil.dealBuyStock(monitorstockVO.getStockid(),
-						aib.getTradeMoney(), sqb.getCurrentPrice(), sellPrice,
+						aib.getTradeMoney(), sqb.getTodayOpen(), sellPrice,
 						monitorstockVO.getTradealgorithm());
 			}
 		}

@@ -27,7 +27,6 @@ public class StairAfterOpenPriceDecidedStrategy implements OneTimeStrategy{
 		if (aib.getFirstBuyPriceStrategy().equals("¿ªÅÌ¼Û")) {
 			StockQuotesBean sqb = InternetStockQuotesInquirer.getInstance()
 					.getStockQuotesBean(monitorstockVO.getStockid());
-			double currentPrice = sqb.getCurrentPrice();
 			dealBuy(monitorstockVO, aib, stockTradeList, sqb);
 
 		}
@@ -35,7 +34,7 @@ public class StairAfterOpenPriceDecidedStrategy implements OneTimeStrategy{
 
 	public void dealBuy(MonitorstockVO monitorstockVO, AdditionalInfoBean aib,
 			List stockTradeList, StockQuotesBean sqb) {
-		double basePrice = sqb.getCurrentPrice();
+		double basePrice = sqb.getTodayOpen();
 		double currentPrice = sqb.getYesterdayClose();
 		int spaceNumber = aib.getStairNumber() - stockTradeList.size();
 		StairUtil.dealBuy(monitorstockVO.getStockid(), aib, basePrice,

@@ -46,11 +46,14 @@ public class TradeSoftwareController {
 
 	private synchronized void executeTradeSoftwareCMD(String cmdName,
 			Map<String, Object> cmdParameters) {
+		if (exec == null) {
+			return;
+		}
 		List<String> scripts = (List<String>) ControllScriptReader
 				.getInstance().getCMDScripts(cmdName);
 		for (int i = 0; i < scripts.size(); i++) {
 			String cmd = (String) scripts.get(i);
-			if(cmd.indexOf("price") > 0 && cmdParameters.get("price") == null){
+			if (cmd.indexOf("price") > 0 && cmdParameters.get("price") == null) {
 				continue;
 			}
 			if (cmd.indexOf("%") > 0) {
@@ -60,7 +63,6 @@ public class TradeSoftwareController {
 				String parameter = cmdParameters.get(parameterName).toString();
 				cmd = cmd.replace("%" + parameterName + "%", parameter);
 			}
-
 			exec.executeCall(cmd);
 			TimeUtil.pause(CMD_PAUSE_INTERVAL);
 		}

@@ -9,6 +9,12 @@ public class StairUtil {
 
 	public static void dealBuy(String stockId, AdditionalInfoBean aib,
 			double basePrice, double currentPrice, int spaceNumber) {
+		dealBuy1(stockId, aib, basePrice, currentPrice, spaceNumber, false);
+	}
+
+	private static void dealBuy1(String stockId, AdditionalInfoBean aib,
+			double basePrice, double currentPrice, int spaceNumber,
+			boolean isOpen) {
 		double possibleMinPrice = currentPrice * TradeConstants.MAX_DF;
 
 		double sellPrice = MathUtil.formatDoubleWith2QuanShe(basePrice
@@ -16,7 +22,7 @@ public class StairUtil {
 
 		for (int i = 0; i < spaceNumber; i++) {
 			boolean canBuy = StairUtil.buyAsCondition(stockId, aib,
-					possibleMinPrice, basePrice, sellPrice);
+					possibleMinPrice, basePrice, sellPrice, isOpen && i == 0);
 			if (!canBuy) {
 				break;
 			}
@@ -27,22 +33,35 @@ public class StairUtil {
 		}
 	}
 
-	public static boolean buyAsCondition(String stockId,
-			AdditionalInfoBean aib, double possibleMinPrice, double basePrice,
-			double sellPrice) {
-		if (possibleMinPrice < basePrice) {
-			String message = "盘前买入股票但不下单  : " + stockId + " 价格:" + basePrice
-					+ " 数量:"
-					+ TradeUtil.getTradeNumber(aib.getStairMoney(), basePrice)
-					+ " (盘中监控价格达到下单)";
-			EventRecorder.recordEvent(StairUtil.class, message);
+	public static void dealBuyWithOpenPrice(String stockId,
+			AdditionalInfoBean aib, double basePrice, double currentPrice,
+			int spaceNumber) {
+		dealBuy1(stockId, aib, basePrice, currentPrice, spaceNumber, true);
+	}
 
+	private static boolean buyAsCondition(String stockId,
+			AdditionalInfoBean aib, double possibleMinPrice, double basePrice,
+			double sellPrice, boolean isOpenPrice) {
+		if (isOpenPrice) {
+			String message = TradeUtil.getOpenPriceBuyMessage(stockId,
+					TradeUtil.getTradeNumber(aib.getStairMoney(), basePrice),
+					basePrice);
+			EventRecorder.recordEvent(StairUtil.class, message);
+			TradeUtil.dealBuyStockSuccessfully(stockId, aib.getStairMoney(),
+					basePrice, sellPrice, StairConstants.STAIR_STRATEGY_NAME);
+			return true;
+
+		} else if (possibleMinPrice < basePrice) {
+			String message = TradeUtil.getPendingBuyMessage(stockId,
+					TradeUtil.getTradeNumber(aib.getStairMoney(), basePrice),
+					basePrice);
+			EventRecorder.recordEvent(StairUtil.class, message);
 			TradeUtil.dealBuyStock(stockId, aib.getStairMoney(), basePrice,
 					sellPrice, StairConstants.STAIR_STRATEGY_NAME);
 			return true;
+
 		} else {
 			return false;
 		}
 	}
-
 }

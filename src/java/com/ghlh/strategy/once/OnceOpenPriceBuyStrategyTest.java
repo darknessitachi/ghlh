@@ -15,7 +15,7 @@ import com.ghlh.stockquotes.StockQuotesBean;
 import com.ghlh.strategy.TradeConstants;
 import com.ghlh.strategy.stair.StairTestDataGenerator;
 
-public class OnceAfterOpenPriceDecidedStrategyTest {
+public class OnceOpenPriceBuyStrategyTest {
 
 	private void cleanTestingData() {
 		StocktradeVO stocktradeVO1 = new StocktradeVO();
@@ -32,7 +32,7 @@ public class OnceAfterOpenPriceDecidedStrategyTest {
 		sqb.setCurrentPrice(9);
 		InternetStockQuotesInquirer.getInstance()
 				.setTestingInjectStockQuotesBean(sqb);
-		OnceAfterOpenPriceDecidedStrategy onceJustOpenStrategy = new OnceAfterOpenPriceDecidedStrategy();
+		OnceOpenPriceBuyStrategy onceJustOpenStrategy = new OnceOpenPriceBuyStrategy();
 		onceJustOpenStrategy.processStockTrade(monitorstockVO);
 		List stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				OnceConstants.ONCE_STRATEGY_NAME);
@@ -40,7 +40,7 @@ public class OnceAfterOpenPriceDecidedStrategyTest {
 			fail("Something wong");
 		} else {
 			StocktradeVO stocktradeVO = (StocktradeVO) stockTradeList.get(0);
-			if (stocktradeVO.getStatus() != TradeConstants.STATUS_PENDING_BUY) {
+			if (stocktradeVO.getStatus() != TradeConstants.STATUS_HOLDING) {
 				fail("Something wrong");
 			}
 		}

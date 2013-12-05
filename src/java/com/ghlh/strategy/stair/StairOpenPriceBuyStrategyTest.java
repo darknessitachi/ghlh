@@ -14,18 +14,18 @@ import com.ghlh.stockquotes.InternetStockQuotesInquirer;
 import com.ghlh.stockquotes.StockQuotesBean;
 import com.ghlh.strategy.TradeConstants;
 
-public class StairAfterOpenPriceDecidedStrategyTest {
+public class StairOpenPriceBuyStrategyTest {
 
 	@Test
 	public void testProcessStockTrade() {
 		cleanTestingData();
 		MonitorstockVO monitorstockVO = prepareMonitorstockVO();
 		StockQuotesBean sqb = StairTestDataGenerator.getMockStockQuotestBean();
-		sqb.setCurrentPrice(9);
 		sqb.setYesterdayClose(8.9);
+		sqb.setTodayOpen(9.1);
 		InternetStockQuotesInquirer.getInstance()
 				.setTestingInjectStockQuotesBean(sqb);
-		StairAfterOpenPriceDecidedStrategy stairJustOpenStrategy = new StairAfterOpenPriceDecidedStrategy();
+		StairOpenPriceBuyStrategy stairJustOpenStrategy = new StairOpenPriceBuyStrategy();
 		stairJustOpenStrategy.processStockTrade(monitorstockVO);
 		List stockTradeList = StocktradeDAO.getUnfinishedTradeRecords("601118",
 				StairConstants.STAIR_STRATEGY_NAME);
@@ -35,8 +35,14 @@ public class StairAfterOpenPriceDecidedStrategyTest {
 			for (int i = 0; i < stockTradeList.size(); i++) {
 				StocktradeVO stocktradeVO = (StocktradeVO) stockTradeList
 						.get(i);
-				if (stocktradeVO.getStatus() != TradeConstants.STATUS_PENDING_BUY) {
-					fail("Something wrong");
+				if (i == 0) {
+					if (stocktradeVO.getStatus() != TradeConstants.STATUS_HOLDING) {
+						fail("Something wrong");
+					}
+				} else {
+					if (stocktradeVO.getStatus() != TradeConstants.STATUS_PENDING_BUY) {
+						fail("Something wrong");
+					}
 				}
 			}
 		}
@@ -51,8 +57,14 @@ public class StairAfterOpenPriceDecidedStrategyTest {
 			for (int i = 0; i < stockTradeList.size(); i++) {
 				StocktradeVO stocktradeVO = (StocktradeVO) stockTradeList
 						.get(i);
-				if (stocktradeVO.getStatus() != TradeConstants.STATUS_PENDING_BUY) {
-					fail("Something wrong");
+				if (i == 0) {
+					if (stocktradeVO.getStatus() != TradeConstants.STATUS_HOLDING) {
+						fail("Something wrong");
+					}
+				} else {
+					if (stocktradeVO.getStatus() != TradeConstants.STATUS_PENDING_BUY) {
+						fail("Something wrong");
+					}
 				}
 			}
 		}

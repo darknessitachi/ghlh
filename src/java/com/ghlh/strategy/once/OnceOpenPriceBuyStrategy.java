@@ -12,7 +12,7 @@ import com.ghlh.strategy.OneTimeStrategy;
 import com.ghlh.strategy.TradeUtil;
 import com.ghlh.util.MathUtil;
 
-public class OnceAfterOpenPriceDecidedStrategy implements OneTimeStrategy {
+public class OnceOpenPriceBuyStrategy implements OneTimeStrategy {
 	public void processStockTrade(MonitorstockVO monitorstockVO) {
 		if (!Boolean.valueOf(monitorstockVO.getOnmonitoring())) {
 			return;
@@ -29,15 +29,12 @@ public class OnceAfterOpenPriceDecidedStrategy implements OneTimeStrategy {
 			double sellPrice = sqb.getTodayOpen() * (1 + aib.getTargetZf());
 			sellPrice = MathUtil.formatDoubleWith2QuanShe(sellPrice);
 			if (aib.getBuyPriceStrategy().equals("开盘价")) {
-				String message = "盘前买入股票不下单  : "
-						+ monitorstockVO.getStockid()
-						+ " 价格(开盘价):"
-						+ sqb.getTodayOpen()
-						+ " 数量:"
-						+ TradeUtil.getTradeNumber(aib.getTradeMoney(),
-								aib.getBuyPrice()) + "(盘中监控实际下单)";
+				String message = TradeUtil.getOpenPriceBuyMessage(
+						monitorstockVO.getStockid(),
+						TradeUtil.getTradeNumber(aib.getTradeMoney(),
+								aib.getBuyPrice()), sqb.getTodayOpen());
 				EventRecorder.recordEvent(this.getClass(), message);
-				TradeUtil.dealBuyStock(monitorstockVO.getStockid(),
+				TradeUtil.dealBuyStockSuccessfully(monitorstockVO.getStockid(),
 						aib.getTradeMoney(), sqb.getTodayOpen(), sellPrice,
 						monitorstockVO.getTradealgorithm());
 			}

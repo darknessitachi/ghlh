@@ -10,6 +10,7 @@ public class StairTestDataGenerator {
 		sqb.setStockId("601118");
 		sqb.setName("º£ÄÏÏğ½º");
 		sqb.setCurrentPrice(7);
+		sqb.setTodayOpen(8.78);
 		return sqb;
 	}
 

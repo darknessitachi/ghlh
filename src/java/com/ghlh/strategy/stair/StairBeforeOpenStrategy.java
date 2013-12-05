@@ -14,7 +14,7 @@ import com.ghlh.strategy.TradeConstants;
 import com.ghlh.strategy.TradeUtil;
 import com.ghlh.util.MathUtil;
 
-public class StairBeforeOpenStrategy implements OneTimeStrategy{
+public class StairBeforeOpenStrategy implements OneTimeStrategy {
 	public void processStockTrade(MonitorstockVO monitorstockVO) {
 		String stockId = monitorstockVO.getStockid();
 		AdditionalInfoBean aib = (AdditionalInfoBean) AdditionInfoUtil
@@ -69,9 +69,9 @@ public class StairBeforeOpenStrategy implements OneTimeStrategy{
 		for (int i = 0; i < stockTradeList.size(); i++) {
 			StocktradeVO stocktradeVO = (StocktradeVO) stockTradeList.get(i);
 			if (stocktradeVO.getSellprice() < possibleMaxPrice) {
-				String message = "盘前卖出股票并下单  : " + stocktradeVO.getStockid() + " 价格:"
-						+ stocktradeVO.getSellprice() + " 数量:"
-						+ stocktradeVO.getNumber();
+				String message = TradeUtil.getPendingSellMessage(
+						stocktradeVO.getStockid(), stocktradeVO.getNumber(),
+						stocktradeVO.getSellprice());
 				EventRecorder.recordEvent(this.getClass(), message);
 				TradeUtil.dealSell(stocktradeVO);
 			}

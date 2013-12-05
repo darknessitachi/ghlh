@@ -35,9 +35,9 @@ public class OnceBeforeOpenStrategy implements OneTimeStrategy {
 		double possibleMaxPrice = currentPrice * TradeConstants.MAX_ZF;
 		StocktradeVO stocktradeVO = (StocktradeVO) stockTradeList.get(0);
 		if (stocktradeVO.getSellprice() < possibleMaxPrice) {
-			String message = "盘前卖出股票并下单  : " + stocktradeVO.getStockid()
-					+ " 价格:" + stocktradeVO.getSellprice() + " 数量:"
-					+ stocktradeVO.getNumber();
+			String message = TradeUtil.getPendingSellMessage(
+					stocktradeVO.getStockid(), stocktradeVO.getNumber(),
+					stocktradeVO.getSellprice());
 			EventRecorder.recordEvent(this.getClass(), message);
 			TradeUtil.dealSell(stocktradeVO);
 		}
@@ -50,13 +50,10 @@ public class OnceBeforeOpenStrategy implements OneTimeStrategy {
 		if (aib.getBuyPriceStrategy().equals("设定价")) {
 			double sellPrice = aib.getBuyPrice() * (1 + aib.getTargetZf());
 			sellPrice = MathUtil.formatDoubleWith2QuanShe(sellPrice);
-			String message = "盘前买入股票不下单  : "
-					+ monitorstockVO.getStockid()
-					+ " 价格:"
-					+ aib.getBuyPrice()
-					+ " 数量:"
-					+ TradeUtil.getTradeNumber(aib.getTradeMoney(),
-							aib.getBuyPrice()) + "(盘中监控实际下单)";
+			String message = TradeUtil.getPendingBuyMessage(
+					monitorstockVO.getStockid(),
+					TradeUtil.getTradeNumber(aib.getTradeMoney(),
+							aib.getBuyPrice()), aib.getBuyPrice());
 			EventRecorder.recordEvent(this.getClass(), message);
 
 			TradeUtil.dealBuyStock(monitorstockVO.getStockid(),

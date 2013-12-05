@@ -16,6 +16,14 @@ public class TradeUtil {
 		dealBuyStock(stockId, basePrice, sellPrice, strategy, number);
 	}
 
+	public static void dealBuyStockSuccessfully(String stockId,
+			double tradeMoney, double basePrice, double sellPrice,
+			String strategy) {
+		int number = getTradeNumber(tradeMoney, basePrice);
+		dealBuyStockSuccessfully(stockId, basePrice, sellPrice, strategy,
+				number);
+	}
+
 	public static int getTradeNumber(double tradeMoney, double basePrice) {
 		int number = (int) (tradeMoney / basePrice);
 		number = ((int) (number / 100)) * 100;
@@ -28,12 +36,16 @@ public class TradeUtil {
 				number, false);
 	}
 
+	public static void dealBuyStockSuccessfully(String stockId,
+			double basePrice, double sellPrice, String strategy, int number) {
+		dealBuyStockWith2Status(stockId, basePrice, sellPrice, strategy,
+				number, true);
+
+	}
+
 	private static void dealBuyStockWith2Status(String stockId,
 			double basePrice, double sellPrice, String strategy, int number,
 			boolean isConfirm) {
-		// before open, don't buy, the buy order will be placed after open and
-		// acording the price, otherwise, there would occupy the money
-		// SoftwareTrader.getInstance().buyStock(stockId, number, basePrice);
 
 		StocktradeVO stocktradeVO1 = new StocktradeVO();
 		stocktradeVO1.setId(IDGenerator.generateId("stocktrade"));
@@ -48,6 +60,8 @@ public class TradeUtil {
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
 		if (isConfirm) {
 			stocktradeVO1.setStatus(TradeConstants.STATUS_HOLDING);
+			SoftwareTrader.getInstance().buyStock(stockId, number);
+
 		} else {
 			stocktradeVO1.setStatus(TradeConstants.STATUS_PENDING_BUY);
 		}
@@ -64,4 +78,63 @@ public class TradeUtil {
 		GhlhDAO.edit(stocktradeVO1);
 	}
 
+	public static String getOpenPriceBuyMessage(String stockId, int number,
+			double price) {
+		return getEventMessage(stockId, number, price, "buy", false, PRICE_OPEN);
+	}
+
+	public static String getPendingSellMessage(String stockId, int number,
+			double price) {
+		return getEventMessage(stockId, number, price, "sell", true, 0);
+	}
+
+	public static String getConfirmedSellMessage(String stockId, int number,
+			double price) {
+		return getEventMessage(stockId, number, price, "sell", false, 0);
+	}
+
+	public static String getPendingBuyMessage(String stockId, int number,
+			double price) {
+		return getEventMessage(stockId, number, price, "buy", true, 0);
+	}
+
+	public static String getConfirmedBuyMessage(String stockId, int number,
+			double price) {
+		return getEventMessage(stockId, number, price, "sell", false, 0);
+	}
+
+	public static final int PRICE_OPEN = 1;
+	public static final int PRICE_CLOSE = 2;
+	public static final int PRICE_NOON = 3;
+
+	private static String getEventMessage(String stockId, int number,
+			double price, String cmd, boolean isPending, int priceType) {
+		String message = "";
+		if (cmd.equals("buy")) {
+			message += "买入";
+		} else {
+			message += "买出";
+		}
+		message += "股票:" + stockId;
+		if (isPending) {
+			message += " 预下单";
+		} else {
+			message += " 成交";
+		}
+		message += " 数量:" + number;
+		message += " 价格:" + price;
+		switch (priceType) {
+		case PRICE_OPEN:
+			message += "(开盘价)";
+			break;
+		case PRICE_CLOSE:
+			message += "(收盘价)";
+			break;
+		case PRICE_NOON:
+			message += "(午盘价)";
+			break;
+		default:
+		}
+		return message;
+	}
 }

@@ -14,12 +14,15 @@ import com.ghlh.data.db.StocktradeDAO;
 import com.ghlh.data.db.StocktradeVO;
 import com.ghlh.stockquotes.InternetStockQuotesInquirer;
 import com.ghlh.stockquotes.StockQuotesBean;
+import com.ghlh.strategy.OneTimeStrategy;
 import com.ghlh.strategy.TradeConstants;
+import com.ghlh.strategy.TradeUtil;
 import com.ghlh.strategy.stair.StairIntradayStrategy;
 import com.ghlh.tradeway.SoftwareTrader;
 import com.ghlh.ui.StatusField;
 import com.ghlh.ui.autotradestart.AutoTradeMonitor;
 import com.ghlh.ui.autotradestart.AutoTradeSwitch;
+import com.ghlh.util.ReflectUtil;
 import com.ghlh.util.StockMarketUtil;
 import com.ghlh.util.TimeUtil;
 
@@ -37,6 +40,7 @@ public class StockTradeIntradyMonitoringJob {
 		}
 		try {
 			List monitorStocksList = this.monitorstockDAO.getMonitorStock();
+			processOpenPriceBuy(monitorStocksList);
 
 			Map possbileSellMap = new HashMap();
 			Map pendingBuyMap = new HashMap();
@@ -57,6 +61,17 @@ public class StockTradeIntradyMonitoringJob {
 			}
 		} catch (Exception ex) {
 			logger.error("Stock Monitoring Trade throw : ", ex);
+		}
+	}
+
+	private void processOpenPriceBuy(List monitorStocksList) {
+		for (int i = 0; i < monitorStocksList.size(); i++) {
+			MonitorstockVO monitorstockVO = (MonitorstockVO) monitorStocksList
+					.get(i);
+			OneTimeStrategy ts = (OneTimeStrategy) ReflectUtil
+					.getClassInstance("com.ghlh.strategy",
+							monitorstockVO.getTradealgorithm(), "OpenPriceBuy");
+			ts.processStockTrade(monitorstockVO);
 		}
 	}
 
@@ -85,9 +100,10 @@ public class StockTradeIntradyMonitoringJob {
 		for (int j = 0; j < pendingBuy.size(); j++) {
 			StocktradeVO stVO = (StocktradeVO) pendingBuy.get(j);
 			if (sqb.getCurrentPrice() <= stVO.getBuyprice()) {
-				String message = "盘中监控股票  : " + monitorstockVO.getStockid()
-						+ " 已达买入价" + stVO.getBuyprice() + " 买入下单:" + " 数量:"
-						+ stVO.getNumber();
+				String message = TradeUtil.getConfirmedBuyMessage(
+						monitorstockVO.getStockid(), stVO.getNumber(),
+						stVO.getBuyprice());
+
 				EventRecorder.recordEvent(this.getClass(), message);
 				SoftwareTrader.getInstance().buyStock(stVO.getStockid(),
 						stVO.getNumber());

@@ -9,7 +9,7 @@ import com.ghlh.stockquotes.StockQuotesBean;
 import com.ghlh.strategy.AdditionInfoUtil;
 import com.ghlh.strategy.OneTimeStrategy;
 
-public class StairAfterOpenPriceDecidedStrategy implements OneTimeStrategy{
+public class StairOpenPriceBuyStrategy implements OneTimeStrategy{
 	public void processStockTrade(MonitorstockVO monitorstockVO) {
 		if (!Boolean.valueOf(monitorstockVO.getOnmonitoring())) {
 			return;
@@ -37,7 +37,7 @@ public class StairAfterOpenPriceDecidedStrategy implements OneTimeStrategy{
 		double basePrice = sqb.getTodayOpen();
 		double currentPrice = sqb.getYesterdayClose();
 		int spaceNumber = aib.getStairNumber() - stockTradeList.size();
-		StairUtil.dealBuy(monitorstockVO.getStockid(), aib, basePrice,
+		StairUtil.dealBuyWithOpenPrice(monitorstockVO.getStockid(), aib, basePrice,
 				currentPrice, spaceNumber);
 	}
 }

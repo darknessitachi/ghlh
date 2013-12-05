@@ -11,14 +11,18 @@ public class StocktradeDAO {
 		return getTradeRecords(stockId, strategy, 0, true);
 	}
 
+	public static List getHoldingTradeRecords(String stockId, String strategy) {
+		return getTradeRecords(stockId, strategy,
+				TradeConstants.STATUS_HOLDING, true);
+	}
+
 	public static List getPossibleSellTradeRecords(String stockId,
 			String strategy) {
 		return getTradeRecords(stockId, strategy,
 				TradeConstants.STATUS_POSSIBLE_SELL, false);
 	}
 
-	public static List getPendingBuyTradeRecords(String stockId,
-			String strategy) {
+	public static List getPendingBuyTradeRecords(String stockId, String strategy) {
 		return getTradeRecords(stockId, strategy,
 				TradeConstants.STATUS_PENDING_BUY, false);
 	}

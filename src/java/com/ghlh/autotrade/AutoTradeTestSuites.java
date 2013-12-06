@@ -11,6 +11,6 @@ import com.ghlh.strategy.stair.StairIntradyFirstBuyStrategyTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ AutoTradeAfterCloseJobTest.class,
-		AutoTradeBeforeOpenJobTest.class })
+		AutoTradeBeforeOpenJobTest.class,StockTradeIntradyMonitorTest.class })
 public class AutoTradeTestSuites {
 }

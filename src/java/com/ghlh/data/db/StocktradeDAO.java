@@ -19,7 +19,18 @@ public class StocktradeDAO {
 		return getTradeRecords(stockId, strategy,
 				TradeConstants.STATUS_HOLDING, true);
 	}
+	
+	public static List getT_0_TradeRecords(String stockId, String strategy) {
+		return getTradeRecords(stockId, strategy,
+				TradeConstants.STATUS_T_0_BUY, false);
+	}
 
+	public static List getFinishedTradeRecords(String stockId, String strategy) {
+		return getTradeRecords(stockId, strategy,
+				TradeConstants.STATUS_FINISH, false);
+	}
+
+	
 	public static List getPossibleSellTradeRecords(String stockId,
 			String strategy) {
 		return getTradeRecords(stockId, strategy,
@@ -81,10 +92,18 @@ public class StocktradeDAO {
 		stocktradeVO1.setId(id);
 		stocktradeVO1.setWhereId(true);
 		stocktradeVO1.setStatus(status);
-		stocktradeVO1.setSelldate(new Date());
 		GhlhDAO.edit(stocktradeVO1);
 	}
 
+	public static void updateStocktradeFinished(int id) {
+		StocktradeVO stocktradeVO1 = new StocktradeVO();
+		stocktradeVO1.setId(id);
+		stocktradeVO1.setWhereId(true);
+		stocktradeVO1.setStatus(TradeConstants.STATUS_FINISH);
+		stocktradeVO1.setSelldate(new Date());
+		GhlhDAO.edit(stocktradeVO1);
+	}
+	
 	public static void removeStocktrade(int id) {
 		StocktradeVO stocktradeVO1 = new StocktradeVO();
 		stocktradeVO1.setId(id);

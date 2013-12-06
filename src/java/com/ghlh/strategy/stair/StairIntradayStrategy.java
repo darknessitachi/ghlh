@@ -35,8 +35,7 @@ public class StairIntradayStrategy implements MonitoringStrategy {
 						+ stocktradeVO.getBuyprice() + " ÊýÁ¿:"
 						+ stocktradeVO.getNumber();
 				EventRecorder.recordEvent(this.getClass(), message);
-				StocktradeDAO.updateStocktradeStatus(stocktradeVO.getId(),
-						TradeConstants.STATUS_FINISH);
+				StocktradeDAO.updateStocktradeFinished(stocktradeVO.getId());
 				reBuyStock(monitorstockVO, stocktradeVO);
 				refreshPendingBuyList(monitorstockVO, pendingBuy);
 			}

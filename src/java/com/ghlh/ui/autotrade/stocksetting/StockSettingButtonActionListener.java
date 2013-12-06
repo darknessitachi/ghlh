@@ -189,7 +189,11 @@ public class StockSettingButtonActionListener extends
 		int confirm = GUIUtil.showConfirmDialog(message, title);
 		if (confirm == 0) {
 			try {
-				new FileStockPoolAccessor().deleteMonitorStock(this.currentRow);
+				//new FileStockPoolAccessor().deleteMonitorStock(this.currentRow);
+				MonitorstockVO monitorstockVO = new MonitorstockVO();
+				monitorstockVO.setId(this.currentMsb.getId());
+				monitorstockVO.setWhereId(true);
+				GhlhDAO.remove(monitorstockVO);
 			} catch (Exception ex) {
 				logger.error("click save throw exception:", ex);
 			}

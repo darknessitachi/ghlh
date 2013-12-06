@@ -31,8 +31,6 @@ public class StockTradeIntradyMonitoringJob {
 	private static Logger logger = Logger
 			.getLogger(StockTradeIntradyMonitoringJob.class);
 
-	MonitorstockDAO monitorstockDAO = null;
-
 	private int monitoringCount = 0;
 
 	public void monitoring() {
@@ -40,7 +38,7 @@ public class StockTradeIntradyMonitoringJob {
 			return;
 		}
 		try {
-			List monitorStocksList = this.monitorstockDAO.getMonitorStock();
+			List monitorStocksList = MonitorstockDAO.getMonitorStock();
 			processIntraFirstBuy(monitorStocksList);
 
 			List stockMonitors = retrieveStockMonitors(monitorStocksList);
@@ -75,21 +73,22 @@ public class StockTradeIntradyMonitoringJob {
 		}
 	}
 
-	private void monitoringIntrady(List stockMonitors) {
+	public void monitoringIntrady(List stockMonitors) {
 		for (int i = 0; i < stockMonitors.size(); i++) {
 			StockTradeIntradyMonitor monitor = (StockTradeIntradyMonitor) stockMonitors
 					.get(i);
 			StockQuotesBean sqb = InternetStockQuotesInquirer.getInstance()
 					.getStockQuotesBean(
 							monitor.getMonitorstockVO().getStockid());
-
+			AutoTradeMonitor.getInstance().setMonitorStock(sqb.getStockId(),
+					sqb.getName());
 			monitor.processBuy(sqb);
 			monitor.processSell(sqb);
 			TimeUtil.pause(200);
 		}
 	}
 
-	private List retrieveStockMonitors(List monitorStocksList) {
+	public List retrieveStockMonitors(List monitorStocksList) {
 		List stockMonitors = new ArrayList();
 		for (int i = 0; i < monitorStocksList.size(); i++) {
 			MonitorstockVO monitorstockVO = (MonitorstockVO) monitorStocksList

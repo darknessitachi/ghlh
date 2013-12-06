@@ -59,8 +59,7 @@ public class StockTradeIntradyMonitor {
 						stocktradeVO.getStockid(), stocktradeVO.getNumber(),
 						stocktradeVO.getSellprice());
 				EventRecorder.recordEvent(this.getClass(), message);
-				StocktradeDAO.updateStocktradeStatus(stocktradeVO.getId(),
-						TradeConstants.STATUS_FINISH);
+				StocktradeDAO.updateStocktradeFinished(stocktradeVO.getId());
 				if (Boolean.valueOf(monitorstockVO.getOnmonitoring())) {
 					reBuy(stocktradeVO);
 				}
@@ -69,6 +68,11 @@ public class StockTradeIntradyMonitor {
 	}
 
 	private void reBuy(StocktradeVO stocktradeVO) {
+		String message = TradeUtil.getPendingBuyMessage(
+				stocktradeVO.getStockid(), stocktradeVO.getNumber(),
+				stocktradeVO.getBuyprice());
+		EventRecorder.recordEvent(this.getClass(), message);
+
 		TradeUtil.dealBuyStock(stocktradeVO.getStockid(),
 				stocktradeVO.getBuyprice(), stocktradeVO.getSellprice(),
 				stocktradeVO.getTradealgorithm(), stocktradeVO.getNumber());

@@ -5,6 +5,7 @@ import java.util.Date;
 import com.common.util.IDGenerator;
 import com.ghlh.autotrade.EventRecorder;
 import com.ghlh.data.db.GhlhDAO;
+import com.ghlh.data.db.StocktradeDAO;
 import com.ghlh.data.db.StocktradeVO;
 import com.ghlh.tradeway.SoftwareTrader;
 
@@ -105,7 +106,7 @@ public class TradeUtil {
 
 	public static String getConfirmedBuyMessage(String stockId, int number,
 			double price) {
-		return getEventMessage(stockId, number, price, "sell", false, 0);
+		return getEventMessage(stockId, number, price, "buy", false, 0);
 	}
 
 	public static final int PRICE_OPEN = 1;
@@ -118,7 +119,7 @@ public class TradeUtil {
 		if (cmd.equals("buy")) {
 			message += "买入";
 		} else {
-			message += "买出";
+			message += "卖出";
 		}
 		message += "股票:" + stockId;
 		if (isPending) {
@@ -141,6 +142,21 @@ public class TradeUtil {
 		default:
 		}
 		return message;
+	}
+
+	public static String getAfterCloseEventMessage(StocktradeVO stVO) {
+		String result = null;
+		if (stVO.getStatus() == TradeConstants.STATUS_POSSIBLE_SELL) {
+			result = "预下单卖出股票:" + stVO.getStockid() + "未成功，将状态置回持有";
+		}
+		if (stVO.getStatus() == TradeConstants.STATUS_T_0_BUY) {
+			result = "下单买入股票:" + stVO.getStockid() + "成功，将状态置回持有";
+		}
+		if (stVO.getStatus() == TradeConstants.STATUS_PENDING_BUY) {
+			result = "预下单买入股票:" + stVO.getStockid() + "未成功，将交易记录删除";
+		}
+
+		return result;
 	}
 
 	public static int getPriceType(String buyPriceStrategy) {

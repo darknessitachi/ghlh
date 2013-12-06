@@ -59,7 +59,7 @@ public class TradeUtil {
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
 		if (isConfirm) {
-			stocktradeVO1.setStatus(TradeConstants.STATUS_HOLDING);
+			stocktradeVO1.setStatus(TradeConstants.STATUS_T_0_BUY);
 			SoftwareTrader.getInstance().buyStock(stockId, number);
 
 		} else {

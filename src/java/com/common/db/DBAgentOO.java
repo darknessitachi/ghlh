@@ -507,7 +507,7 @@ public class DBAgentOO {
 
 	public List<Object> selectData(String sql, String className, int startPos,
 			int size) throws Exception {
-		//System.outprintln("sql = " + sql);
+		//System.out.println("sql = " + sql);
 		Connection conn = null;
 		if (this.isInTransaction) {
 			conn = this.connection;

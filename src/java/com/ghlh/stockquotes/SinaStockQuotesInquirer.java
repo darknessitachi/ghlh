@@ -33,6 +33,9 @@ public class SinaStockQuotesInquirer extends InternetStockQuotesInquirer {
 
 			Pattern pattern = Pattern.compile(",");
 			String[] stockInfoPieces = pattern.split(stockInfo);
+			if (stockInfoPieces.length == 0 || stockInfoPieces.length == 1) {
+				return null;
+			}
 			result.setName(stockInfoPieces[0]);
 			result.setTodayOpen(Double.parseDouble(stockInfoPieces[1]));
 			result.setYesterdayClose(Double.parseDouble(stockInfoPieces[2]));

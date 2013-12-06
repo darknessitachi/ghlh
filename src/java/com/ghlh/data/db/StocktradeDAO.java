@@ -11,6 +11,10 @@ public class StocktradeDAO {
 		return getTradeRecords(stockId, strategy, 0, true);
 	}
 
+	public static List getUnfinishedTradeRecords() {
+		return getTradeRecords(null, null, 0, true);
+	}
+
 	public static List getHoldingTradeRecords(String stockId, String strategy) {
 		return getTradeRecords(stockId, strategy,
 				TradeConstants.STATUS_HOLDING, true);
@@ -33,17 +37,43 @@ public class StocktradeDAO {
 
 	private static List getTradeRecords(String stockId, String strategy,
 			int status, boolean isUnfinished) {
-		String sql = "SELECT * FROM stocktrade WHERE stockId = '" + stockId
-				+ "' AND tradeAlgorithm = '" + strategy + "' ";
+		String sql = "SELECT * FROM stocktrade";
+		boolean isNeedWhere = true;
+
+		if (stockId != null) {
+			sql = appendConnectWork(sql, isNeedWhere);
+			sql += " stockId = '" + stockId + "'";
+			isNeedWhere = false;
+		}
+		if (strategy != null) {
+			sql = appendConnectWork(sql, isNeedWhere);
+			sql += " tradeAlgorithm = '" + strategy + "'";
+			isNeedWhere = false;
+		}
+
 		if (status != 0) {
-			sql += " AND status = " + status;
+			sql = appendConnectWork(sql, isNeedWhere);
+			sql += " status = " + status;
+			isNeedWhere = false;
 		}
 		if (isUnfinished) {
-			sql += " AND isNull(sellDate) ";
+			sql = appendConnectWork(sql, isNeedWhere);
+			sql += " isNull(sellDate) ";
+			isNeedWhere = false;
 		}
+
 		sql += " ORDER BY buyPrice desc ";
 		List result = GhlhDAO.list(sql, "com.ghlh.data.db.StocktradeVO");
 		return result;
+	}
+
+	private static String appendConnectWork(String sql, boolean isNeedWhere) {
+		if (isNeedWhere) {
+			sql += " Where ";
+		} else {
+			sql += " And ";
+		}
+		return sql;
 	}
 
 	public static void updateStocktradeStatus(int id, int status) {
@@ -53,6 +83,13 @@ public class StocktradeDAO {
 		stocktradeVO1.setStatus(status);
 		stocktradeVO1.setSelldate(new Date());
 		GhlhDAO.edit(stocktradeVO1);
+	}
+
+	public static void removeStocktrade(int id) {
+		StocktradeVO stocktradeVO1 = new StocktradeVO();
+		stocktradeVO1.setId(id);
+		stocktradeVO1.setWhereId(true);
+		GhlhDAO.remove(stocktradeVO1);
 	}
 
 }

@@ -41,6 +41,10 @@ public class AutoTradeMonitor {
 	}
 
 	public void setMonitorStock(String stockId, String name) {
-		this.monitorStockField.setText("正在监控股票:" + stockId + " " + name);
+		if (stockId.equals("0")) {
+			this.monitorStockField.setText("自动监控休市停止");
+		} else {
+			this.monitorStockField.setText("正在监控股票:" + stockId + " " + name);
+		}
 	}
 }

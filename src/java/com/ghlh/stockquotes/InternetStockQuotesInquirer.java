@@ -27,6 +27,7 @@ public abstract class InternetStockQuotesInquirer implements
 		try {
 			boolean isSZ = isFromShenzhenMarket(stockId);
 			String url = getStockQuotesPageURL(stockId, isSZ);
+			System.out.println("URL = " + url);
 			String data = getStockQuotesInfoFromInternet(url);
 			result = parseStockQuotes(data);
 		} catch (StockQuotesException ex) {

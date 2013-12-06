@@ -13,7 +13,7 @@ import com.ghlh.strategy.TradeUtil;
 import com.ghlh.util.MathUtil;
 import com.ghlh.util.StockMarketUtil;
 
-public class OnceOpenPriceBuyStrategy implements OneTimeStrategy {
+public class OnceIntradyFirstBuyStrategy implements OneTimeStrategy {
 	public void processStockTrade(MonitorstockVO monitorstockVO) {
 		if (!Boolean.valueOf(monitorstockVO.getOnmonitoring())) {
 			return;

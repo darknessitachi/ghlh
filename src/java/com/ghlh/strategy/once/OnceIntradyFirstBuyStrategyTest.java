@@ -17,7 +17,7 @@ import com.ghlh.strategy.TradeConstants;
 import com.ghlh.strategy.stair.StairTestDataGenerator;
 import com.ghlh.util.StockMarketUtil;
 
-public class OnceOpenPriceBuyStrategyTest {
+public class OnceIntradyFirstBuyStrategyTest {
 
 	private void cleanTestingData() {
 		StocktradeVO stocktradeVO1 = new StocktradeVO();
@@ -31,10 +31,10 @@ public class OnceOpenPriceBuyStrategyTest {
 		cleanTestingData();
 		MonitorstockVO monitorstockVO = prepareMonitorstockVO();
 		StockQuotesBean sqb = StairTestDataGenerator.getMockStockQuotestBean();
-		sqb.setCurrentPrice(9);
+		sqb.setCurrentPrice(8.9);
 		InternetStockQuotesInquirer.getInstance()
 				.setTestingInjectStockQuotesBean(sqb);
-		OnceOpenPriceBuyStrategy onceJustOpenStrategy = new OnceOpenPriceBuyStrategy();
+		OnceIntradyFirstBuyStrategy onceJustOpenStrategy = new OnceIntradyFirstBuyStrategy();
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.HOUR_OF_DAY, 9);
 
@@ -46,7 +46,7 @@ public class OnceOpenPriceBuyStrategyTest {
 			fail("Something wong");
 		} else {
 			StocktradeVO stocktradeVO = (StocktradeVO) stockTradeList.get(0);
-			if (stocktradeVO.getStatus() != TradeConstants.STATUS_HOLDING) {
+			if (stocktradeVO.getStatus() != TradeConstants.STATUS_T_0_BUY) {
 				fail("Something wrong");
 			}
 		}
@@ -57,10 +57,10 @@ public class OnceOpenPriceBuyStrategyTest {
 		cleanTestingData();
 		MonitorstockVO monitorstockVO = prepareMonitorstockVOForNoon();
 		StockQuotesBean sqb = StairTestDataGenerator.getMockStockQuotestBean();
-		sqb.setCurrentPrice(9);
+		sqb.setCurrentPrice(8.8);
 		InternetStockQuotesInquirer.getInstance()
 				.setTestingInjectStockQuotesBean(sqb);
-		OnceOpenPriceBuyStrategy onceJustOpenStrategy = new OnceOpenPriceBuyStrategy();
+		OnceIntradyFirstBuyStrategy onceJustOpenStrategy = new OnceIntradyFirstBuyStrategy();
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.HOUR_OF_DAY, 13);
 
@@ -72,7 +72,7 @@ public class OnceOpenPriceBuyStrategyTest {
 			fail("Something wong");
 		} else {
 			StocktradeVO stocktradeVO = (StocktradeVO) stockTradeList.get(0);
-			if (stocktradeVO.getStatus() != TradeConstants.STATUS_HOLDING) {
+			if (stocktradeVO.getStatus() != TradeConstants.STATUS_T_0_BUY) {
 				fail("Something wrong");
 			}
 		}

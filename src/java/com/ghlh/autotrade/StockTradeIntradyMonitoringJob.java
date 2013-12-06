@@ -2,6 +2,7 @@ package com.ghlh.autotrade;
 
 /*@author Robin*/
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ import com.ghlh.stockquotes.StockQuotesBean;
 import com.ghlh.strategy.OneTimeStrategy;
 import com.ghlh.strategy.TradeConstants;
 import com.ghlh.strategy.TradeUtil;
-import com.ghlh.strategy.stair.StairIntradayStrategy;
+import com.ghlh.strategy.stair.StairConstants;
 import com.ghlh.tradeway.SoftwareTrader;
 import com.ghlh.ui.StatusField;
 import com.ghlh.ui.autotradestart.AutoTradeMonitor;
@@ -40,20 +41,16 @@ public class StockTradeIntradyMonitoringJob {
 		}
 		try {
 			List monitorStocksList = this.monitorstockDAO.getMonitorStock();
-			processOpenPriceBuy(monitorStocksList);
+			processIntraFirstBuy(monitorStocksList);
 
-			Map possbileSellMap = new HashMap();
-			Map pendingBuyMap = new HashMap();
-			retrieveStockTrades(monitorStocksList, possbileSellMap,
-					pendingBuyMap);
+			List stockMonitors = retrieveStockMonitors(monitorStocksList);
 
 			while (AutoTradeSwitch.getInstance().isStart()) {
 				if (StockMarketUtil.isMarketBreak()) {
 					break;
 				}
 				setMonitoringStatus();
-				monitoringIntrady(monitorStocksList, possbileSellMap,
-						pendingBuyMap);
+				monitoringIntrady(stockMonitors);
 				TimeUtil.pause(200);
 			}
 			if (!AutoTradeSwitch.getInstance().isStart()) {
@@ -61,87 +58,53 @@ public class StockTradeIntradyMonitoringJob {
 			}
 		} catch (Exception ex) {
 			logger.error("Stock Monitoring Trade throw : ", ex);
+		} finally {
+			AutoTradeMonitor.getInstance().setMonitorStock("0", "");
 		}
 	}
 
-	private void processOpenPriceBuy(List monitorStocksList) {
+	private void processIntraFirstBuy(List monitorStocksList) {
 		for (int i = 0; i < monitorStocksList.size(); i++) {
 			MonitorstockVO monitorstockVO = (MonitorstockVO) monitorStocksList
 					.get(i);
 			OneTimeStrategy ts = (OneTimeStrategy) ReflectUtil
 					.getClassInstance("com.ghlh.strategy",
-							monitorstockVO.getTradealgorithm(), "OpenPriceBuy");
+							monitorstockVO.getTradealgorithm(),
+							"IntradyFirstBuyStrategy");
 			ts.processStockTrade(monitorstockVO);
 		}
 	}
 
-	private void monitoringIntrady(List monitorStocksList, Map possbileSellMap,
-			Map pendingBuyMap) {
-		for (int i = 0; i < monitorStocksList.size(); i++) {
-			MonitorstockVO monitorstockVO = (MonitorstockVO) monitorStocksList
+	private void monitoringIntrady(List stockMonitors) {
+		for (int i = 0; i < stockMonitors.size(); i++) {
+			StockTradeIntradyMonitor monitor = (StockTradeIntradyMonitor) stockMonitors
 					.get(i);
-			if (!Boolean.valueOf(monitorstockVO.getOnmonitoring())) {
-				continue;
-			}
-			AutoTradeMonitor.getInstance().setMonitorStock(
-					monitorstockVO.getStockid(), monitorstockVO.getName());
+			StockQuotesBean sqb = InternetStockQuotesInquirer.getInstance()
+					.getStockQuotesBean(
+							monitor.getMonitorstockVO().getStockid());
 
-			processBuyLogic(monitorstockVO, pendingBuyMap);
-			processSpecificLogic(possbileSellMap, pendingBuyMap, monitorstockVO);
+			monitor.processBuy(sqb);
+			monitor.processSell(sqb);
 			TimeUtil.pause(200);
 		}
 	}
 
-	private void processBuyLogic(MonitorstockVO monitorstockVO,
-			Map pendingBuyMap) {
-		StockQuotesBean sqb = InternetStockQuotesInquirer.getInstance()
-				.getStockQuotesBean(monitorstockVO.getStockid());
-		List pendingBuy = (List) pendingBuyMap.get(monitorstockVO);
-		for (int j = 0; j < pendingBuy.size(); j++) {
-			StocktradeVO stVO = (StocktradeVO) pendingBuy.get(j);
-			if (sqb.getCurrentPrice() <= stVO.getBuyprice()) {
-				String message = TradeUtil.getConfirmedBuyMessage(
-						monitorstockVO.getStockid(), stVO.getNumber(),
-						stVO.getBuyprice());
-
-				EventRecorder.recordEvent(this.getClass(), message);
-				SoftwareTrader.getInstance().buyStock(stVO.getStockid(),
-						stVO.getNumber());
-				StocktradeDAO.updateStocktradeStatus(stVO.getId(),
-						TradeConstants.STATUS_HOLDING);
-				pendingBuy.remove(j);
-				break;
-			}
-		}
-	}
-
-	private void processSpecificLogic(Map possbileSellMap, Map pendingBuyMap,
-			MonitorstockVO monitorstockVO) {
-		String tradeAlgorithm = monitorstockVO.getTradealgorithm();
-		if (tradeAlgorithm.equals("Stair")) {
-			StairIntradayStrategy sis = new StairIntradayStrategy();
-			sis.processStockTrade(monitorstockVO,
-					(List) possbileSellMap.get(monitorstockVO),
-					(List) pendingBuyMap.get(monitorstockVO));
-		}
-	}
-
-	private void retrieveStockTrades(List monitorStocksList,
-			Map possbileSellMap, Map pendingBuyMap) {
-		Map stockTrade = new HashMap();
+	private List retrieveStockMonitors(List monitorStocksList) {
+		List stockMonitors = new ArrayList();
 		for (int i = 0; i < monitorStocksList.size(); i++) {
 			MonitorstockVO monitorstockVO = (MonitorstockVO) monitorStocksList
 					.get(i);
 			List possibleSell = StocktradeDAO.getPossibleSellTradeRecords(
 					monitorstockVO.getStockid(),
 					monitorstockVO.getTradealgorithm());
-			possbileSellMap.put(monitorstockVO, possibleSell);
 			List pendingBuy = StocktradeDAO.getPendingBuyTradeRecords(
 					monitorstockVO.getStockid(),
 					monitorstockVO.getTradealgorithm());
-			pendingBuyMap.put(monitorstockVO, pendingBuy);
-
+			StockTradeIntradyMonitor stockTradeIntradyMonitor = new StockTradeIntradyMonitor(
+					monitorstockVO, possibleSell, pendingBuy);
+			stockMonitors.add(stockTradeIntradyMonitor);
 		}
+		return stockMonitors;
 	}
 
 	private void setMonitoringStatus() {

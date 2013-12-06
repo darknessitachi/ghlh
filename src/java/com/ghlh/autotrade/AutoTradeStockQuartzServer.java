@@ -41,6 +41,9 @@ public class AutoTradeStockQuartzServer {
 					AutoTradeIntradayJob.class);
 			scheduleJob(13, 0, "AfternoonAutoTradeMonitoring",
 					AutoTradeIntradayJob.class);
+			scheduleJob(15, 2, "AfterCloseAutoTradeJob",
+					AutoTradeAfterCloseJob.class);
+
 			for (int i = 0; i < 8; i++) {
 				scheduleJob(i * 3, 15, "TradeSoftwareActivate" + i,
 						AutoTradeSoftwareActivateJob.class);

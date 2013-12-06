@@ -9,12 +9,12 @@ public class StairUtil {
 
 	public static void dealBuy(String stockId, AdditionalInfoBean aib,
 			double basePrice, double currentPrice, int spaceNumber) {
-		dealBuy1(stockId, aib, basePrice, currentPrice, spaceNumber, false);
+		dealBuy1(stockId, aib, basePrice, currentPrice, spaceNumber, false,0);
 	}
 
 	private static void dealBuy1(String stockId, AdditionalInfoBean aib,
 			double basePrice, double currentPrice, int spaceNumber,
-			boolean isOpen) {
+			boolean isIntradyFirstBuy, int priceType) {
 		double possibleMinPrice = currentPrice * TradeConstants.MAX_DF;
 
 		double sellPrice = MathUtil.formatDoubleWith2QuanShe(basePrice
@@ -22,7 +22,7 @@ public class StairUtil {
 
 		for (int i = 0; i < spaceNumber; i++) {
 			boolean canBuy = StairUtil.buyAsCondition(stockId, aib,
-					possibleMinPrice, basePrice, sellPrice, isOpen && i == 0);
+					possibleMinPrice, basePrice, sellPrice, isIntradyFirstBuy && i == 0, priceType);
 			if (!canBuy) {
 				break;
 			}
@@ -33,19 +33,19 @@ public class StairUtil {
 		}
 	}
 
-	public static void dealBuyWithOpenPrice(String stockId,
+	public static void dealBuyIntradyFirstBuy(String stockId,
 			AdditionalInfoBean aib, double basePrice, double currentPrice,
-			int spaceNumber) {
-		dealBuy1(stockId, aib, basePrice, currentPrice, spaceNumber, true);
+			int spaceNumber, int priceType) {
+		dealBuy1(stockId, aib, basePrice, currentPrice, spaceNumber, true, priceType);
 	}
 
 	private static boolean buyAsCondition(String stockId,
 			AdditionalInfoBean aib, double possibleMinPrice, double basePrice,
-			double sellPrice, boolean isOpenPrice) {
-		if (isOpenPrice) {
-			String message = TradeUtil.getOpenPriceBuyMessage(stockId,
+			double sellPrice, boolean isIntradyFirstBuy, int priceType) {
+		if (isIntradyFirstBuy) {
+			String message = TradeUtil.getIntradyPriceBuyMessage(stockId,
 					TradeUtil.getTradeNumber(aib.getStairMoney(), basePrice),
-					basePrice);
+					basePrice,priceType);
 			EventRecorder.recordEvent(StairUtil.class, message);
 			TradeUtil.dealBuyStockSuccessfully(stockId, aib.getStairMoney(),
 					basePrice, sellPrice, StairConstants.STAIR_STRATEGY_NAME);

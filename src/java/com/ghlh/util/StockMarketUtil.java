@@ -109,7 +109,7 @@ public class StockMarketUtil {
 		int result = 0;
 		Calendar calendar = testCalendar;
 		if (calendar == null) {
-			Calendar.getInstance();
+			calendar = Calendar.getInstance();
 		}
 		int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		if (hour >= 9 && hour <= 11) {

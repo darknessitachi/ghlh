@@ -8,46 +8,63 @@ import com.ghlh.strategy.TradeConstants;
 public class StocktradeDAO {
 
 	public static List getUnfinishedTradeRecords(String stockId, String strategy) {
-		return getTradeRecords(stockId, strategy, 0, true);
+		return getTradeRecords(stockId, strategy, 0, true, false);
 	}
 
 	public static List getUnfinishedTradeRecords() {
-		return getTradeRecords(null, null, 0, true);
+		return getTradeRecords(null, null, 0, true, false);
 	}
 
 	public static List getHoldingTradeRecords(String stockId, String strategy) {
 		return getTradeRecords(stockId, strategy,
-				TradeConstants.STATUS_HOLDING, true);
+				TradeConstants.STATUS_HOLDING, true, false);
 	}
-	
+
+	public static List getIntradyHoldingTradeRecords(String stockId,
+			String strategy) {
+		String sql = "SELECT * FROM stocktrade where  stockId = '" + stockId
+				+ "' and tradeAlgorithm = '" + strategy + "' and status = "
+				+ TradeConstants.STATUS_HOLDING + " or status = "
+				+ TradeConstants.STATUS_POSSIBLE_SELL + " or status = "
+				+ TradeConstants.STATUS_T_0_BUY;
+		sql += " ORDER BY buyPrice desc ";
+		List result = GhlhDAO.list(sql, "com.ghlh.data.db.StocktradeVO");
+		return result;
+	}
+
 	public static List getT_0_TradeRecords(String stockId, String strategy) {
 		return getTradeRecords(stockId, strategy,
-				TradeConstants.STATUS_T_0_BUY, false);
+				TradeConstants.STATUS_T_0_BUY, false, false);
 	}
 
 	public static List getFinishedTradeRecords(String stockId, String strategy) {
-		return getTradeRecords(stockId, strategy,
-				TradeConstants.STATUS_FINISH, false);
+		return getTradeRecords(stockId, strategy, TradeConstants.STATUS_FINISH,
+				false, false);
 	}
 
-	
 	public static List getPossibleSellTradeRecords(String stockId,
 			String strategy) {
 		return getTradeRecords(stockId, strategy,
-				TradeConstants.STATUS_POSSIBLE_SELL, false);
+				TradeConstants.STATUS_POSSIBLE_SELL, false, false);
 	}
 
 	public static List getPendingBuyTradeRecords(String stockId, String strategy) {
 		return getTradeRecords(stockId, strategy,
-				TradeConstants.STATUS_PENDING_BUY, false);
+				TradeConstants.STATUS_PENDING_BUY, false, false);
+	}
+
+	public static List getPendingRebuyTradeRecords(String stockId,
+			String strategy) {
+		return getTradeRecords(stockId, strategy,
+				TradeConstants.STATUS_PENDING_BUY, false, true);
 	}
 
 	public static List getOneStockTradeRecords(String stockId, String strategy) {
-		return getTradeRecords(stockId, strategy, 0, false);
+		return getTradeRecords(stockId, strategy, 0, false, false);
 	}
 
 	private static List getTradeRecords(String stockId, String strategy,
-			int status, boolean isUnfinished) {
+			int status, boolean isUnfinished, boolean isRebuy) {
 		String sql = "SELECT * FROM stocktrade";
 		boolean isNeedWhere = true;
 
@@ -70,6 +87,11 @@ public class StocktradeDAO {
 		if (isUnfinished) {
 			sql = appendConnectWork(sql, isNeedWhere);
 			sql += " isNull(sellDate) ";
+			isNeedWhere = false;
+		}
+		if (isRebuy) {
+			sql = appendConnectWork(sql, isNeedWhere);
+			sql += " NOT ISNULL (previoustradeid) ";
 			isNeedWhere = false;
 		}
 
@@ -103,7 +125,7 @@ public class StocktradeDAO {
 		stocktradeVO1.setSelldate(new Date());
 		GhlhDAO.edit(stocktradeVO1);
 	}
-	
+
 	public static void removeStocktrade(int id) {
 		StocktradeVO stocktradeVO1 = new StocktradeVO();
 		stocktradeVO1.setId(id);

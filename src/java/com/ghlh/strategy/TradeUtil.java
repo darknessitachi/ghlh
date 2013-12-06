@@ -34,19 +34,25 @@ public class TradeUtil {
 	public static void dealBuyStock(String stockId, double basePrice,
 			double sellPrice, String strategy, int number) {
 		dealBuyStockWith2Status(stockId, basePrice, sellPrice, strategy,
-				number, false);
+				number, false, 0);
+	}
+
+	public static void dealBuyStock(String stockId, double basePrice,
+			double sellPrice, String strategy, int number, int previousTradeId) {
+		dealBuyStockWith2Status(stockId, basePrice, sellPrice, strategy,
+				number, false, previousTradeId);
 	}
 
 	public static void dealBuyStockSuccessfully(String stockId,
 			double basePrice, double sellPrice, String strategy, int number) {
 		dealBuyStockWith2Status(stockId, basePrice, sellPrice, strategy,
-				number, true);
+				number, true, 0);
 
 	}
 
 	private static void dealBuyStockWith2Status(String stockId,
 			double basePrice, double sellPrice, String strategy, int number,
-			boolean isConfirm) {
+			boolean isConfirm, int previousTradeId) {
 
 		StocktradeVO stocktradeVO1 = new StocktradeVO();
 		stocktradeVO1.setId(IDGenerator.generateId("stocktrade"));
@@ -59,6 +65,9 @@ public class TradeUtil {
 		stocktradeVO1.setSellprice(sellPrice);
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
+		if (previousTradeId > 0) {
+			stocktradeVO1.setPrevioustradeid(previousTradeId);
+		}
 		if (isConfirm) {
 			stocktradeVO1.setStatus(TradeConstants.STATUS_T_0_BUY);
 			SoftwareTrader.getInstance().buyStock(stockId, number);

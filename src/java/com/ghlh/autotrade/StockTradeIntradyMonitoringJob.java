@@ -3,6 +3,7 @@ package com.ghlh.autotrade;
 /*@author Robin*/
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,12 @@ public class StockTradeIntradyMonitoringJob {
 				setMonitoringStatus();
 				monitoringIntrady(stockMonitors);
 				TimeUtil.pause(200);
+				int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+				int mins = Calendar.getInstance().get(Calendar.MINUTE);
+				if (hour == 14 && mins == 58) {
+					processBeforeCloseBuy(stockMonitors);
+					break;
+				}
 			}
 			if (!AutoTradeSwitch.getInstance().isStart()) {
 				AutoTradeMonitor.getInstance().showStopSuccessful();
@@ -69,6 +76,18 @@ public class StockTradeIntradyMonitoringJob {
 					.getClassInstance("com.ghlh.strategy",
 							monitorstockVO.getTradealgorithm(),
 							"IntradyFirstBuyStrategy");
+			ts.processStockTrade(monitorstockVO);
+		}
+	}
+
+	private void processBeforeCloseBuy(List monitorStocksList) {
+		for (int i = 0; i < monitorStocksList.size(); i++) {
+			MonitorstockVO monitorstockVO = (MonitorstockVO) monitorStocksList
+					.get(i);
+			OneTimeStrategy ts = (OneTimeStrategy) ReflectUtil
+					.getClassInstance("com.ghlh.strategy",
+							monitorstockVO.getTradealgorithm(),
+							"BeforeCloseStrategy");
 			ts.processStockTrade(monitorstockVO);
 		}
 	}

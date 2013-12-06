@@ -40,7 +40,8 @@ public class StockTradeIntradyUtil {
 
 		TradeUtil.dealBuyStock(stocktradeVO.getStockid(),
 				stocktradeVO.getBuyprice(), stocktradeVO.getSellprice(),
-				stocktradeVO.getTradealgorithm(), stocktradeVO.getNumber());
+				stocktradeVO.getTradealgorithm(), stocktradeVO.getNumber(),
+				stocktradeVO.getId());
 		refreshPendingBuyList(stocktradeVO.getStockid(), pendingBuyList);
 	}
 

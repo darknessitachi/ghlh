@@ -58,64 +58,10 @@ public class StockTradeIntradyMonitor {
 
 	public void processSell(StockQuotesBean sqb) {
 		StockTradeIntradyUtil.processSell(this, sqb);
-		// for (int i = 0; i < possibleSellList.size(); i++) {
-		// StocktradeVO stocktradeVO = (StocktradeVO) possibleSellList.get(i);
-		// if (sqb.getHighestPrice() >= stocktradeVO.getSellprice()) {
-		// String message = TradeUtil.getConfirmedSellMessage(
-		// stocktradeVO.getStockid(), stocktradeVO.getNumber(),
-		// stocktradeVO.getSellprice());
-		// EventRecorder.recordEvent(this.getClass(), message);
-		// StocktradeDAO.updateStocktradeFinished(stocktradeVO.getId());
-		// if (Boolean.valueOf(monitorstockVO.getOnmonitoring())) {
-		// reBuy(stocktradeVO);
-		// }
-		// }
-		// }
-	}
-
-	private void reBuy(StocktradeVO stocktradeVO) {
-		String message = TradeUtil.getPendingBuyMessage(
-				stocktradeVO.getStockid(), stocktradeVO.getNumber(),
-				stocktradeVO.getBuyprice());
-		EventRecorder.recordEvent(this.getClass(), message);
-
-		TradeUtil.dealBuyStock(stocktradeVO.getStockid(),
-				stocktradeVO.getBuyprice(), stocktradeVO.getSellprice(),
-				stocktradeVO.getTradealgorithm(), stocktradeVO.getNumber());
-		refreshPendingBuyList();
-	}
-
-	private void refreshPendingBuyList() {
-		int size = pendingBuyList.size();
-		for (int i = 0; i < size; i++) {
-			pendingBuyList.remove(0);
-		}
-
-		List newPendingBuy = StocktradeDAO
-				.getPendingBuyTradeRecords(monitorstockVO.getStockid(),
-						StairConstants.STAIR_STRATEGY_NAME);
-		pendingBuyList.addAll(newPendingBuy);
-
 	}
 
 	public void processBuy(StockQuotesBean sqb) {
 		StockTradeIntradyUtil.processBuy(this, sqb);
-		// for (int j = 0; j < pendingBuyList.size(); j++) {
-		// StocktradeVO stVO = (StocktradeVO) pendingBuyList.get(j);
-		// if (sqb.getCurrentPrice() <= stVO.getBuyprice()) {
-		// String message = TradeUtil.getConfirmedBuyMessage(
-		// monitorstockVO.getStockid(), stVO.getNumber(),
-		// stVO.getBuyprice());
-		//
-		// EventRecorder.recordEvent(this.getClass(), message);
-		// SoftwareTrader.getInstance().buyStock(stVO.getStockid(),
-		// stVO.getNumber());
-		// StocktradeDAO.updateStocktradeStatus(stVO.getId(),
-		// TradeConstants.STATUS_T_0_BUY);
-		// pendingBuyList.remove(j);
-		// break;
-		// }
-		// }
 	}
 
 }

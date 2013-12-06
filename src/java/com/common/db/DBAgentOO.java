@@ -127,7 +127,7 @@ public class DBAgentOO {
 				} else {
 					con = this.getConnection();
 				}
-				//System.outprintln("exec sql = " + sql);
+				//System.out.println("exec sql = " + sql);
 				ps = con.prepareStatement(sql);
 
 				for (int i = 0; i < data.size(); i++) {

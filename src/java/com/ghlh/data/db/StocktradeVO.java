@@ -192,6 +192,25 @@ public class StocktradeVO implements java.io.Serializable{
   public int getStatus(){
     return status;
   }
+  private boolean hasPrevioustradeid;
+  public boolean isHasPrevioustradeid(){
+    return hasPrevioustradeid;
+  }
+  private boolean wherePrevioustradeid;
+  public boolean isWherePrevioustradeid(){
+    return this.wherePrevioustradeid;
+  }
+  public void setWherePrevioustradeid(boolean wherePrevioustradeid){
+    this.wherePrevioustradeid = wherePrevioustradeid;
+  }
+  private int previoustradeid;
+  public void setPrevioustradeid(int previoustradeid){
+    this.hasPrevioustradeid = true;
+    this.previoustradeid = previoustradeid;
+  }
+  public int getPrevioustradeid(){
+    return previoustradeid;
+  }
   private boolean hasComments;
   public boolean isHasComments(){
     return hasComments;

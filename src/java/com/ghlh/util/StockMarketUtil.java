@@ -85,6 +85,42 @@ public class StockMarketUtil {
 		return result;
 	}
 
+	public static boolean isMorningOpen() {
+		if (getOpenType() == 1) {
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean isAfternoonOpen() {
+		if (getOpenType() == 2) {
+			return true;
+		}
+		return false;
+	}
+
+	private static Calendar testCalendar;
+
+	public static void setTestCalendar(Calendar testCalendar) {
+		StockMarketUtil.testCalendar = testCalendar;
+	}
+
+	private static int getOpenType() {
+		int result = 0;
+		Calendar calendar = testCalendar;
+		if (calendar == null) {
+			Calendar.getInstance();
+		}
+		int hour = calendar.get(Calendar.HOUR_OF_DAY);
+		if (hour >= 9 && hour <= 11) {
+			result = 1;
+		}
+		if (hour >= 13 && hour <= 14) {
+			result = 2;
+		}
+		return result;
+	}
+
 	private static Map readMarketHoliday() {
 		Map result = new HashMap();
 		InputStream is = StockMarketUtil.class

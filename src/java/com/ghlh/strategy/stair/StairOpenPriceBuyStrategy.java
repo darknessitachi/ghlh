@@ -9,7 +9,7 @@ import com.ghlh.stockquotes.StockQuotesBean;
 import com.ghlh.strategy.AdditionInfoUtil;
 import com.ghlh.strategy.OneTimeStrategy;
 
-public class StairOpenPriceBuyStrategy implements OneTimeStrategy{
+public class StairOpenPriceBuyStrategy implements OneTimeStrategy {
 	public void processStockTrade(MonitorstockVO monitorstockVO) {
 		if (!Boolean.valueOf(monitorstockVO.getOnmonitoring())) {
 			return;
@@ -25,19 +25,18 @@ public class StairOpenPriceBuyStrategy implements OneTimeStrategy{
 				.parseAdditionalInfoBean(monitorstockVO.getAdditioninfo(),
 						monitorstockVO.getTradealgorithm());
 		if (aib.getFirstBuyPriceStrategy().equals("¿ªÅÌ¼Û")) {
-			StockQuotesBean sqb = InternetStockQuotesInquirer.getInstance()
-					.getStockQuotesBean(monitorstockVO.getStockid());
-			dealBuy(monitorstockVO, aib, stockTradeList, sqb);
-
+			dealBuy(monitorstockVO, aib, stockTradeList);
 		}
 	}
 
 	public void dealBuy(MonitorstockVO monitorstockVO, AdditionalInfoBean aib,
-			List stockTradeList, StockQuotesBean sqb) {
+			List stockTradeList) {
+		StockQuotesBean sqb = InternetStockQuotesInquirer.getInstance()
+				.getStockQuotesBean(monitorstockVO.getStockid());
 		double basePrice = sqb.getTodayOpen();
 		double currentPrice = sqb.getYesterdayClose();
 		int spaceNumber = aib.getStairNumber() - stockTradeList.size();
-		StairUtil.dealBuyWithOpenPrice(monitorstockVO.getStockid(), aib, basePrice,
-				currentPrice, spaceNumber);
+		StairUtil.dealBuyWithOpenPrice(monitorstockVO.getStockid(), aib,
+				basePrice, currentPrice, spaceNumber);
 	}
 }

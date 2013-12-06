@@ -83,6 +83,11 @@ public class TradeUtil {
 		return getEventMessage(stockId, number, price, "buy", false, PRICE_OPEN);
 	}
 
+	public static String getIntradyPriceBuyMessage(String stockId, int number,
+			double price, int priceType) {
+		return getEventMessage(stockId, number, price, "buy", false, priceType);
+	}
+
 	public static String getPendingSellMessage(String stockId, int number,
 			double price) {
 		return getEventMessage(stockId, number, price, "sell", true, 0);
@@ -136,5 +141,15 @@ public class TradeUtil {
 		default:
 		}
 		return message;
+	}
+
+	public static int getPriceType(String buyPriceStrategy) {
+		if (buyPriceStrategy.equals("¿ªÅÌ¼Û")) {
+			return PRICE_OPEN;
+		}
+		if (buyPriceStrategy.equals("ÎçÅÌ¼Û")) {
+			return PRICE_NOON;
+		}
+		return 0;
 	}
 }

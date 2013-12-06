@@ -11,6 +11,7 @@ import com.ghlh.strategy.AdditionInfoUtil;
 import com.ghlh.strategy.OneTimeStrategy;
 import com.ghlh.strategy.TradeUtil;
 import com.ghlh.util.MathUtil;
+import com.ghlh.util.StockMarketUtil;
 
 public class OnceOpenPriceBuyStrategy implements OneTimeStrategy {
 	public void processStockTrade(MonitorstockVO monitorstockVO) {
@@ -26,16 +27,25 @@ public class OnceOpenPriceBuyStrategy implements OneTimeStrategy {
 							monitorstockVO.getTradealgorithm());
 			StockQuotesBean sqb = InternetStockQuotesInquirer.getInstance()
 					.getStockQuotesBean(monitorstockVO.getStockid());
-			double sellPrice = sqb.getTodayOpen() * (1 + aib.getTargetZf());
-			sellPrice = MathUtil.formatDoubleWith2QuanShe(sellPrice);
-			if (aib.getBuyPriceStrategy().equals("开盘价")) {
-				String message = TradeUtil.getOpenPriceBuyMessage(
+			if (aib.getBuyPriceStrategy().equals("开盘价")
+					&& StockMarketUtil.isMorningOpen()
+					|| aib.getBuyPriceStrategy().equals("午盘价")
+					&& StockMarketUtil.isAfternoonOpen()) {
+				int priceType = TradeUtil.getPriceType(aib
+						.getBuyPriceStrategy());
+				// if (aib.getBuyPriceStrategy().equals("收盘价")) {
+				// priceType = TradeUtil.PRICE_CLOSE;
+				// }
+				double sellPrice = sqb.getCurrentPrice() * (1 + aib.getTargetZf());
+				sellPrice = MathUtil.formatDoubleWith2QuanShe(sellPrice);
+				String message = TradeUtil.getIntradyPriceBuyMessage(
 						monitorstockVO.getStockid(),
 						TradeUtil.getTradeNumber(aib.getTradeMoney(),
-								aib.getBuyPrice()), sqb.getTodayOpen());
+								sqb.getCurrentPrice()), sqb.getCurrentPrice(),
+						priceType);
 				EventRecorder.recordEvent(this.getClass(), message);
 				TradeUtil.dealBuyStockSuccessfully(monitorstockVO.getStockid(),
-						aib.getTradeMoney(), sqb.getTodayOpen(), sellPrice,
+						aib.getTradeMoney(), sqb.getCurrentPrice(), sellPrice,
 						monitorstockVO.getTradealgorithm());
 			}
 		}

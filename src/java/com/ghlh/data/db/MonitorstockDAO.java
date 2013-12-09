@@ -10,6 +10,12 @@ public class MonitorstockDAO {
 		return result;
 	}
 
+	public static List getBackMA10MonitorStock() {
+		String sql = "SELECT * FROM monitorstock where tradeAlgorithm = 'BackMA10'";
+		List result = GhlhDAO.list(sql, "com.ghlh.data.db.MonitorstockVO");
+		return result;
+	}
+
 	public static void turnOnorOffMonitorStock(int id, boolean on) {
 		MonitorstockVO monitorstockVO = new MonitorstockVO();
 		monitorstockVO.setId(id);

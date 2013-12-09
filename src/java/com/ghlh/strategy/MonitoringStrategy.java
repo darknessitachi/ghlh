@@ -1,9 +1,9 @@
 package com.ghlh.strategy;
 
-import java.util.List;
-
-import com.ghlh.data.db.MonitorstockVO;
+import com.ghlh.autotrade.StockTradeIntradyMonitor;
+import com.ghlh.stockquotes.StockQuotesBean;
 
 public interface MonitoringStrategy {
-	void processStockTrade(MonitorstockVO monitorstockVO, List possibleSellMap, List pendingBuy);
+	void processSell(StockTradeIntradyMonitor monitor, StockQuotesBean sqb);
+	void processBuy(StockTradeIntradyMonitor monitor, StockQuotesBean sqb);
 }

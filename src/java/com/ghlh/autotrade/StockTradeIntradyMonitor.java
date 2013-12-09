@@ -6,11 +6,10 @@ import com.ghlh.data.db.MonitorstockVO;
 import com.ghlh.data.db.StocktradeDAO;
 import com.ghlh.data.db.StocktradeVO;
 import com.ghlh.stockquotes.StockQuotesBean;
+import com.ghlh.strategy.MonitoringStrategy;
 import com.ghlh.strategy.OneTimeStrategy;
-import com.ghlh.strategy.TradeConstants;
 import com.ghlh.strategy.TradeUtil;
 import com.ghlh.strategy.stair.StairConstants;
-import com.ghlh.tradeway.SoftwareTrader;
 import com.ghlh.util.ReflectUtil;
 
 public class StockTradeIntradyMonitor {
@@ -19,7 +18,13 @@ public class StockTradeIntradyMonitor {
 		this.monitorstockVO = monitorstockVO;
 		this.possibleSellList = possibleSellList;
 		this.pendingBuyList = pendingBuyList;
+		this.monitorStrategy = (MonitoringStrategy) ReflectUtil
+				.getClassInstance("com.ghlh.strategy",
+						monitorstockVO.getTradealgorithm(), "IntradayStrategy");
+
 	}
+
+	private MonitoringStrategy monitorStrategy;
 
 	private MonitorstockVO monitorstockVO;
 
@@ -52,19 +57,20 @@ public class StockTradeIntradyMonitor {
 	private List pendingBuyList;
 
 	public void processSell(StockQuotesBean sqb) {
-		for (int i = 0; i < possibleSellList.size(); i++) {
-			StocktradeVO stocktradeVO = (StocktradeVO) possibleSellList.get(i);
-			if (sqb.getHighestPrice() >= stocktradeVO.getSellprice()) {
-				String message = TradeUtil.getConfirmedSellMessage(
-						stocktradeVO.getStockid(), stocktradeVO.getNumber(),
-						stocktradeVO.getSellprice());
-				EventRecorder.recordEvent(this.getClass(), message);
-				StocktradeDAO.updateStocktradeFinished(stocktradeVO.getId());
-				if (Boolean.valueOf(monitorstockVO.getOnmonitoring())) {
-					reBuy(stocktradeVO);
-				}
-			}
-		}
+		StockTradeIntradyUtil.processSell(this, sqb);
+		// for (int i = 0; i < possibleSellList.size(); i++) {
+		// StocktradeVO stocktradeVO = (StocktradeVO) possibleSellList.get(i);
+		// if (sqb.getHighestPrice() >= stocktradeVO.getSellprice()) {
+		// String message = TradeUtil.getConfirmedSellMessage(
+		// stocktradeVO.getStockid(), stocktradeVO.getNumber(),
+		// stocktradeVO.getSellprice());
+		// EventRecorder.recordEvent(this.getClass(), message);
+		// StocktradeDAO.updateStocktradeFinished(stocktradeVO.getId());
+		// if (Boolean.valueOf(monitorstockVO.getOnmonitoring())) {
+		// reBuy(stocktradeVO);
+		// }
+		// }
+		// }
 	}
 
 	private void reBuy(StocktradeVO stocktradeVO) {
@@ -93,22 +99,23 @@ public class StockTradeIntradyMonitor {
 	}
 
 	public void processBuy(StockQuotesBean sqb) {
-		for (int j = 0; j < pendingBuyList.size(); j++) {
-			StocktradeVO stVO = (StocktradeVO) pendingBuyList.get(j);
-			if (sqb.getCurrentPrice() <= stVO.getBuyprice()) {
-				String message = TradeUtil.getConfirmedBuyMessage(
-						monitorstockVO.getStockid(), stVO.getNumber(),
-						stVO.getBuyprice());
-
-				EventRecorder.recordEvent(this.getClass(), message);
-				SoftwareTrader.getInstance().buyStock(stVO.getStockid(),
-						stVO.getNumber());
-				StocktradeDAO.updateStocktradeStatus(stVO.getId(),
-						TradeConstants.STATUS_T_0_BUY);
-				pendingBuyList.remove(j);
-				break;
-			}
-		}
+		StockTradeIntradyUtil.processBuy(this, sqb);
+		// for (int j = 0; j < pendingBuyList.size(); j++) {
+		// StocktradeVO stVO = (StocktradeVO) pendingBuyList.get(j);
+		// if (sqb.getCurrentPrice() <= stVO.getBuyprice()) {
+		// String message = TradeUtil.getConfirmedBuyMessage(
+		// monitorstockVO.getStockid(), stVO.getNumber(),
+		// stVO.getBuyprice());
+		//
+		// EventRecorder.recordEvent(this.getClass(), message);
+		// SoftwareTrader.getInstance().buyStock(stVO.getStockid(),
+		// stVO.getNumber());
+		// StocktradeDAO.updateStocktradeStatus(stVO.getId(),
+		// TradeConstants.STATUS_T_0_BUY);
+		// pendingBuyList.remove(j);
+		// break;
+		// }
+		// }
 	}
 
 }

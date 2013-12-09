@@ -42,7 +42,7 @@ public class StockTradeIntradyMonitorTest {
 		GhlhDAO.remove(stocktradeVO1);
 	}
 
-	 @Test
+	@Test
 	public void test600036StairProcessBuy() {
 		cleanTestingData600036Stair();
 		MonitorstockVO msv600036 = this.getMonitorstockVO600036Stair();

@@ -37,8 +37,7 @@ public class GhlhDAO {
 		}
 		return result;
 	}
-	
-	
+
 	public static void remove(Object object) {
 		DBAgentOO dbAgentOO = new DBAgentOO();
 		try {
@@ -52,7 +51,18 @@ public class GhlhDAO {
 		DBAgentOO dbAgentOO = new DBAgentOO();
 		List result = null;
 		try {
-			result = dbAgentOO.selectData(sql,className);
+			result = dbAgentOO.selectData(sql, className);
+		} catch (Exception ex) {
+			logger.error("list with SQL = " + sql + " throw", ex);
+		}
+		return result;
+	}
+
+	public static List list(String sql, String className, int startPos, int size) {
+		DBAgentOO dbAgentOO = new DBAgentOO();
+		List result = null;
+		try {
+			result = dbAgentOO.selectData(sql, className, startPos, size);
 		} catch (Exception ex) {
 			logger.error("list with SQL = " + sql + " throw", ex);
 		}

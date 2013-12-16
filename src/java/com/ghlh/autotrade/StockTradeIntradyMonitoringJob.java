@@ -54,7 +54,7 @@ public class StockTradeIntradyMonitoringJob {
 				int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 				int mins = Calendar.getInstance().get(Calendar.MINUTE);
 				if (hour == 14 && mins == 58) {
-					processBeforeCloseBuy(stockMonitors);
+					processBeforeCloseBuy(monitorStocksList);
 					break;
 				}
 			}

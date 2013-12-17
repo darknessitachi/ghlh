@@ -69,6 +69,8 @@ public class StockTradeIntradyMonitoringJob {
 	}
 
 	private void processIntraFirstBuy(List monitorStocksList) {
+		String message = "刚开盘开盘价买入处理开始";
+		EventRecorder.recordEvent(this.getClass(), message);
 		for (int i = 0; i < monitorStocksList.size(); i++) {
 			MonitorstockVO monitorstockVO = (MonitorstockVO) monitorStocksList
 					.get(i);
@@ -78,9 +80,13 @@ public class StockTradeIntradyMonitoringJob {
 							"IntradyFirstBuyStrategy");
 			ts.processStockTrade(monitorstockVO);
 		}
+		message = "刚开盘开盘价买入处理结束";
+		EventRecorder.recordEvent(this.getClass(), message);
 	}
 
 	private void processBeforeCloseBuy(List monitorStocksList) {
+		String message = "快收盘收盘价买入处理开始";
+		EventRecorder.recordEvent(this.getClass(), message);
 		for (int i = 0; i < monitorStocksList.size(); i++) {
 			MonitorstockVO monitorstockVO = (MonitorstockVO) monitorStocksList
 					.get(i);
@@ -90,6 +96,8 @@ public class StockTradeIntradyMonitoringJob {
 							"BeforeCloseStrategy");
 			ts.processStockTrade(monitorstockVO);
 		}
+		message = "快收盘收盘价买入处理结束";
+		EventRecorder.recordEvent(this.getClass(), message);
 	}
 
 	public void monitoringIntrady(List stockMonitors) {

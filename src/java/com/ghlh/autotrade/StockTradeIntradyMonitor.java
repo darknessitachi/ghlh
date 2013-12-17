@@ -57,11 +57,11 @@ public class StockTradeIntradyMonitor {
 	private List pendingBuyList;
 
 	public void processSell(StockQuotesBean sqb) {
-		StockTradeIntradyUtil.processSell(this, sqb);
+		monitorStrategy.processSell(this, sqb);
 	}
 
 	public void processBuy(StockQuotesBean sqb) {
-		StockTradeIntradyUtil.processBuy(this, sqb);
+		monitorStrategy.processBuy(this, sqb);
 	}
 
 }

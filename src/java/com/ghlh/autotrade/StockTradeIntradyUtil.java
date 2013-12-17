@@ -19,7 +19,7 @@ public class StockTradeIntradyUtil {
 		List pendingBuyList = monitor.getPendingBuyList();
 		for (int i = 0; i < possibleSellList.size(); i++) {
 			StocktradeVO stocktradeVO = (StocktradeVO) possibleSellList.get(i);
-			if (stocktradeVO.getStatus() == TradeConstants.STATUS_POSSIBLE_SELL) {
+			if (stocktradeVO.getStatus() != TradeConstants.STATUS_FINISH) {
 				if (sqb.getHighestPrice() >= stocktradeVO.getSellprice()) {
 					String message = TradeUtil.getConfirmedSellMessage(
 							stocktradeVO.getStockid(),
@@ -71,7 +71,7 @@ public class StockTradeIntradyUtil {
 		List pendingBuyList = monitor.getPendingBuyList();
 		for (int j = 0; j < pendingBuyList.size(); j++) {
 			StocktradeVO stVO = (StocktradeVO) pendingBuyList.get(j);
-			if (stVO.getStatus() == TradeConstants.STATUS_PENDING_BUY) {
+			if (stVO.getStatus() != TradeConstants.STATUS_T_0_BUY) {
 				if (sqb.getCurrentPrice() <= stVO.getBuyprice()) {
 					String message = TradeUtil.getConfirmedBuyMessage(monitor
 							.getMonitorstockVO().getStockid(),

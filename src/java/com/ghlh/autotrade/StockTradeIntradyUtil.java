@@ -1,5 +1,6 @@
 package com.ghlh.autotrade;
 
+import java.util.Date;
 import java.util.List;
 
 import com.ghlh.data.db.StocktradeDAO;
@@ -18,15 +19,22 @@ public class StockTradeIntradyUtil {
 		List pendingBuyList = monitor.getPendingBuyList();
 		for (int i = 0; i < possibleSellList.size(); i++) {
 			StocktradeVO stocktradeVO = (StocktradeVO) possibleSellList.get(i);
-			if (sqb.getHighestPrice() >= stocktradeVO.getSellprice()) {
-				String message = TradeUtil.getConfirmedSellMessage(
-						stocktradeVO.getStockid(), stocktradeVO.getNumber(),
-						stocktradeVO.getSellprice());
-				EventRecorder.recordEvent(StockTradeIntradyUtil.class, message);
-				StocktradeDAO.updateStocktradeFinished(stocktradeVO.getId());
-				if (Boolean.valueOf(monitor.getMonitorstockVO()
-						.getOnmonitoring())) {
-					reBuy(stocktradeVO, pendingBuyList);
+			if (stocktradeVO.getStatus() == TradeConstants.STATUS_POSSIBLE_SELL) {
+				if (sqb.getHighestPrice() >= stocktradeVO.getSellprice()) {
+					String message = TradeUtil.getConfirmedSellMessage(
+							stocktradeVO.getStockid(),
+							stocktradeVO.getNumber(),
+							stocktradeVO.getSellprice());
+					EventRecorder.recordEvent(StockTradeIntradyUtil.class,
+							message);
+					stocktradeVO.setStatus(TradeConstants.STATUS_FINISH);
+					stocktradeVO.setSelldate(new Date());
+					StocktradeDAO
+							.updateStocktradeFinished(stocktradeVO.getId());
+					if (Boolean.valueOf(monitor.getMonitorstockVO()
+							.getOnmonitoring())) {
+						reBuy(stocktradeVO, pendingBuyList);
+					}
 				}
 			}
 		}

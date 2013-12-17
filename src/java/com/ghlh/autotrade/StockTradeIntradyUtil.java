@@ -71,18 +71,20 @@ public class StockTradeIntradyUtil {
 		List pendingBuyList = monitor.getPendingBuyList();
 		for (int j = 0; j < pendingBuyList.size(); j++) {
 			StocktradeVO stVO = (StocktradeVO) pendingBuyList.get(j);
-			if (sqb.getCurrentPrice() <= stVO.getBuyprice()) {
-				String message = TradeUtil.getConfirmedBuyMessage(monitor
-						.getMonitorstockVO().getStockid(), stVO.getNumber(),
-						stVO.getBuyprice());
+			if (stVO.getStatus() == TradeConstants.STATUS_PENDING_BUY) {
+				if (sqb.getCurrentPrice() <= stVO.getBuyprice()) {
+					String message = TradeUtil.getConfirmedBuyMessage(monitor
+							.getMonitorstockVO().getStockid(),
+							stVO.getNumber(), stVO.getBuyprice());
 
-				EventRecorder.recordEvent(StockTradeIntradyUtil.class, message);
-				SoftwareTrader.getInstance().buyStock(stVO.getStockid(),
-						stVO.getNumber());
-				StocktradeDAO.updateStocktradeStatus(stVO.getId(),
-						TradeConstants.STATUS_T_0_BUY);
-				pendingBuyList.remove(j);
-				break;
+					EventRecorder.recordEvent(StockTradeIntradyUtil.class,
+							message);
+					SoftwareTrader.getInstance().buyStock(stVO.getStockid(),
+							stVO.getNumber());
+					StocktradeDAO.updateStocktradeStatus(stVO.getId(),
+							TradeConstants.STATUS_T_0_BUY);
+					stVO.setStatus(TradeConstants.STATUS_T_0_BUY);
+				}
 			}
 		}
 	}

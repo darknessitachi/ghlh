@@ -151,7 +151,7 @@ public class Launcher extends DefaultDockableBarHolder {
 				.getImageIcon(StockIconsFactory.TabConfig32);
 		ImageIcon decisionImage = StockIconsFactory
 				.getImageIcon(StockIconsFactory.TabDecision32);
-		_tabbedPane.addTab("博客订阅", feedImage, _feedPanel);
+		//_tabbedPane.addTab("博客订阅", feedImage, _feedPanel);
 		_tabbedPane.addTab("自动交易设置", decisionImage, _decisionPanel);
 		_tabbedPane.addTab("自动交易启动", configImage, _configPanel);
 
@@ -163,14 +163,14 @@ public class Launcher extends DefaultDockableBarHolder {
 
 		_decisionPanel.add(MainPanel.getInstance().getMainPanel());
 		_configPanel.add(new StartMainPanel().getContentPanel());
-		FeedReader _reader = new FeedReader(
-				new String[] { "http://blog.sina.com.cn/rss/2716358792.xml"
+		//FeedReader _reader = new FeedReader(
+				//new String[] { //"http://blog.sina.com.cn/rss/2716358792.xml"
 				// "http://blog.sina.com.cn/rss/2716358792.xml",
 				// "http://blog.sina.com.cn/rss/1216826604.xml",
 				// "http://blog.sina.com.cn/rss/1278228085.xml",
 				// "http://luodaisohu.blog.sohu.com/rss"
-				}, "http://blog.sina.com.cn/rss/2716358792.xml");
-		_feedPanel.add(_reader);
+				//}, "http://blog.sina.com.cn/rss/2716358792.xml");
+		//_feedPanel.add(_reader);
 
 		// add status bar
 		_statusBar = createStatusBar();

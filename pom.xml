@@ -113,13 +113,7 @@
       <artifactId>action</artifactId>
       <version>1.0</version>
       <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>jide</groupId>
-      <artifactId>action</artifactId>
-      <version>1.0</version>
-      <scope>compile</scope>
-    </dependency>   
+    </dependency>  
     <dependency>
       <groupId>jide</groupId>
       <artifactId>action</artifactId>

@@ -63,7 +63,14 @@ public class ConfigurationAccessor {
 		return result;
 	}
 
+	private boolean openSoftwareTrade;
+
 	public boolean isOpenSoftwareTrade() {
-		return true;
+		return openSoftwareTrade;
 	}
+
+	public void setOpenSoftwareTrade(boolean openSoftwareTrade) {
+		this.openSoftwareTrade = openSoftwareTrade;
+	}
+
 }

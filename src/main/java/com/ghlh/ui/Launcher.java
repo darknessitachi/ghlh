@@ -19,6 +19,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.UIResource;
 
+import com.ghlh.conf.ConfigurationAccessor;
 import com.ghlh.icons.StockIconsFactory;
 import com.ghlh.ui.autotrade.MainPanel;
 import com.ghlh.ui.autotradestart.StartMainPanel;
@@ -100,6 +101,15 @@ public class Launcher extends DefaultDockableBarHolder {
 	}
 
 	public static void main(String[] args) {
+		if(args.length > 0){
+			String openSoftware = args[0];
+			if(openSoftware.toLowerCase().equals("close")){
+				ConfigurationAccessor.getInstance().setOpenSoftwareTrade(false);
+			}
+			if(openSoftware.toLowerCase().equals("open")){
+				ConfigurationAccessor.getInstance().setOpenSoftwareTrade(true);
+			}
+		}
 		// setNative(true) will make the color used by action framework to be
 		// kept the same as native XP theme.
 		Office2003Painter.setNative(SystemInfo.isWindowsXP());

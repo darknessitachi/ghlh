@@ -16,9 +16,10 @@ public class TradeSoftwareController {
 	public final static int ACTION_PAUSE_INTERVAL = 500;
 
 	private IntCall exec;
-	private static TradeSoftwareController instance = new TradeSoftwareController();
 	private static Logger logger = Logger
 			.getLogger(TradeSoftwareController.class);
+
+	private static TradeSoftwareController instance = new TradeSoftwareController();
 
 	public static TradeSoftwareController getInstance() {
 		return instance;

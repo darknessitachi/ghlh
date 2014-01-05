@@ -4,8 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import com.eaio.nativecall.IntCall;
 import com.eaio.nativecall.NativeCall;
+import com.ghlh.conf.ConfigurationAccessor;
 import com.ghlh.util.TimeUtil;
 
 public class TradeSoftwareController {
@@ -14,6 +17,8 @@ public class TradeSoftwareController {
 
 	private IntCall exec;
 	private static TradeSoftwareController instance = new TradeSoftwareController();
+	private static Logger logger = Logger
+			.getLogger(TradeSoftwareController.class);
 
 	public static TradeSoftwareController getInstance() {
 		return instance;
@@ -24,6 +29,7 @@ public class TradeSoftwareController {
 			NativeCall.init();
 			init();
 		} catch (Throwable t) {
+			logger.error("Load hotkey throw:", t);
 			t.printStackTrace();
 		}
 	}

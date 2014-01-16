@@ -36,8 +36,8 @@ public class VOBeanGenerater {
 		String currentDir = System.getProperty("user.dir");
 
 		String packageName = this.replacePointToSep(packageName1);
-		String packageDir = currentDir + fileSep + "src" + fileSep + "java"
-				+ fileSep + packageName;
+		String packageDir = currentDir + fileSep + "src" + fileSep + "main"
+				+ fileSep + "java" + fileSep + packageName;
 		if (packageName.equals("")) {
 			packageDir = currentDir + fileSep + "src";
 		}
@@ -350,7 +350,7 @@ public class VOBeanGenerater {
 	public static void main(String[] args) {
 		try {
 			VOBeanGenerater vobg = new VOBeanGenerater();
-			String[] tablename = { "stocktrade"};
+			String[] tablename = { "stockdailyinfo" };
 			for (int i = 0; i < tablename.length; i++) {
 				vobg.generateVOBean(tablename[i], "com.ghlh.data.db");
 			}

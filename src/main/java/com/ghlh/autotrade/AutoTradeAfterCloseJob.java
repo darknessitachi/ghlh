@@ -34,21 +34,43 @@ public class AutoTradeAfterCloseJob implements Job {
 
 	private void collectStockDailyInfo() {
 		List backMA5 = MonitorstockDAO.getBackMA10MonitorStock();
-		for (int i = 0; i < backMA5.size(); i++) {
-			MonitorstockVO monitorstockVO = (MonitorstockVO) backMA5.get(i);
-			StockQuotesBean sqb = InternetStockQuotesInquirer.getInstance()
-					.getStockQuotesBean(monitorstockVO.getStockid());
-			StockdailyinfoVO stockdailyinfoVO = new StockdailyinfoVO();
-			stockdailyinfoVO.setStockid(monitorstockVO.getStockid());
-			stockdailyinfoVO.setDate(new Date());
-			stockdailyinfoVO.setOpenprice(sqb.getTodayOpen());
-			stockdailyinfoVO.setCloseprice(sqb.getCurrentPrice());
-			stockdailyinfoVO.setHighestprice(sqb.getHighestPrice());
-			stockdailyinfoVO.setLowestprice(sqb.getLowestPrice());
-			stockdailyinfoVO.setCreatedtime(new Date());
-			stockdailyinfoVO.setLastmodifiedtime(new Date());
-			GhlhDAO.create(stockdailyinfoVO);
+		for (int i = 1; i < 1000; i++) {
+			// MonitorstockVO monitorstockVO = (MonitorstockVO) backMA5.get(i);
+			String stockId = getStockId(i);
+			StockQuotesBean sqb = InternetStockQuotesInquirer.getEastMoneyInstance()
+					.getStockQuotesBean(stockId);
+			if (sqb != null) {
+				StockdailyinfoVO stockdailyinfoVO = new StockdailyinfoVO();
+				stockdailyinfoVO.setStockid(stockId);
+				stockdailyinfoVO.setDate(new Date());
+				stockdailyinfoVO.setTodayopenprice(sqb.getTodayOpen());
+				stockdailyinfoVO.setCurrentprice(sqb.getCurrentPrice());
+				stockdailyinfoVO.setHighestprice(sqb.getHighestPrice());
+				stockdailyinfoVO.setLowestprice(sqb.getLowestPrice());
+				stockdailyinfoVO.setYesterdaycloseprice(sqb.getYesterdayClose());
+				stockdailyinfoVO.setZde(sqb.getZde());
+				stockdailyinfoVO.setZdf(sqb.getZdf());
+				stockdailyinfoVO.setHsl(sqb.getHsl());
+				
+				stockdailyinfoVO.setCreatedtime(new Date());
+				stockdailyinfoVO.setLastmodifiedtime(new Date());
+				GhlhDAO.create(stockdailyinfoVO);
+			}
 		}
+	}
+
+	public static void main(String[] args){
+		new AutoTradeAfterCloseJob().collectStockDailyInfo();
+	}
+	private String getStockId(int no) {
+		String result = no + "";
+		if ((no + "").length() == 1) {
+			result = "00" + no;
+		}
+		if ((no + "").length() == 2) {
+			result = "0" + no;
+		}
+		return "002" + result;
 	}
 
 	private void processPredoneOrders() {

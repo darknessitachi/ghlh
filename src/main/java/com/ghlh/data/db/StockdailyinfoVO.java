@@ -40,43 +40,119 @@ public class StockdailyinfoVO implements java.io.Serializable{
   public java.util.Date getDate(){
     return date;
   }
-  private boolean hasOpenprice;
-  public boolean isHasOpenprice(){
-    return hasOpenprice;
+  private boolean hasCurrentprice;
+  public boolean isHasCurrentprice(){
+    return hasCurrentprice;
   }
-  private boolean whereOpenprice;
-  public boolean isWhereOpenprice(){
-    return this.whereOpenprice;
+  private boolean whereCurrentprice;
+  public boolean isWhereCurrentprice(){
+    return this.whereCurrentprice;
   }
-  public void setWhereOpenprice(boolean whereOpenprice){
-    this.whereOpenprice = whereOpenprice;
+  public void setWhereCurrentprice(boolean whereCurrentprice){
+    this.whereCurrentprice = whereCurrentprice;
   }
-  private double openprice;
-  public void setOpenprice(double openprice){
-    this.hasOpenprice = true;
-    this.openprice = openprice;
+  private double currentprice;
+  public void setCurrentprice(double currentprice){
+    this.hasCurrentprice = true;
+    this.currentprice = currentprice;
   }
-  public double getOpenprice(){
-    return openprice;
+  public double getCurrentprice(){
+    return currentprice;
   }
-  private boolean hasCloseprice;
-  public boolean isHasCloseprice(){
-    return hasCloseprice;
+  private boolean hasZde;
+  public boolean isHasZde(){
+    return hasZde;
   }
-  private boolean whereCloseprice;
-  public boolean isWhereCloseprice(){
-    return this.whereCloseprice;
+  private boolean whereZde;
+  public boolean isWhereZde(){
+    return this.whereZde;
   }
-  public void setWhereCloseprice(boolean whereCloseprice){
-    this.whereCloseprice = whereCloseprice;
+  public void setWhereZde(boolean whereZde){
+    this.whereZde = whereZde;
   }
-  private double closeprice;
-  public void setCloseprice(double closeprice){
-    this.hasCloseprice = true;
-    this.closeprice = closeprice;
+  private double zde;
+  public void setZde(double zde){
+    this.hasZde = true;
+    this.zde = zde;
   }
-  public double getCloseprice(){
-    return closeprice;
+  public double getZde(){
+    return zde;
+  }
+  private boolean hasZdf;
+  public boolean isHasZdf(){
+    return hasZdf;
+  }
+  private boolean whereZdf;
+  public boolean isWhereZdf(){
+    return this.whereZdf;
+  }
+  public void setWhereZdf(boolean whereZdf){
+    this.whereZdf = whereZdf;
+  }
+  private double zdf;
+  public void setZdf(double zdf){
+    this.hasZdf = true;
+    this.zdf = zdf;
+  }
+  public double getZdf(){
+    return zdf;
+  }
+  private boolean hasHsl;
+  public boolean isHasHsl(){
+    return hasHsl;
+  }
+  private boolean whereHsl;
+  public boolean isWhereHsl(){
+    return this.whereHsl;
+  }
+  public void setWhereHsl(boolean whereHsl){
+    this.whereHsl = whereHsl;
+  }
+  private double hsl;
+  public void setHsl(double hsl){
+    this.hasHsl = true;
+    this.hsl = hsl;
+  }
+  public double getHsl(){
+    return hsl;
+  }
+  private boolean hasTodayopenprice;
+  public boolean isHasTodayopenprice(){
+    return hasTodayopenprice;
+  }
+  private boolean whereTodayopenprice;
+  public boolean isWhereTodayopenprice(){
+    return this.whereTodayopenprice;
+  }
+  public void setWhereTodayopenprice(boolean whereTodayopenprice){
+    this.whereTodayopenprice = whereTodayopenprice;
+  }
+  private double todayopenprice;
+  public void setTodayopenprice(double todayopenprice){
+    this.hasTodayopenprice = true;
+    this.todayopenprice = todayopenprice;
+  }
+  public double getTodayopenprice(){
+    return todayopenprice;
+  }
+  private boolean hasYesterdaycloseprice;
+  public boolean isHasYesterdaycloseprice(){
+    return hasYesterdaycloseprice;
+  }
+  private boolean whereYesterdaycloseprice;
+  public boolean isWhereYesterdaycloseprice(){
+    return this.whereYesterdaycloseprice;
+  }
+  public void setWhereYesterdaycloseprice(boolean whereYesterdaycloseprice){
+    this.whereYesterdaycloseprice = whereYesterdaycloseprice;
+  }
+  private double yesterdaycloseprice;
+  public void setYesterdaycloseprice(double yesterdaycloseprice){
+    this.hasYesterdaycloseprice = true;
+    this.yesterdaycloseprice = yesterdaycloseprice;
+  }
+  public double getYesterdaycloseprice(){
+    return yesterdaycloseprice;
   }
   private boolean hasHighestprice;
   public boolean isHasHighestprice(){

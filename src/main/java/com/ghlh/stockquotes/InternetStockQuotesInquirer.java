@@ -18,6 +18,12 @@ public abstract class InternetStockQuotesInquirer implements
 	public static StockQuotesInquirer getInstance() {
 		return instance;
 	}
+	
+	private static StockQuotesInquirer eastMoneyInstance = new SinaStockQuotesInquirer();
+
+	public static StockQuotesInquirer getEastMoneyInstance() {
+		return eastMoneyInstance;
+	}
 
 	public StockQuotesBean getStockQuotesBean(String stockId) {
 		if(testingInjectStockQuotesBean != null){

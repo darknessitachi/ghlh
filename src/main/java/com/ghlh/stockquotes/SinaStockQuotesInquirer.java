@@ -54,7 +54,7 @@ public class SinaStockQuotesInquirer extends InternetStockQuotesInquirer {
 		try {
 			StockQuotesInquirer internetStockQuotesInquirer = new SinaStockQuotesInquirer();
 			StockQuotesBean stockQuotesBean = internetStockQuotesInquirer
-					.getStockQuotesBean("600616");
+					.getStockQuotesBean("300001");
 			System.out.println(stockQuotesBean);
 
 		} catch (Exception ex) {

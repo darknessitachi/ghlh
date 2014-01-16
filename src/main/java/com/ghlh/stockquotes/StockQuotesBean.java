@@ -91,7 +91,18 @@ public class StockQuotesBean {
 				+ currentPrice + " Zdf = " + zdf + " Zde = " + zde
 				+ " TodayOpen = " + todayOpen + " YesterdayClose = "
 				+ yesterdayClose + " HighestPrice = " + highestPrice
-				+ " LowestPrice = " + lowestPrice;
+				+ " LowestPrice = " + lowestPrice
+				+ " Hsl = " + hsl;
 
+	}
+	
+	private double hsl;
+
+	public double getHsl() {
+		return hsl;
+	}
+
+	public void setHsl(double hsl) {
+		this.hsl = hsl;
 	}
 }

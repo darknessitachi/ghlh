@@ -49,6 +49,10 @@ public abstract class InternetStockQuotesInquirer implements
 		}
 		return result;
 	}
+	
+	protected String getCharset(){
+		return "gb2312";
+	}
 
 	private String getStockQuotesInfoFromInternet(String url)
 			throws StockQuotesException {
@@ -56,7 +60,8 @@ public abstract class InternetStockQuotesInquirer implements
 			method = new GetMethod(url);
 			client.executeMethod(method);
 			InputStream in = method.getResponseBodyAsStream();
-			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			BufferedReader br = new BufferedReader(new InputStreamReader(in,
+					getCharset()));
 			String result = br.readLine();
 			return result;
 		} catch (Exception ex) {

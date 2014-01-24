@@ -52,7 +52,7 @@ public class BackMA10IntradayStrategy implements MonitoringStrategy {
 			for (int i = 0; i < previousDailyInfo.size(); i++) {
 				StockdailyinfoVO dailyInfo = (StockdailyinfoVO) previousDailyInfo
 						.get(i);
-				sumClosePrice += dailyInfo.getCloseprice();
+				sumClosePrice += dailyInfo.getYesterdaycloseprice();
 			}
 			double ma10Price = MathUtil
 					.formatDoubleWith2QuanJin((sumClosePrice + sqb

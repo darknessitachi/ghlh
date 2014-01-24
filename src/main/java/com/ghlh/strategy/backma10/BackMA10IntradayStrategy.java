@@ -57,6 +57,10 @@ public class BackMA10IntradayStrategy implements MonitoringStrategy {
 			double ma10Price = MathUtil
 					.formatDoubleWith2QuanJin((sumClosePrice + sqb
 							.getCurrentPrice()) / (days + 1));
+			if(TradeUtil.isStopTrade(sqb)){
+				return;
+			}
+
 			if (sqb.getCurrentPrice() <= ma10Price) {
 				AdditionalInfoBean aib = (AdditionalInfoBean) AdditionInfoUtil
 						.parseAdditionalInfoBean(monitor.getMonitorstockVO()

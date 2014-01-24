@@ -33,36 +33,44 @@ public class AutoTradeAfterCloseJob implements Job {
 	}
 
 	private void collectStockDailyInfo() {
-		List backMA5 = MonitorstockDAO.getBackMA10MonitorStock();
 		for (int i = 1; i < 1000; i++) {
-			// MonitorstockVO monitorstockVO = (MonitorstockVO) backMA5.get(i);
-			String stockId = getStockId(i);
+			String stockId = this.getStockCYBId(i);
 			StockQuotesBean sqb = InternetStockQuotesInquirer.getEastMoneyInstance()
 					.getStockQuotesBean(stockId);
-			if (sqb != null) {
-				StockdailyinfoVO stockdailyinfoVO = new StockdailyinfoVO();
-				stockdailyinfoVO.setStockid(stockId);
-				stockdailyinfoVO.setDate(new Date());
-				stockdailyinfoVO.setTodayopenprice(sqb.getTodayOpen());
-				stockdailyinfoVO.setCurrentprice(sqb.getCurrentPrice());
-				stockdailyinfoVO.setHighestprice(sqb.getHighestPrice());
-				stockdailyinfoVO.setLowestprice(sqb.getLowestPrice());
-				stockdailyinfoVO.setYesterdaycloseprice(sqb.getYesterdayClose());
-				stockdailyinfoVO.setZde(sqb.getZde());
-				stockdailyinfoVO.setZdf(sqb.getZdf());
-				stockdailyinfoVO.setHsl(sqb.getHsl());
-				
-				stockdailyinfoVO.setCreatedtime(new Date());
-				stockdailyinfoVO.setLastmodifiedtime(new Date());
-				GhlhDAO.create(stockdailyinfoVO);
-			}
+			createStockDailyIinfo(stockId, sqb);
+		}
+
+		for (int i = 1; i < 1000; i++) {
+			String stockId = this.getStockSMBId(i);
+			StockQuotesBean sqb = InternetStockQuotesInquirer.getEastMoneyInstance()
+					.getStockQuotesBean(stockId);
+			createStockDailyIinfo(stockId, sqb);
+		}
+	}
+
+	private void createStockDailyIinfo(String stockId, StockQuotesBean sqb) {
+		if (sqb != null) {
+			StockdailyinfoVO stockdailyinfoVO = new StockdailyinfoVO();
+			stockdailyinfoVO.setStockid(stockId);
+			stockdailyinfoVO.setDate(new Date());
+			stockdailyinfoVO.setTodayopenprice(sqb.getTodayOpen());
+			stockdailyinfoVO.setCurrentprice(sqb.getCurrentPrice());
+			stockdailyinfoVO.setHighestprice(sqb.getHighestPrice());
+			stockdailyinfoVO.setLowestprice(sqb.getLowestPrice());
+			stockdailyinfoVO.setYesterdaycloseprice(sqb.getYesterdayClose());
+			stockdailyinfoVO.setZde(sqb.getZde());
+			stockdailyinfoVO.setZdf(sqb.getZdf());
+			stockdailyinfoVO.setHsl(sqb.getHsl());
+			stockdailyinfoVO.setCreatedtime(new Date());
+			stockdailyinfoVO.setLastmodifiedtime(new Date());
+			GhlhDAO.create(stockdailyinfoVO);
 		}
 	}
 
 	public static void main(String[] args){
 		new AutoTradeAfterCloseJob().collectStockDailyInfo();
 	}
-	private String getStockId(int no) {
+	private String getStockSMBId(int no) {
 		String result = no + "";
 		if ((no + "").length() == 1) {
 			result = "00" + no;
@@ -71,6 +79,17 @@ public class AutoTradeAfterCloseJob implements Job {
 			result = "0" + no;
 		}
 		return "002" + result;
+	}
+	
+	private String getStockCYBId(int no) {
+		String result = no + "";
+		if ((no + "").length() == 1) {
+			result = "00" + no;
+		}
+		if ((no + "").length() == 2) {
+			result = "0" + no;
+		}
+		return "300" + result;
 	}
 
 	private void processPredoneOrders() {

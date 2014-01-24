@@ -72,6 +72,9 @@ public class StockTradeIntradyUtil {
 		for (int j = 0; j < pendingBuyList.size(); j++) {
 			StocktradeVO stVO = (StocktradeVO) pendingBuyList.get(j);
 			if (stVO.getStatus() != TradeConstants.STATUS_T_0_BUY) {
+				if(TradeUtil.isStopTrade(sqb)){
+					return;
+				}
 				if (sqb.getCurrentPrice() <= stVO.getBuyprice()) {
 					String message = TradeUtil.getConfirmedBuyMessage(monitor
 							.getMonitorstockVO().getStockid(),

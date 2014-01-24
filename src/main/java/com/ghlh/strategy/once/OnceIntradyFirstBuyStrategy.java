@@ -36,6 +36,9 @@ public class OnceIntradyFirstBuyStrategy implements OneTimeStrategy {
 				// if (aib.getBuyPriceStrategy().equals(" ’≈Ãº€")) {
 				// priceType = TradeUtil.PRICE_CLOSE;
 				// }
+				if(TradeUtil.isStopTrade(sqb)){
+					return;
+				}
 				double sellPrice = sqb.getCurrentPrice() * (1 + aib.getTargetZf());
 				sellPrice = MathUtil.formatDoubleWith2QuanShe(sellPrice);
 				String message = TradeUtil.getIntradyPriceBuyMessage(

@@ -2,21 +2,38 @@ package com.ghlh.strategy;
 
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+
 import com.common.util.IDGenerator;
+import com.ghlh.autotrade.AutoTradeAfterCloseJob;
 import com.ghlh.autotrade.EventRecorder;
 import com.ghlh.data.db.GhlhDAO;
 import com.ghlh.data.db.StocktradeDAO;
 import com.ghlh.data.db.StocktradeVO;
+import com.ghlh.stockquotes.StockQuotesBean;
 import com.ghlh.tradeway.SoftwareTrader;
 
 public class TradeUtil {
 
+	private static Logger logger = Logger
+			.getLogger(TradeUtil.class);
+
+	
 	public static void dealBuyStock(String stockId, double tradeMoney,
 			double basePrice, double sellPrice, String strategy) {
 		int number = getTradeNumber(tradeMoney, basePrice);
 		dealBuyStock(stockId, basePrice, sellPrice, strategy, number);
 	}
 
+	public static boolean isStopTrade(StockQuotesBean sqb){
+		boolean result = false;
+		if(sqb.getCurrentPrice() == 0){
+			logger.error(" Stock : " + sqb.getStockId() + " is stopped to trade now");
+			result = true;
+		}
+		return result;
+	}
+	
 	public static void dealBuyStockSuccessfully(String stockId,
 			double tradeMoney, double basePrice, double sellPrice,
 			String strategy) {

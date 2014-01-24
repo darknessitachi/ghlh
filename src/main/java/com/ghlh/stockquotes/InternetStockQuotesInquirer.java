@@ -19,7 +19,7 @@ public abstract class InternetStockQuotesInquirer implements
 		return instance;
 	}
 	
-	private static StockQuotesInquirer eastMoneyInstance = new SinaStockQuotesInquirer();
+	private static StockQuotesInquirer eastMoneyInstance = new EastMoneyStockQuotesInquirer();
 
 	public static StockQuotesInquirer getEastMoneyInstance() {
 		return eastMoneyInstance;

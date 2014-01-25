@@ -31,16 +31,18 @@ public class AutoTradeAfterCloseJob implements Job {
 		message = "结束15:05盘后处理";
 		EventRecorder.recordEvent(this.getClass(), message);
 	}
-
+	private int CYB_COUNT = 400;
+	private int SMB_COUNT = 800;
+	
 	private void collectStockDailyInfo() {
-		for (int i = 1; i < 1000; i++) {
+		for (int i = 1; i < CYB_COUNT; i++) {
 			String stockId = this.getStockCYBId(i);
 			StockQuotesBean sqb = InternetStockQuotesInquirer.getEastMoneyInstance()
 					.getStockQuotesBean(stockId);
 			createStockDailyIinfo(stockId, sqb);
 		}
 
-		for (int i = 1; i < 1000; i++) {
+		for (int i = 1; i < SMB_COUNT; i++) {
 			String stockId = this.getStockSMBId(i);
 			StockQuotesBean sqb = InternetStockQuotesInquirer.getEastMoneyInstance()
 					.getStockQuotesBean(stockId);

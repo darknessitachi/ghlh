@@ -13,17 +13,17 @@ public class SoftwareTraderTest extends SoftwareTrader {
 
 	@Test
 	public void testSellStock() {
-		softwareTrader.sellStock("601118", 100);
+		softwareTrader.sellStock("002149", 100);
 	}
 
 	@Test
 	public void testBuyStockWithPrice() {
-		softwareTrader.buyStock("600036", 100,12.51);
+		softwareTrader.buyStock("002149", 100,12.59);
 	}
 
 	@Test
 	public void testSellStockWithPrice() {
-		softwareTrader.sellStock("601118", 100,9.24);
+		softwareTrader.sellStock("002149", 100,12.59);
 	}
 
 	

@@ -19,7 +19,7 @@ public class TradeSoftwareController {
 	private static Logger logger = Logger
 			.getLogger(TradeSoftwareController.class);
 
-	private static TradeSoftwareController instance = new TradeSoftwareController();
+	private static TradeSoftwareController instance = new com.ghlh.tradeway.software.java.TradeSoftwareController();
 
 	public static TradeSoftwareController getInstance() {
 		return instance;
@@ -27,8 +27,8 @@ public class TradeSoftwareController {
 
 	public TradeSoftwareController() {
 		try {
-			NativeCall.init();
-			init();
+//			NativeCall.init();
+//			init();
 		} catch (Throwable t) {
 			logger.error("Load hotkey throw:", t);
 			t.printStackTrace();
@@ -78,6 +78,7 @@ public class TradeSoftwareController {
 
 	public static void main(String[] args) {
 		new TradeSoftwareController().activateTradeSoft();
+		
 	}
 
 }

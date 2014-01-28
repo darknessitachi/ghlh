@@ -72,5 +72,16 @@ public class ConfigurationAccessor {
 	public void setOpenSoftwareTrade(boolean openSoftwareTrade) {
 		this.openSoftwareTrade = openSoftwareTrade;
 	}
+	
+	private String tradeWay = "java";
+
+	public String getTradeWay() {
+		return tradeWay;
+	}
+
+	public void setTradeWay(String tradeWay) {
+		this.tradeWay = tradeWay;
+	}
+	
 
 }

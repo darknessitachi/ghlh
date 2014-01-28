@@ -12,23 +12,31 @@ import com.ghlh.conf.ConfigurationAccessor;
 import com.ghlh.util.TimeUtil;
 
 public class TradeSoftwareController {
-	public final static int CMD_PAUSE_INTERVAL = 500;
-	public final static int ACTION_PAUSE_INTERVAL = 500;
+	public final static int CMD_PAUSE_INTERVAL = 1000;
+	public final static int ACTION_PAUSE_INTERVAL = 1000;
 
 	private IntCall exec;
 	private static Logger logger = Logger
 			.getLogger(TradeSoftwareController.class);
 
-	private static TradeSoftwareController instance = new com.ghlh.tradeway.software.java.TradeSoftwareController();
+	private static TradeSoftwareController instance = null;
 
 	public static TradeSoftwareController getInstance() {
+		if (instance == null) {
+			if (ConfigurationAccessor.getInstance().getTradeWay()
+					.equals("java")) {
+				instance = new com.ghlh.tradeway.software.java.TradeSoftwareController();
+			} else {
+				instance = new TradeSoftwareController();
+			}
+		}
 		return instance;
 	}
 
 	public TradeSoftwareController() {
 		try {
-//			NativeCall.init();
-//			init();
+			NativeCall.init();
+			init();
 		} catch (Throwable t) {
 			logger.error("Load hotkey throw:", t);
 			t.printStackTrace();
@@ -78,7 +86,7 @@ public class TradeSoftwareController {
 
 	public static void main(String[] args) {
 		new TradeSoftwareController().activateTradeSoft();
-		
+
 	}
 
 }

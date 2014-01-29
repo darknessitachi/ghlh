@@ -63,7 +63,7 @@ public class TradeSoftwareController extends
 		}
 	}
 
-	private synchronized void executeCall(String cmd) {
+	private void executeCall(String cmd) {
 		if (cmd.indexOf("MouseClick") == 0) {
 			String pos = cmd.substring(cmd.indexOf(" ") + 1);
 			String xS = pos.substring(0, pos.indexOf(" "));

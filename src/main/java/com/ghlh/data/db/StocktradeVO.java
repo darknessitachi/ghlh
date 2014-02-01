@@ -154,24 +154,43 @@ public class StocktradeVO implements java.io.Serializable{
   public java.util.Date getSelldate(){
     return selldate;
   }
-  private boolean hasSellprice;
-  public boolean isHasSellprice(){
-    return hasSellprice;
+  private boolean hasWinsellprice;
+  public boolean isHasWinsellprice(){
+    return hasWinsellprice;
   }
-  private boolean whereSellprice;
-  public boolean isWhereSellprice(){
-    return this.whereSellprice;
+  private boolean whereWinsellprice;
+  public boolean isWhereWinsellprice(){
+    return this.whereWinsellprice;
   }
-  public void setWhereSellprice(boolean whereSellprice){
-    this.whereSellprice = whereSellprice;
+  public void setWhereWinsellprice(boolean whereWinsellprice){
+    this.whereWinsellprice = whereWinsellprice;
   }
-  private double sellprice;
-  public void setSellprice(double sellprice){
-    this.hasSellprice = true;
-    this.sellprice = sellprice;
+  private double winsellprice;
+  public void setWinsellprice(double winsellprice){
+    this.hasWinsellprice = true;
+    this.winsellprice = winsellprice;
   }
-  public double getSellprice(){
-    return sellprice;
+  public double getWinsellprice(){
+    return winsellprice;
+  }
+  private boolean hasLostsellprice;
+  public boolean isHasLostsellprice(){
+    return hasLostsellprice;
+  }
+  private boolean whereLostsellprice;
+  public boolean isWhereLostsellprice(){
+    return this.whereLostsellprice;
+  }
+  public void setWhereLostsellprice(boolean whereLostsellprice){
+    this.whereLostsellprice = whereLostsellprice;
+  }
+  private double lostsellprice;
+  public void setLostsellprice(double lostsellprice){
+    this.hasLostsellprice = true;
+    this.lostsellprice = lostsellprice;
+  }
+  public double getLostsellprice(){
+    return lostsellprice;
   }
   private boolean hasStatus;
   public boolean isHasStatus(){

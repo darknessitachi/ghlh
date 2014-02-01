@@ -35,8 +35,11 @@ public class TradeSoftwareController {
 
 	public TradeSoftwareController() {
 		try {
-			NativeCall.init();
-			init();
+			if (!ConfigurationAccessor.getInstance().getTradeWay()
+					.equals("java")) {
+				NativeCall.init();
+				init();
+			}
 		} catch (Throwable t) {
 			logger.error("Load hotkey throw:", t);
 			t.printStackTrace();

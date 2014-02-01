@@ -70,6 +70,7 @@ public class ConfigurationAccessor {
 	}
 
 	public void setOpenSoftwareTrade(boolean openSoftwareTrade) {
+		System.out.println("set Open Software = " + openSoftwareTrade);
 		this.openSoftwareTrade = openSoftwareTrade;
 	}
 	

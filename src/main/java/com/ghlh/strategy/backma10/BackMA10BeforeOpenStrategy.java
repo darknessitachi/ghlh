@@ -30,10 +30,10 @@ public class BackMA10BeforeOpenStrategy implements OneTimeStrategy {
 		double currentPrice = stockQuotesBean.getCurrentPrice();
 		double possibleMaxPrice = currentPrice * TradeConstants.MAX_ZF;
 		StocktradeVO stocktradeVO = (StocktradeVO) stockTradeList.get(0);
-		if (stocktradeVO.getSellprice() < possibleMaxPrice) {
+		if (stocktradeVO.getWinsellprice() < possibleMaxPrice) {
 			String message = TradeUtil.getPendingSellMessage(
 					stocktradeVO.getStockid(), stocktradeVO.getNumber(),
-					stocktradeVO.getSellprice());
+					stocktradeVO.getWinsellprice());
 			EventRecorder.recordEvent(this.getClass(), message);
 			TradeUtil.dealSell(stocktradeVO);
 		}

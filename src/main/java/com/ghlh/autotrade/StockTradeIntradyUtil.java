@@ -6,6 +6,7 @@ import java.util.List;
 import com.ghlh.data.db.StocktradeDAO;
 import com.ghlh.data.db.StocktradeVO;
 import com.ghlh.stockquotes.StockQuotesBean;
+import com.ghlh.strategy.BuyStockBean;
 import com.ghlh.strategy.TradeConstants;
 import com.ghlh.strategy.TradeUtil;
 import com.ghlh.strategy.stair.StairConstants;
@@ -19,24 +20,46 @@ public class StockTradeIntradyUtil {
 		List pendingBuyList = monitor.getPendingBuyList();
 		for (int i = 0; i < possibleSellList.size(); i++) {
 			StocktradeVO stocktradeVO = (StocktradeVO) possibleSellList.get(i);
-			if (stocktradeVO.getStatus() != TradeConstants.STATUS_FINISH) {
-				if (sqb.getHighestPrice() >= stocktradeVO.getSellprice()) {
-					String message = TradeUtil.getConfirmedSellMessage(
-							stocktradeVO.getStockid(),
-							stocktradeVO.getNumber(),
-							stocktradeVO.getSellprice());
-					EventRecorder.recordEvent(StockTradeIntradyUtil.class,
-							message);
-					stocktradeVO.setStatus(TradeConstants.STATUS_FINISH);
-					stocktradeVO.setSelldate(new Date());
-					StocktradeDAO
-							.updateStocktradeFinished(stocktradeVO.getId());
-					if (Boolean.valueOf(monitor.getMonitorstockVO()
-							.getOnmonitoring())) {
-						reBuy(stocktradeVO, pendingBuyList);
-					}
+			if (stocktradeVO.getStatus() != TradeConstants.STATUS_SUCCESS
+					&& stocktradeVO.getStatus() != TradeConstants.STATUS_FAILURE) {
+				if (sqb.getHighestPrice() >= stocktradeVO.getWinsellprice()) {
+					processWin(monitor, pendingBuyList, stocktradeVO);
+				}
+
+				if (sqb.getLowestPrice() <= stocktradeVO.getLostsellprice()) {
+					processLost(stocktradeVO);
 				}
 			}
+		}
+	}
+
+	private static void processLost(StocktradeVO stocktradeVO) {
+		String message = TradeUtil.getConfirmedSellMessage(
+				stocktradeVO.getStockid(), stocktradeVO.getNumber(),
+				stocktradeVO.getLostsellprice());
+		EventRecorder.recordEvent(StockTradeIntradyUtil.class, message);
+		SoftwareTrader.getInstance().sellStock(stocktradeVO.getStockid(),
+				stocktradeVO.getNumber());
+		stocktradeVO.setSelldate(new Date());
+		stocktradeVO.setStatus(TradeConstants.STATUS_FAILURE);
+
+		StocktradeDAO.updateStocktradeFailure(stocktradeVO.getId());
+	}
+
+	private static void processWin(StockTradeIntradyMonitor monitor,
+			List pendingBuyList, StocktradeVO stocktradeVO) {
+		String message = TradeUtil.getConfirmedSellMessage(
+				stocktradeVO.getStockid(), stocktradeVO.getNumber(),
+				stocktradeVO.getWinsellprice());
+		EventRecorder.recordEvent(StockTradeIntradyUtil.class, message);
+		SoftwareTrader.getInstance().sellStock(stocktradeVO.getStockid(),
+				stocktradeVO.getNumber());
+		stocktradeVO.setSelldate(new Date());
+		stocktradeVO.setStatus(TradeConstants.STATUS_SUCCESS);
+
+		StocktradeDAO.updateStocktradeFinished(stocktradeVO.getId());
+		if (Boolean.valueOf(monitor.getMonitorstockVO().getOnmonitoring())) {
+			reBuy(stocktradeVO, pendingBuyList);
 		}
 	}
 
@@ -46,15 +69,22 @@ public class StockTradeIntradyUtil {
 				stocktradeVO.getBuyprice());
 		EventRecorder.recordEvent(StockTradeIntradyUtil.class, message);
 
-		TradeUtil.dealBuyStock(stocktradeVO.getStockid(),
-				stocktradeVO.getBuyprice(), stocktradeVO.getSellprice(),
-				stocktradeVO.getTradealgorithm(), stocktradeVO.getNumber(),
-				stocktradeVO.getId());
-		refreshPendingBuyList(stocktradeVO.getStockid(), pendingBuyList);
+		BuyStockBean buyStockBean = new BuyStockBean();
+		buyStockBean.setStockId(stocktradeVO.getStockid());
+		buyStockBean.setBuyPrice(stocktradeVO.getBuyprice());
+		buyStockBean.setWinSellPrice(stocktradeVO.getWinsellprice());
+		buyStockBean.setStrategy(stocktradeVO.getTradealgorithm());
+		buyStockBean.setNumber(stocktradeVO.getNumber());
+		buyStockBean.setPreviousTradeId(stocktradeVO.getId());
+		buyStockBean.setLostSellPrice(stocktradeVO.getLostsellprice());
+		TradeUtil.dealBuyStock(buyStockBean);
+
+		refreshPendingBuyList(stocktradeVO.getStockid(), pendingBuyList,
+				stocktradeVO.getTradealgorithm());
 	}
 
 	private static void refreshPendingBuyList(String stockId,
-			List pendingBuyList) {
+			List pendingBuyList, String strategy) {
 		int size = pendingBuyList.size();
 		for (int i = 0; i < size; i++) {
 			pendingBuyList.remove(0);
@@ -72,7 +102,7 @@ public class StockTradeIntradyUtil {
 		for (int j = 0; j < pendingBuyList.size(); j++) {
 			StocktradeVO stVO = (StocktradeVO) pendingBuyList.get(j);
 			if (stVO.getStatus() != TradeConstants.STATUS_T_0_BUY) {
-				if(TradeUtil.isStopTrade(sqb)){
+				if (TradeUtil.isStopTrade(sqb)) {
 					return;
 				}
 				if (sqb.getCurrentPrice() <= stVO.getBuyprice()) {

@@ -26,10 +26,10 @@ public class BackMA10IntradayStrategy implements MonitoringStrategy {
 		List possibleSellList = monitor.getPossibleSellList();
 		for (int i = 0; i < possibleSellList.size(); i++) {
 			StocktradeVO stocktradeVO = (StocktradeVO) possibleSellList.get(i);
-			if (sqb.getHighestPrice() >= stocktradeVO.getSellprice()) {
+			if (sqb.getHighestPrice() >= stocktradeVO.getWinsellprice()) {
 				String message = TradeUtil.getConfirmedSellMessage(
 						stocktradeVO.getStockid(), stocktradeVO.getNumber(),
-						stocktradeVO.getSellprice());
+						stocktradeVO.getWinsellprice());
 				EventRecorder.recordEvent(StockTradeIntradyUtil.class, message);
 				StocktradeDAO.updateStocktradeFinished(stocktradeVO.getId());
 			}
@@ -92,7 +92,7 @@ public class BackMA10IntradayStrategy implements MonitoringStrategy {
 		stocktradeVO1.setNumber(number);
 		double sellPrice = sqb.getCurrentPrice() * (1 + aib.getTargetZf());
 		sellPrice = MathUtil.formatDoubleWith2QuanShe(sellPrice);
-		stocktradeVO1.setSellprice(sellPrice);
+		stocktradeVO1.setWinsellprice(sellPrice);
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
 		stocktradeVO1.setStatus(TradeConstants.STATUS_T_0_BUY);

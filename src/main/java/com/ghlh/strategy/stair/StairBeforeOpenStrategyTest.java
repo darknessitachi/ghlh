@@ -447,7 +447,7 @@ public class StairBeforeOpenStrategyTest {
 		stocktradeVO1.setBuybaseprice(7.6);
 		stocktradeVO1.setBuyprice(7.6);
 		stocktradeVO1.setNumber(3200);
-		stocktradeVO1.setSellprice(8);
+		stocktradeVO1.setWinsellprice(8);
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
 		GhlhDAO.create(stocktradeVO1);
@@ -465,7 +465,7 @@ public class StairBeforeOpenStrategyTest {
 		stocktradeVO1.setStatus(TradeConstants.STATUS_HOLDING);
 		stocktradeVO1.setBuyprice(8);
 		stocktradeVO1.setNumber(3100);
-		stocktradeVO1.setSellprice(8.42);
+		stocktradeVO1.setWinsellprice(8.42);
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
 		GhlhDAO.create(stocktradeVO1);
@@ -484,7 +484,7 @@ public class StairBeforeOpenStrategyTest {
 		stocktradeVO1.setBuyprice(8.42);
 		stocktradeVO1.setNumber(2900);
 		stocktradeVO1.setStatus(TradeConstants.STATUS_HOLDING);
-		stocktradeVO1.setSellprice(8.86);
+		stocktradeVO1.setWinsellprice(8.86);
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
 		GhlhDAO.create(stocktradeVO1);
@@ -499,7 +499,7 @@ public class StairBeforeOpenStrategyTest {
 		stocktradeVO1.setBuybaseprice(8.86);
 		stocktradeVO1.setBuyprice(8.86);
 		stocktradeVO1.setNumber(2800);
-		stocktradeVO1.setSellprice(9.3);
+		stocktradeVO1.setWinsellprice(9.3);
 		stocktradeVO1.setStatus(TradeConstants.STATUS_HOLDING);
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());

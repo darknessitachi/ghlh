@@ -35,7 +35,7 @@ public class StairBeforeCloseStrategy implements OneTimeStrategy {
 				if(TradeUtil.isStopTrade(sqb)){
 					return;
 				}
-				if (sqb.getCurrentPrice() < stocktradeVO.getSellprice()) {
+				if (sqb.getCurrentPrice() < stocktradeVO.getWinsellprice()) {
 					AdditionalInfoBean aib = (AdditionalInfoBean) AdditionInfoUtil
 							.parseAdditionalInfoBean(
 									monitorstockVO.getAdditioninfo(),

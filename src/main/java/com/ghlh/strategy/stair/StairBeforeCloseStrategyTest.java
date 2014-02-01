@@ -46,7 +46,7 @@ public class StairBeforeCloseStrategyTest {
 		stocktradeVO1.setBuybaseprice(8.78);
 		stocktradeVO1.setBuyprice(8.78);
 		stocktradeVO1.setNumber(500);
-		stocktradeVO1.setSellprice(9.21);
+		stocktradeVO1.setWinsellprice(9.21);
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
 		stocktradeVO1.setPrevioustradeid(1);

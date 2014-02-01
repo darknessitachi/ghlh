@@ -134,7 +134,6 @@ public class StockMarketUtil {
 						&& !line.trim().equals("")) {
 					String date = line.substring(0, line.indexOf('='));
 					String holidayName = line.substring(line.indexOf('=') + 1);
-					System.out.println(date + " " + holidayName);
 					result.put(date, holidayName);
 				}
 				br.close();

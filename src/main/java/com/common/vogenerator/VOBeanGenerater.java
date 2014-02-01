@@ -350,7 +350,7 @@ public class VOBeanGenerater {
 	public static void main(String[] args) {
 		try {
 			VOBeanGenerater vobg = new VOBeanGenerater();
-			String[] tablename = { "stockdailyinfo" };
+			String[] tablename = { "stocktrade" };
 			for (int i = 0; i < tablename.length; i++) {
 				vobg.generateVOBean(tablename[i], "com.ghlh.data.db");
 			}

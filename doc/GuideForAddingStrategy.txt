@@ -1,0 +1,9 @@
+1. UI update:
+   com.ghlh.strategy/strategy.properties
+2. Add AdditionalInfoBean
+   com.ghlh.strategy.%strategyname.lowcase%.AdditionalInfoBean
+3. Generate 4 kinds of Classes as below:
+   XXXBeforeCloseStrategy
+   XXXBeforeOpenStrategy
+   XXXIntradayStrategy
+   XXXIntradyFirstBuyStrategy

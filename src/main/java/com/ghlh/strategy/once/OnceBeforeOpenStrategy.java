@@ -9,6 +9,7 @@ import com.ghlh.data.db.StocktradeVO;
 import com.ghlh.stockquotes.InternetStockQuotesInquirer;
 import com.ghlh.stockquotes.StockQuotesBean;
 import com.ghlh.strategy.AdditionInfoUtil;
+import com.ghlh.strategy.BuyStockBean;
 import com.ghlh.strategy.OneTimeStrategy;
 import com.ghlh.strategy.TradeConstants;
 import com.ghlh.strategy.TradeUtil;
@@ -33,11 +34,14 @@ public class OnceBeforeOpenStrategy implements OneTimeStrategy {
 				.getInstance().getStockQuotesBean(monitorstockVO.getStockid());
 		double currentPrice = stockQuotesBean.getCurrentPrice();
 		double possibleMaxPrice = currentPrice * TradeConstants.MAX_ZF;
+		double possibleMinPrice = currentPrice * TradeConstants.MAX_DF;
 		StocktradeVO stocktradeVO = (StocktradeVO) stockTradeList.get(0);
-		if (stocktradeVO.getSellprice() < possibleMaxPrice) {
+		if (stocktradeVO.getWinsellprice() < possibleMaxPrice
+				|| stocktradeVO.getLostsellprice() > possibleMinPrice) {
 			String message = TradeUtil.getPendingSellMessage(
 					stocktradeVO.getStockid(), stocktradeVO.getNumber(),
-					stocktradeVO.getSellprice());
+					stocktradeVO.getWinsellprice(),
+					stocktradeVO.getLostsellprice());
 			EventRecorder.recordEvent(this.getClass(), message);
 			TradeUtil.dealSell(stocktradeVO);
 		}
@@ -48,17 +52,28 @@ public class OnceBeforeOpenStrategy implements OneTimeStrategy {
 				.parseAdditionalInfoBean(monitorstockVO.getAdditioninfo(),
 						OnceConstants.ONCE_STRATEGY_NAME);
 		if (aib.getBuyPriceStrategy().equals("Éè¶¨¼Û")) {
-			double sellPrice = aib.getBuyPrice() * (1 + aib.getTargetZf());
-			sellPrice = MathUtil.formatDoubleWith2QuanShe(sellPrice);
+			double winSellPrice = aib.getBuyPrice() * (1 + aib.getTargetZf());
+			winSellPrice = MathUtil.formatDoubleWith2QuanShe(winSellPrice);
+
 			String message = TradeUtil.getPendingBuyMessage(
 					monitorstockVO.getStockid(),
 					TradeUtil.getTradeNumber(aib.getTradeMoney(),
 							aib.getBuyPrice()), aib.getBuyPrice());
 			EventRecorder.recordEvent(this.getClass(), message);
-
-			TradeUtil.dealBuyStock(monitorstockVO.getStockid(),
-					aib.getTradeMoney(), aib.getBuyPrice(), sellPrice,
-					OnceConstants.ONCE_STRATEGY_NAME);
+			BuyStockBean buyStockBean = new BuyStockBean();
+			buyStockBean.setStockId(monitorstockVO.getStockid());
+			buyStockBean.setTradeMoney(aib.getTradeMoney());
+			buyStockBean.setBuyPrice(aib.getBuyPrice());
+			buyStockBean.setWinSellPrice(winSellPrice);
+			if (aib.getLostDf() > 0) {
+				double lostSellPrice = aib.getBuyPrice()
+						* (1 - aib.getLostDf());
+				lostSellPrice = MathUtil
+						.formatDoubleWith2QuanShe(lostSellPrice);
+				buyStockBean.setLostSellPrice(lostSellPrice);
+			}
+			buyStockBean.setStrategy(OnceConstants.ONCE_STRATEGY_NAME);
+			TradeUtil.dealBuyStock(buyStockBean);
 		}
 	}
 }

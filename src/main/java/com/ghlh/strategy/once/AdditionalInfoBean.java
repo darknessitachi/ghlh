@@ -30,5 +30,12 @@ public class AdditionalInfoBean {
 	private double buyPrice;
 	private double targetZf;
 	private double tradeMoney;
-	
+	private double lostDf;
+
+	public double getLostDf() {
+		return lostDf;
+	}
+	public void setLostDf(double lostDf) {
+		this.lostDf = lostDf;
+	}
 }

@@ -40,7 +40,7 @@ public class OnceBeforeCloseStrategyTest {
 		monitorstockVO.setStockid("601118");
 		monitorstockVO.setName("海南橡胶");
 		monitorstockVO.setTradealgorithm("Once");
-		monitorstockVO.setAdditioninfo("设定价,10.0,0.05,10000.0");
+		monitorstockVO.setAdditioninfo("设定价,10.0,0.05,10000.0,0.02");
 		monitorstockVO.setOnmonitoring("true");
 		return monitorstockVO;
 	}
@@ -51,11 +51,11 @@ public class OnceBeforeCloseStrategyTest {
 		stocktradeVO1.setStockid("601118");
 		stocktradeVO1.setTradealgorithm(OnceConstants.ONCE_STRATEGY_NAME);
 		stocktradeVO1.setBuydate(new Date());
-		stocktradeVO1.setStatus(TradeConstants.STATUS_FINISH);
+		stocktradeVO1.setStatus(TradeConstants.STATUS_SUCCESS);
 		stocktradeVO1.setBuybaseprice(7.6);
 		stocktradeVO1.setBuyprice(7.6);
 		stocktradeVO1.setNumber(3200);
-		stocktradeVO1.setSellprice(8);
+		stocktradeVO1.setWinsellprice(8);
 		stocktradeVO1.setSelldate(new Date());
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
@@ -71,7 +71,7 @@ public class OnceBeforeCloseStrategyTest {
 		stocktradeVO1.setBuybaseprice(7.6);
 		stocktradeVO1.setBuyprice(7.6);
 		stocktradeVO1.setNumber(3200);
-		stocktradeVO1.setSellprice(8);
+		stocktradeVO1.setWinsellprice(8);
 		stocktradeVO1.setPrevioustradeid(id);
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());

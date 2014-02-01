@@ -32,7 +32,7 @@ public class OnceBeforeCloseStrategy implements OneTimeStrategy {
 						.get(0);
 				StockQuotesBean sqb = InternetStockQuotesInquirer.getInstance()
 						.getStockQuotesBean(monitorstockVO.getStockid());
-				if (sqb.getCurrentPrice() < stocktradeVO.getSellprice()) {
+				if (sqb.getCurrentPrice() < stocktradeVO.getWinsellprice()) {
 					AdditionalInfoBean aib = (AdditionalInfoBean) AdditionInfoUtil
 							.parseAdditionalInfoBean(
 									monitorstockVO.getAdditioninfo(),

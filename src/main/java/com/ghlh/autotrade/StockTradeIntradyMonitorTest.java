@@ -13,6 +13,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.common.util.IDGenerator;
+import com.ghlh.conf.ConfigurationAccessor;
 import com.ghlh.data.db.GhlhDAO;
 import com.ghlh.data.db.MonitorstockVO;
 import com.ghlh.data.db.StocktradeDAO;
@@ -24,6 +25,10 @@ import com.ghlh.strategy.stair.StairConstants;
 
 public class StockTradeIntradyMonitorTest {
 
+	static{
+		ConfigurationAccessor.getInstance().setOpenSoftwareTrade(false);
+	}
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -55,7 +60,7 @@ public class StockTradeIntradyMonitorTest {
 		stim.processBuy(sqb);
 		List result = StocktradeDAO.getT_0_TradeRecords("600036",
 				StairConstants.STAIR_STRATEGY_NAME);
-		if (result.size() != 1) {
+		if (result.size() != 2) {
 			fail("Something wrong");
 		}
 		StocktradeVO stVO = (StocktradeVO) result.get(0);
@@ -75,6 +80,7 @@ public class StockTradeIntradyMonitorTest {
 		StockQuotesBean sqb = this.getMockStockQuotestBean600036();
 
 		sqb.setHighestPrice(10.97);
+		sqb.setLowestPrice(10.85);
 		stim.processSell(sqb);
 
 		List finishedList = StocktradeDAO.getFinishedTradeRecords("600036",
@@ -83,7 +89,7 @@ public class StockTradeIntradyMonitorTest {
 			fail("Something wrong");
 		}
 		StocktradeVO stVO = (StocktradeVO) finishedList.get(0);
-		if (stVO.getStatus() != TradeConstants.STATUS_FINISH) {
+		if (stVO.getStatus() != TradeConstants.STATUS_SUCCESS) {
 			fail("Something wrong");
 		}
 
@@ -139,7 +145,7 @@ public class StockTradeIntradyMonitorTest {
 		stocktradeVO1.setBuybaseprice(10.97);
 		stocktradeVO1.setBuyprice(10.97);
 		stocktradeVO1.setNumber(900);
-		stocktradeVO1.setSellprice(11.51);
+		stocktradeVO1.setWinsellprice(11.51);
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
 		GhlhDAO.create(stocktradeVO1);
@@ -153,7 +159,7 @@ public class StockTradeIntradyMonitorTest {
 		stocktradeVO1.setBuybaseprice(10.43);
 		stocktradeVO1.setBuyprice(10.43);
 		stocktradeVO1.setNumber(900);
-		stocktradeVO1.setSellprice(10.97);
+		stocktradeVO1.setWinsellprice(10.97);
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
 		GhlhDAO.create(stocktradeVO1);
@@ -167,7 +173,7 @@ public class StockTradeIntradyMonitorTest {
 		stocktradeVO1.setBuybaseprice(9.91);
 		stocktradeVO1.setBuyprice(9.91);
 		stocktradeVO1.setNumber(1000);
-		stocktradeVO1.setSellprice(10.43);
+		stocktradeVO1.setWinsellprice(10.43);
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
 		GhlhDAO.create(stocktradeVO1);
@@ -186,7 +192,7 @@ public class StockTradeIntradyMonitorTest {
 		stocktradeVO1.setBuybaseprice(10.97);
 		stocktradeVO1.setBuyprice(10.97);
 		stocktradeVO1.setNumber(900);
-		stocktradeVO1.setSellprice(11.51);
+		stocktradeVO1.setWinsellprice(11.51);
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
 		GhlhDAO.create(stocktradeVO1);
@@ -200,7 +206,7 @@ public class StockTradeIntradyMonitorTest {
 		stocktradeVO1.setBuybaseprice(10.43);
 		stocktradeVO1.setBuyprice(10.43);
 		stocktradeVO1.setNumber(900);
-		stocktradeVO1.setSellprice(10.97);
+		stocktradeVO1.setWinsellprice(10.97);
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
 		GhlhDAO.create(stocktradeVO1);
@@ -230,7 +236,7 @@ public class StockTradeIntradyMonitorTest {
 		stocktradeVO1.setBuybaseprice(10.95);
 		stocktradeVO1.setBuyprice(10.95);
 		stocktradeVO1.setNumber(400);
-		stocktradeVO1.setSellprice(11.49);
+		stocktradeVO1.setWinsellprice(11.49);
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
 		GhlhDAO.create(stocktradeVO1);
@@ -270,7 +276,7 @@ public class StockTradeIntradyMonitorTest {
 		stocktradeVO1.setBuybaseprice(8.8);
 		stocktradeVO1.setBuyprice(8.8);
 		stocktradeVO1.setNumber(1100);
-		stocktradeVO1.setSellprice(9.24);
+		stocktradeVO1.setWinsellprice(9.24);
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
 		GhlhDAO.create(stocktradeVO1);
@@ -284,7 +290,7 @@ public class StockTradeIntradyMonitorTest {
 		stocktradeVO1.setBuybaseprice(8.36);
 		stocktradeVO1.setBuyprice(8.36);
 		stocktradeVO1.setNumber(1100);
-		stocktradeVO1.setSellprice(8.8);
+		stocktradeVO1.setWinsellprice(8.8);
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
 		GhlhDAO.create(stocktradeVO1);
@@ -298,7 +304,7 @@ public class StockTradeIntradyMonitorTest {
 		monitorstockVO.setStockid("601118");
 		monitorstockVO.setName("海南橡胶");
 		monitorstockVO.setTradealgorithm(OnceConstants.ONCE_STRATEGY_NAME);
-		monitorstockVO.setAdditioninfo("开盘价,8.8,0.05,5000.0");
+		monitorstockVO.setAdditioninfo("开盘价,8.8,0.05,5000.0,0.02");
 		monitorstockVO.setOnmonitoring("true");
 		return monitorstockVO;
 	}
@@ -314,7 +320,7 @@ public class StockTradeIntradyMonitorTest {
 		stocktradeVO1.setBuybaseprice(8.8);
 		stocktradeVO1.setBuyprice(8.8);
 		stocktradeVO1.setNumber(500);
-		stocktradeVO1.setSellprice(9.24);
+		stocktradeVO1.setWinsellprice(9.24);
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
 		GhlhDAO.create(stocktradeVO1);
@@ -354,7 +360,7 @@ public class StockTradeIntradyMonitorTest {
 		stocktradeVO1.setBuybaseprice(15.42);
 		stocktradeVO1.setBuyprice(15.42);
 		stocktradeVO1.setNumber(600);
-		stocktradeVO1.setSellprice(16.19);
+		stocktradeVO1.setWinsellprice(16.19);
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
 		GhlhDAO.create(stocktradeVO1);
@@ -384,7 +390,7 @@ public class StockTradeIntradyMonitorTest {
 		stocktradeVO1.setBuybaseprice(15.42);
 		stocktradeVO1.setBuyprice(15.42);
 		stocktradeVO1.setNumber(300);
-		stocktradeVO1.setSellprice(16.19);
+		stocktradeVO1.setWinsellprice(16.19);
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
 		GhlhDAO.create(stocktradeVO1);

@@ -68,10 +68,10 @@ public class StairBeforeOpenStrategy implements OneTimeStrategy {
 		double possibleMaxPrice = currentPrice * TradeConstants.MAX_ZF;
 		for (int i = 0; i < stockTradeList.size(); i++) {
 			StocktradeVO stocktradeVO = (StocktradeVO) stockTradeList.get(i);
-			if (stocktradeVO.getSellprice() < possibleMaxPrice) {
+			if (stocktradeVO.getWinsellprice() < possibleMaxPrice) {
 				String message = TradeUtil.getPendingSellMessage(
 						stocktradeVO.getStockid(), stocktradeVO.getNumber(),
-						stocktradeVO.getSellprice());
+						stocktradeVO.getWinsellprice());
 				EventRecorder.recordEvent(this.getClass(), message);
 				TradeUtil.dealSell(stocktradeVO);
 			}

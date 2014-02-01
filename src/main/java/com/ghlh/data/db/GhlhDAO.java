@@ -1,10 +1,12 @@
 package com.ghlh.data.db;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import com.common.db.DBAgentOO;
+import com.ghlh.stockquotes.StockQuotesBean;
 
 public class GhlhDAO {
 	private static Logger logger = Logger.getLogger(GhlhDAO.class);
@@ -67,6 +69,25 @@ public class GhlhDAO {
 			logger.error("list with SQL = " + sql + " throw", ex);
 		}
 		return result;
+	}
+
+	public static void createStockDailyIinfo(StockQuotesBean sqb) {
+		if (sqb != null) {
+			StockdailyinfoVO stockdailyinfoVO = new StockdailyinfoVO();
+			stockdailyinfoVO.setStockid(sqb.getStockId());
+			stockdailyinfoVO.setDate(new Date());
+			stockdailyinfoVO.setTodayopenprice(sqb.getTodayOpen());
+			stockdailyinfoVO.setCurrentprice(sqb.getCurrentPrice());
+			stockdailyinfoVO.setHighestprice(sqb.getHighestPrice());
+			stockdailyinfoVO.setLowestprice(sqb.getLowestPrice());
+			stockdailyinfoVO.setYesterdaycloseprice(sqb.getYesterdayClose());
+			stockdailyinfoVO.setZde(sqb.getZde());
+			stockdailyinfoVO.setZdf(sqb.getZdf());
+			stockdailyinfoVO.setHsl(sqb.getHsl());
+			stockdailyinfoVO.setCreatedtime(new Date());
+			stockdailyinfoVO.setLastmodifiedtime(new Date());
+			create(stockdailyinfoVO);
+		}
 	}
 
 }

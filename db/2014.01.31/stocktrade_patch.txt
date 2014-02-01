@@ -1,0 +1,3 @@
+ALTER TABLE `ghlh`.`stocktrade`   
+  CHANGE `sellPrice` `winSellPrice` DOUBLE NULL,
+  ADD COLUMN `lostSellPrice` DOUBLE NULL AFTER `winSellPrice`;

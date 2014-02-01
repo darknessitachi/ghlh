@@ -107,6 +107,12 @@ public class StockTradeIntradyMonitoringJob {
 			StockQuotesBean sqb = InternetStockQuotesInquirer.getInstance()
 					.getStockQuotesBean(
 							monitor.getMonitorstockVO().getStockid());
+			if (TradeUtil.isStopTrade(sqb)) {
+				AutoTradeMonitor.getInstance().setMonitorStock(sqb.getStockId(),
+						sqb.getName() + " Í£ÅÆ ");
+				TimeUtil.pause(200);
+				continue;
+			}
 			AutoTradeMonitor.getInstance().setMonitorStock(sqb.getStockId(),
 					sqb.getName());
 			monitor.processBuy(sqb);

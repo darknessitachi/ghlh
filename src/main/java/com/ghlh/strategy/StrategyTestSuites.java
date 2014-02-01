@@ -15,7 +15,7 @@ import com.ghlh.strategy.stair.StairIntradyFirstBuyStrategyTest;
 @Suite.SuiteClasses({ OnceBeforeOpenStrategyTest.class,
 		OnceIntradyFirstBuyStrategyTest.class,
 		StairBeforeOpenStrategyTest.class, StairIntradayStrategyTest.class,
-		StairIntradyFirstBuyStrategyTest.class, AutoTradeTestSuites.class,
+		StairIntradyFirstBuyStrategyTest.class,
 		OnceBeforeCloseStrategyTest.class })
 public class StrategyTestSuites {
 }

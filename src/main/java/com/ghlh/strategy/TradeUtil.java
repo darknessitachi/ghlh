@@ -5,35 +5,40 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 
 import com.common.util.IDGenerator;
-import com.ghlh.autotrade.AutoTradeAfterCloseJob;
-import com.ghlh.autotrade.EventRecorder;
 import com.ghlh.data.db.GhlhDAO;
-import com.ghlh.data.db.StocktradeDAO;
 import com.ghlh.data.db.StocktradeVO;
 import com.ghlh.stockquotes.StockQuotesBean;
 import com.ghlh.tradeway.SoftwareTrader;
 
 public class TradeUtil {
 
-	private static Logger logger = Logger
-			.getLogger(TradeUtil.class);
+	private static Logger logger = Logger.getLogger(TradeUtil.class);
 
-	
 	public static void dealBuyStock(String stockId, double tradeMoney,
 			double basePrice, double sellPrice, String strategy) {
 		int number = getTradeNumber(tradeMoney, basePrice);
 		dealBuyStock(stockId, basePrice, sellPrice, strategy, number);
 	}
 
-	public static boolean isStopTrade(StockQuotesBean sqb){
+	public static void dealBuyStock(BuyStockBean buyStockBean) {
+		if (buyStockBean.getNumber() == 0) {
+			int number = getTradeNumber(buyStockBean.getTradeMoney(),
+					buyStockBean.getBuyPrice());
+			buyStockBean.setNumber(number);
+		}
+		dealBuyStockWith2Status(buyStockBean);
+	}
+
+	public static boolean isStopTrade(StockQuotesBean sqb) {
 		boolean result = false;
-		if(sqb.getCurrentPrice() == 0){
-			logger.error(" Stock : " + sqb.getStockId() + " is stopped to trade now");
+		if (sqb.getCurrentPrice() == 0) {
+			logger.error(" Stock : " + sqb.getStockId()
+					+ " is stopped to trade now");
 			result = true;
 		}
 		return result;
 	}
-	
+
 	public static void dealBuyStockSuccessfully(String stockId,
 			double tradeMoney, double basePrice, double sellPrice,
 			String strategy) {
@@ -70,25 +75,37 @@ public class TradeUtil {
 	private static void dealBuyStockWith2Status(String stockId,
 			double basePrice, double sellPrice, String strategy, int number,
 			boolean isConfirm, int previousTradeId) {
+		BuyStockBean buyStockBean = new BuyStockBean();
+		buyStockBean.setStockId(stockId);
+		buyStockBean.setBuyPrice(basePrice);
+		buyStockBean.setWinSellPrice(sellPrice);
+		buyStockBean.setStrategy(strategy);
+		buyStockBean.setNumber(number);
+		buyStockBean.setConfirm(isConfirm);
+		buyStockBean.setPreviousTradeId(previousTradeId);
+		dealBuyStockWith2Status(buyStockBean);
+	}
 
+	private static void dealBuyStockWith2Status(BuyStockBean buyStockBean) {
 		StocktradeVO stocktradeVO1 = new StocktradeVO();
 		stocktradeVO1.setId(IDGenerator.generateId("stocktrade"));
-		stocktradeVO1.setStockid(stockId);
-		stocktradeVO1.setTradealgorithm(strategy);
+		stocktradeVO1.setStockid(buyStockBean.getStockId());
+		stocktradeVO1.setTradealgorithm(buyStockBean.getStrategy());
 		stocktradeVO1.setBuydate(new Date());
-		stocktradeVO1.setBuybaseprice(basePrice);
-		stocktradeVO1.setBuyprice(basePrice);
-		stocktradeVO1.setNumber(number);
-		stocktradeVO1.setSellprice(sellPrice);
+		stocktradeVO1.setBuybaseprice(buyStockBean.getBuyPrice());
+		stocktradeVO1.setBuyprice(buyStockBean.getBuyPrice());
+		stocktradeVO1.setNumber(buyStockBean.getNumber());
+		stocktradeVO1.setWinsellprice(buyStockBean.getWinSellPrice());
+		stocktradeVO1.setLostsellprice(buyStockBean.getLostSellPrice());
 		stocktradeVO1.setCreatedtimestamp(new Date());
 		stocktradeVO1.setLastmodifiedtimestamp(new Date());
-		if (previousTradeId > 0) {
-			stocktradeVO1.setPrevioustradeid(previousTradeId);
+		if (buyStockBean.getPreviousTradeId() > 0) {
+			stocktradeVO1.setPrevioustradeid(buyStockBean.getPreviousTradeId());
 		}
-		if (isConfirm) {
+		if (buyStockBean.isConfirm()) {
 			stocktradeVO1.setStatus(TradeConstants.STATUS_T_0_BUY);
-			SoftwareTrader.getInstance().buyStock(stockId, number);
-
+			SoftwareTrader.getInstance().buyStock(buyStockBean.getStockId(),
+					buyStockBean.getNumber());
 		} else {
 			stocktradeVO1.setStatus(TradeConstants.STATUS_PENDING_BUY);
 		}
@@ -96,8 +113,8 @@ public class TradeUtil {
 	}
 
 	public static void dealSell(StocktradeVO stocktradeVO) {
-		SoftwareTrader.getInstance().sellStock(stocktradeVO.getStockid(),
-				stocktradeVO.getNumber(), stocktradeVO.getSellprice());
+		// SoftwareTrader.getInstance().sellStock(stocktradeVO.getStockid(),
+		// stocktradeVO.getNumber(), stocktradeVO.getWinsellprice());
 		StocktradeVO stocktradeVO1 = new StocktradeVO();
 		stocktradeVO1.setId(stocktradeVO.getId());
 		stocktradeVO1.setWhereId(true);
@@ -118,6 +135,12 @@ public class TradeUtil {
 	public static String getPendingSellMessage(String stockId, int number,
 			double price) {
 		return getEventMessage(stockId, number, price, "sell", true, 0);
+	}
+
+	public static String getPendingSellMessage(String stockId, int number,
+			double winPrice, double lostPrice) {
+		return getEventMessage(stockId, number, winPrice, "sell", true, 0,
+				lostPrice);
 	}
 
 	public static String getConfirmedSellMessage(String stockId, int number,
@@ -141,6 +164,13 @@ public class TradeUtil {
 
 	private static String getEventMessage(String stockId, int number,
 			double price, String cmd, boolean isPending, int priceType) {
+		return getEventMessage(stockId, number, price, cmd, isPending,
+				priceType, 0);
+	}
+
+	private static String getEventMessage(String stockId, int number,
+			double winPrice, String cmd, boolean isPending, int priceType,
+			double lostPrice) {
 		String message = "";
 		if (cmd.equals("buy")) {
 			message += "买入";
@@ -154,7 +184,11 @@ public class TradeUtil {
 			message += " 成交";
 		}
 		message += " 数量:" + number;
-		message += " 价格:" + price;
+		if (lostPrice == 0) {
+			message += " 价格:" + winPrice;
+		} else {
+			message += " 价格:" + winPrice + "(止盈)" + " " + lostPrice + "(止损)";
+		}
 		switch (priceType) {
 		case PRICE_OPEN:
 			message += "(开盘价)";

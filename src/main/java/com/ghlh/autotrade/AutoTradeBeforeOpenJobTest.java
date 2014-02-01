@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.ghlh.conf.ConfigurationAccessor;
 import com.ghlh.data.db.GhlhDAO;
 import com.ghlh.data.db.MonitorstockVO;
 import com.ghlh.data.db.StocktradeDAO;
@@ -14,6 +15,11 @@ import com.ghlh.strategy.TradeConstants;
 
 public class AutoTradeBeforeOpenJobTest {
 
+	static {
+		ConfigurationAccessor.getInstance().setOpenSoftwareTrade(false);
+	}
+	
+	
 	@Test
 	public void testExecute() {
 		prepareMonitorstockVO();
@@ -83,7 +89,7 @@ public class AutoTradeBeforeOpenJobTest {
 		monitorstockVO.setStockid("600519");
 		monitorstockVO.setName("贵州茅台");
 		monitorstockVO.setTradealgorithm("Once");
-		monitorstockVO.setAdditioninfo("设定价,137.46,0.05,20000.0");
+		monitorstockVO.setAdditioninfo("设定价,137.46,0.05,20000.0,0.02");
 		monitorstockVO.setOnmonitoring("true");
 		GhlhDAO.create(monitorstockVO);
 

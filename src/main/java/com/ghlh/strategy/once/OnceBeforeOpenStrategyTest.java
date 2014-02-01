@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.ghlh.conf.ConfigurationAccessor;
 import com.ghlh.data.db.GhlhDAO;
 import com.ghlh.data.db.MonitorstockVO;
 import com.ghlh.data.db.StocktradeDAO;
@@ -16,7 +17,11 @@ import com.ghlh.strategy.TradeConstants;
 import com.ghlh.strategy.stair.StairTestDataGenerator;
 
 public class OnceBeforeOpenStrategyTest {
-
+	
+	static {
+		ConfigurationAccessor.getInstance().setOpenSoftwareTrade(false);
+	}
+	
 	@Test
 	public void testProcessStockTrade() {
 		cleanTestingData();
@@ -86,7 +91,7 @@ public class OnceBeforeOpenStrategyTest {
 		monitorstockVO.setStockid("601118");
 		monitorstockVO.setName("海南橡胶");
 		monitorstockVO.setTradealgorithm("Once");
-		monitorstockVO.setAdditioninfo("设定价,10.0,0.05,10000.0");
+		monitorstockVO.setAdditioninfo("设定价,10.0,0.05,10000.0,0.0");
 		monitorstockVO.setOnmonitoring("true");
 		return monitorstockVO;
 	}

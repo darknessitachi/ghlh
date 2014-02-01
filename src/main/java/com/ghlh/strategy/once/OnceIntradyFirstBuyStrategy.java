@@ -8,6 +8,7 @@ import com.ghlh.data.db.StocktradeDAO;
 import com.ghlh.stockquotes.InternetStockQuotesInquirer;
 import com.ghlh.stockquotes.StockQuotesBean;
 import com.ghlh.strategy.AdditionInfoUtil;
+import com.ghlh.strategy.BuyStockBean;
 import com.ghlh.strategy.OneTimeStrategy;
 import com.ghlh.strategy.TradeUtil;
 import com.ghlh.util.MathUtil;
@@ -33,23 +34,31 @@ public class OnceIntradyFirstBuyStrategy implements OneTimeStrategy {
 					&& StockMarketUtil.isAfternoonOpen()) {
 				int priceType = TradeUtil.getPriceType(aib
 						.getBuyPriceStrategy());
-				// if (aib.getBuyPriceStrategy().equals("ÊÕÅÌ¼Û")) {
-				// priceType = TradeUtil.PRICE_CLOSE;
-				// }
 				if(TradeUtil.isStopTrade(sqb)){
 					return;
 				}
-				double sellPrice = sqb.getCurrentPrice() * (1 + aib.getTargetZf());
-				sellPrice = MathUtil.formatDoubleWith2QuanShe(sellPrice);
+				double winSellPrice = sqb.getCurrentPrice() * (1 + aib.getTargetZf());
+				winSellPrice = MathUtil.formatDoubleWith2QuanShe(winSellPrice);
 				String message = TradeUtil.getIntradyPriceBuyMessage(
 						monitorstockVO.getStockid(),
 						TradeUtil.getTradeNumber(aib.getTradeMoney(),
 								sqb.getCurrentPrice()), sqb.getCurrentPrice(),
 						priceType);
 				EventRecorder.recordEvent(this.getClass(), message);
-				TradeUtil.dealBuyStockSuccessfully(monitorstockVO.getStockid(),
-						aib.getTradeMoney(), sqb.getCurrentPrice(), sellPrice,
-						monitorstockVO.getTradealgorithm());
+				BuyStockBean buyStockBean = new BuyStockBean();
+				buyStockBean.setStockId(monitorstockVO.getStockid());
+				buyStockBean.setTradeMoney(aib.getTradeMoney());
+				buyStockBean.setBuyPrice(sqb.getCurrentPrice());
+				buyStockBean.setWinSellPrice(winSellPrice);
+				if (aib.getLostDf() > 0) {
+					double lostSellPrice = sqb.getCurrentPrice()
+							* (1 - aib.getLostDf());
+					lostSellPrice = MathUtil
+							.formatDoubleWith2QuanShe(lostSellPrice);
+					buyStockBean.setLostSellPrice(lostSellPrice);
+				}
+				buyStockBean.setStrategy(monitorstockVO.getTradealgorithm());
+				TradeUtil.dealBuyStockSuccessfully(buyStockBean);
 			}
 		}
 	}

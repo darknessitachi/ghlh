@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.ghlh.conf.ConfigurationAccessor;
 import com.ghlh.data.db.GhlhDAO;
 import com.ghlh.data.db.MonitorstockVO;
 import com.ghlh.data.db.StocktradeDAO;
@@ -18,7 +19,10 @@ import com.ghlh.strategy.stair.StairTestDataGenerator;
 import com.ghlh.util.StockMarketUtil;
 
 public class OnceIntradyFirstBuyStrategyTest {
-
+	static{
+		ConfigurationAccessor.getInstance().setOpenSoftwareTrade(false);
+	}
+	
 	private void cleanTestingData() {
 		StocktradeVO stocktradeVO1 = new StocktradeVO();
 		stocktradeVO1.setStockid("601118");

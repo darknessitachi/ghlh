@@ -37,8 +37,13 @@ public class StocktradeDAO {
 				TradeConstants.STATUS_T_0_BUY, false, false);
 	}
 
-	public static List getFinishedTradeRecords(String stockId, String strategy) {
+	public static List getSuccessfulTradeRecords(String stockId, String strategy) {
 		return getTradeRecords(stockId, strategy, TradeConstants.STATUS_SUCCESS,
+				false, false);
+	}
+	
+	public static List getFailedTradeRecords(String stockId, String strategy) {
+		return getTradeRecords(stockId, strategy, TradeConstants.STATUS_FAILURE,
 				false, false);
 	}
 

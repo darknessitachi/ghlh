@@ -83,7 +83,7 @@ public class StockTradeIntradyMonitorTest {
 		sqb.setLowestPrice(10.85);
 		stim.processSell(sqb);
 
-		List finishedList = StocktradeDAO.getFinishedTradeRecords("600036",
+		List finishedList = StocktradeDAO.getSuccessfulTradeRecords("600036",
 				StairConstants.STAIR_STRATEGY_NAME);
 		if (finishedList.size() != 1) {
 			fail("Something wrong");

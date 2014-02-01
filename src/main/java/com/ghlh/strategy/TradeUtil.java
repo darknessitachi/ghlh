@@ -46,6 +46,16 @@ public class TradeUtil {
 		dealBuyStockSuccessfully(stockId, basePrice, sellPrice, strategy,
 				number);
 	}
+	
+	public static void dealBuyStockSuccessfully(BuyStockBean buyStockBean) {
+		if (buyStockBean.getNumber() == 0) {
+			int number = getTradeNumber(buyStockBean.getTradeMoney(),
+					buyStockBean.getBuyPrice());
+			buyStockBean.setNumber(number);
+		}
+		buyStockBean.setConfirm(true);
+		dealBuyStockWith2Status(buyStockBean);
+	}
 
 	public static int getTradeNumber(double tradeMoney, double basePrice) {
 		int number = (int) (tradeMoney / basePrice);

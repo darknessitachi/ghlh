@@ -71,11 +71,11 @@ public class GhlhDAO {
 		return result;
 	}
 
-	public static void createStockDailyIinfo(StockQuotesBean sqb) {
+	public static void createStockDailyIinfo(StockQuotesBean sqb, Date date) {
 		if (sqb != null) {
 			StockdailyinfoVO stockdailyinfoVO = new StockdailyinfoVO();
 			stockdailyinfoVO.setStockid(sqb.getStockId());
-			stockdailyinfoVO.setDate(new Date());
+			stockdailyinfoVO.setDate(date);
 			stockdailyinfoVO.setTodayopenprice(sqb.getTodayOpen());
 			stockdailyinfoVO.setCurrentprice(sqb.getCurrentPrice());
 			stockdailyinfoVO.setHighestprice(sqb.getHighestPrice());

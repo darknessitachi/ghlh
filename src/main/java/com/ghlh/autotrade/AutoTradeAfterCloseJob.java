@@ -34,9 +34,10 @@ public class AutoTradeAfterCloseJob implements Job {
 
 	private void collectStockDailyInfo() {
 		List<StockQuotesBean> list = EastMoneyUtil.collectData(SZ_STOCK_COUNT);
+		Date now = new Date();
 		for (int i = 0; i < list.size(); i++) {
 			StockQuotesBean sqb = (StockQuotesBean) list.get(i);
-			GhlhDAO.createStockDailyIinfo(sqb);
+			GhlhDAO.createStockDailyIinfo(sqb, now);
 		}
 	}
 

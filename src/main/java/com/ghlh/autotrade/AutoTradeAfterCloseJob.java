@@ -16,6 +16,7 @@ import com.ghlh.stockquotes.StockQuotesBean;
 import com.ghlh.strategy.TradeConstants;
 import com.ghlh.strategy.TradeUtil;
 import com.ghlh.util.EastMoneyUtil;
+import com.ghlh.util.StockMarketUtil;
 
 public class AutoTradeAfterCloseJob implements Job {
 	private static Logger logger = Logger
@@ -24,6 +25,9 @@ public class AutoTradeAfterCloseJob implements Job {
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		String message = "开始15:05盘后处理";
 		EventRecorder.recordEvent(this.getClass(), message);
+		if (StockMarketUtil.isMarketRest()) {
+			return;
+		}
 		processPredoneOrders();
 		collectStockDailyInfo();
 		message = "结束15:05盘后处理";
@@ -37,6 +41,7 @@ public class AutoTradeAfterCloseJob implements Job {
 		Date now = new Date();
 		for (int i = 0; i < list.size(); i++) {
 			StockQuotesBean sqb = (StockQuotesBean) list.get(i);
+			System.out.println(i);
 			GhlhDAO.createStockDailyIinfo(sqb, now);
 		}
 	}

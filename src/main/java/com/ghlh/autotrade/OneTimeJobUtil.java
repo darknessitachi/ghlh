@@ -11,9 +11,6 @@ import com.ghlh.util.StockMarketUtil;
 public class OneTimeJobUtil {
 
 	public static void processOneTimeStrategy(String oneTimeType) {
-		if (StockMarketUtil.isMarketRest()) {
-			return;
-		}
 		List monitorStocksList = MonitorstockDAO.getMonitorStock();
 		for (int i = 0; i < monitorStocksList.size(); i++) {
 			MonitorstockVO monitorstockVO = (MonitorstockVO) monitorStocksList

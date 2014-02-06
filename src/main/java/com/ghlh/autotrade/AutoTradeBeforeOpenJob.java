@@ -8,6 +8,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 import com.ghlh.ui.autotradestart.AutoTradeSwitch;
+import com.ghlh.util.StockMarketUtil;
 import com.ghlh.util.TimeUtil;
 
 public class AutoTradeBeforeOpenJob implements Job {
@@ -17,6 +18,9 @@ public class AutoTradeBeforeOpenJob implements Job {
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		String message = "开始8:00盘前处理";
 		EventRecorder.recordEvent(this.getClass(), message);
+		if (StockMarketUtil.isMarketRest()) {
+			return;
+		}
 		String oneTimeType = "BeforeOpenStrategy";
 		OneTimeJobUtil.processOneTimeStrategy(oneTimeType);
 		message = "结束8:00盘前处理";

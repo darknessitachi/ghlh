@@ -28,7 +28,8 @@ CREATE TABLE `stockdailyinfo` (
   `lowestprice` double DEFAULT NULL,
   `createdtime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `lastmodifiedtime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`stockid`,`date`)
+  PRIMARY KEY (`stockid`,`date`),
+  FULLTEXT KEY `StockIdIndex` (`stockid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

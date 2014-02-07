@@ -10,6 +10,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 import com.ghlh.data.db.GhlhDAO;
+import com.ghlh.data.db.StockdailyinfoVO;
 import com.ghlh.stockquotes.StockQuotesBean;
 import com.ghlh.util.EastMoneyUtil;
 import com.ghlh.util.StockMarketUtil;
@@ -30,10 +31,13 @@ public class AutoDataCollectingJob implements Job {
 		List<StockQuotesBean> list = EastMoneyUtil
 				.collectData(Constants.SZ_STOCK_COUNT);
 		Date now = new Date();
+		String table = "stockdailyinfo" + hour;
+		StockdailyinfoVO.TABLE_NAME = table;
 		for (int i = 0; i < list.size(); i++) {
 			StockQuotesBean sqb = list.get(i);
 			GhlhDAO.createStockDailyIinfo(sqb, now);
 		}
+		StockdailyinfoVO.TABLE_NAME = "stockdailyinfo";
 		message = "½áÊø" + sTime + "Collecting Data";
 		EventRecorder.recordEvent(this.getClass(), message);
 	}

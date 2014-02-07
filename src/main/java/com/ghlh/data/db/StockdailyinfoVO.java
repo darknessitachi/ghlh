@@ -1,7 +1,7 @@
 package com.ghlh.data.db;
 
 public class StockdailyinfoVO implements java.io.Serializable{
-  public static final String TABLE_NAME = "stockdailyinfo";
+  public static String TABLE_NAME = "stockdailyinfo";
   private boolean hasStockid;
   public boolean isHasStockid(){
     return hasStockid;

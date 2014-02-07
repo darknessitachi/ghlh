@@ -48,6 +48,17 @@ public class AutoTradeStockQuartzServer {
 				scheduleJob(i * 3, 15, "TradeSoftwareActivate" + i,
 						AutoTradeSoftwareActivateJob.class);
 			}
+
+			scheduleJob(10, 0, "AutoDataCollectingJob1",
+					AutoDataCollectingJob.class);
+			scheduleJob(11, 0, "AutoDataCollectingJob2",
+					AutoDataCollectingJob.class);
+			scheduleJob(13, 30, "AutoDataCollectingJob3",
+					AutoDataCollectingJob.class);
+			scheduleJob(14, 30, "AutoDataCollectingJob4",
+					AutoDataCollectingJob.class);
+			
+		
 		} catch (SchedulerException ex) {
 			logger.error("Make auto trade scheduler throw: ", ex);
 		}

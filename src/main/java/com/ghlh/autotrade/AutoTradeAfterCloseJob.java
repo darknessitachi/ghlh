@@ -34,10 +34,8 @@ public class AutoTradeAfterCloseJob implements Job {
 		EventRecorder.recordEvent(this.getClass(), message);
 	}
 
-	private static final int SZ_STOCK_COUNT = 2000;
-
 	private void collectStockDailyInfo() {
-		List<StockQuotesBean> list = EastMoneyUtil.collectData(SZ_STOCK_COUNT);
+		List<StockQuotesBean> list = EastMoneyUtil.collectData(Constants.SZ_STOCK_COUNT);
 		Date now = new Date();
 		for (int i = 0; i < list.size(); i++) {
 			StockQuotesBean sqb = (StockQuotesBean) list.get(i);

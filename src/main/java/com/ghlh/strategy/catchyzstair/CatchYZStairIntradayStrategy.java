@@ -13,10 +13,12 @@ public class CatchYZStairIntradayStrategy implements MonitoringStrategy {
 	}
 
 	public void processBuy(StockTradeIntradyMonitor monitor, StockQuotesBean sqb) {
-		StockTradeIntradyUtil.processBuy(monitor, sqb);
-		
-		MonitorstockDAO.turnOnorOffMonitorStock(monitor.getMonitorstockVO()
-				.getId(), false);
+		boolean buySuccessfully = StockTradeIntradyUtil
+				.processBuy(monitor, sqb);
+		if (buySuccessfully) {
+			MonitorstockDAO.turnOnorOffMonitorStock(monitor.getMonitorstockVO()
+					.getId(), false);
+		}
 	}
 
 }

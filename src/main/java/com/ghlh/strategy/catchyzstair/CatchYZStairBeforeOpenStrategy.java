@@ -55,22 +55,23 @@ public class CatchYZStairBeforeOpenStrategy implements OneTimeStrategy {
 				.getEastMoneyInstance().getStockQuotesBean(
 						monitorstockVO.getStockid());
 		double buyPrice = sqb.getCurrentPrice() * (1 + aib.getBuyZdf());
-
+		buyPrice = MathUtil.formatDoubleWith2QuanJin(buyPrice);
+		
 		double winSellPrice = buyPrice * (1 + aib.getTargetZf());
 		winSellPrice = MathUtil.formatDoubleWith2QuanShe(winSellPrice);
 
 		String message = TradeUtil.getPendingBuyMessage(
 				monitorstockVO.getStockid(),
-				TradeUtil.getTradeNumber(aib.getTradeMoney(), winSellPrice),
-				winSellPrice);
+				TradeUtil.getTradeNumber(aib.getTradeMoney(), buyPrice),
+				buyPrice);
 		EventRecorder.recordEvent(this.getClass(), message);
 		BuyStockBean buyStockBean = new BuyStockBean();
 		buyStockBean.setStockId(monitorstockVO.getStockid());
 		buyStockBean.setTradeMoney(aib.getTradeMoney());
-		buyStockBean.setBuyPrice(winSellPrice);
+		buyStockBean.setBuyPrice(buyPrice);
 		buyStockBean.setWinSellPrice(winSellPrice);
 		if (aib.getLostDf() > 0) {
-			double lostSellPrice = winSellPrice * (1 - aib.getLostDf());
+			double lostSellPrice = buyPrice * (1 - aib.getLostDf());
 			lostSellPrice = MathUtil.formatDoubleWith2QuanShe(lostSellPrice);
 			buyStockBean.setLostSellPrice(lostSellPrice);
 		}

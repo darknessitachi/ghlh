@@ -96,14 +96,15 @@ public class StockTradeIntradyUtil {
 
 	}
 
-	public static void processBuy(StockTradeIntradyMonitor monitor,
+	public static boolean processBuy(StockTradeIntradyMonitor monitor,
 			StockQuotesBean sqb) {
+		boolean result = false;
 		List pendingBuyList = monitor.getPendingBuyList();
 		for (int j = 0; j < pendingBuyList.size(); j++) {
 			StocktradeVO stVO = (StocktradeVO) pendingBuyList.get(j);
 			if (stVO.getStatus() != TradeConstants.STATUS_T_0_BUY) {
 				if (TradeUtil.isStopTrade(sqb)) {
-					return;
+					return false;
 				}
 				if (sqb.getCurrentPrice() <= stVO.getBuyprice()) {
 					String message = TradeUtil.getConfirmedBuyMessage(monitor
@@ -117,9 +118,11 @@ public class StockTradeIntradyUtil {
 					StocktradeDAO.updateStocktradeStatus(stVO.getId(),
 							TradeConstants.STATUS_T_0_BUY);
 					stVO.setStatus(TradeConstants.STATUS_T_0_BUY);
+					result = true;
 				}
 			}
 		}
+		return result;
 	}
 
 }

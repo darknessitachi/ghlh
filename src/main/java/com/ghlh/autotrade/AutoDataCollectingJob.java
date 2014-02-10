@@ -11,6 +11,8 @@ import org.quartz.JobExecutionException;
 
 import com.ghlh.data.db.GhlhDAO;
 import com.ghlh.data.db.StockdailyinfoVO;
+import com.ghlh.stockquotes.EastMoneyStockQuotesInquirer;
+import com.ghlh.stockquotes.InternetStockQuotesInquirer;
 import com.ghlh.stockquotes.StockQuotesBean;
 import com.ghlh.util.EastMoneyUtil;
 import com.ghlh.util.StockMarketUtil;
@@ -18,6 +20,7 @@ import com.ghlh.util.StockMarketUtil;
 public class AutoDataCollectingJob implements Job {
 	private static Logger logger = Logger
 			.getLogger(AutoDataCollectingJob.class);
+	public final String[] zs = { "000001", "399001", "399005", "399006" };
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
@@ -37,15 +40,25 @@ public class AutoDataCollectingJob implements Job {
 			StockQuotesBean sqb = list.get(i);
 			GhlhDAO.createStockDailyIinfo(sqb, now);
 		}
+		collectDataForZS(now);
 		StockdailyinfoVO.TABLE_NAME = "stockdailyinfo";
 		message = "½áÊø" + sTime + "Collecting Data";
 		EventRecorder.recordEvent(this.getClass(), message);
 	}
 
+	private void collectDataForZS(Date now) {
+		for (int i = 0; i < zs.length; i++) {
+			StockQuotesBean sqb = ((EastMoneyStockQuotesInquirer) InternetStockQuotesInquirer
+					.getEastMoneyInstance()).getZSStockQuotes(zs[i]);
+			GhlhDAO.createStockDailyIinfo(sqb, now);
+		}
+	}
+
 	public static void main(String[] args) {
 		AutoDataCollectingJob adcj = new AutoDataCollectingJob();
+		Date now = new Date();
 		try {
-			adcj.execute(null);
+			adcj.collectDataForZS(now);
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

@@ -7,9 +7,15 @@ import java.io.InputStreamReader;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.log4j.Logger;
+
+import com.ghlh.autotrade.AutoDataCollectingJob;
 
 public abstract class InternetStockQuotesInquirer implements
 		StockQuotesInquirer {
+	private static Logger logger = Logger
+			.getLogger(InternetStockQuotesInquirer.class);
+
 	private static HttpClient client = new HttpClient();
 	private static HttpMethod method = null;
 
@@ -37,7 +43,7 @@ public abstract class InternetStockQuotesInquirer implements
 			String data = getStockQuotesInfoFromInternet(url);
 			result = parseStockQuotes(data);
 		} catch (StockQuotesException ex) {
-
+			logger.error("getStockQuotesBean throw : ",ex);
 		}
 		return result;
 	}

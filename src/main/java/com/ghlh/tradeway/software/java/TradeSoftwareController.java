@@ -76,7 +76,13 @@ public class TradeSoftwareController extends
 		}
 		if (cmd.indexOf("SendInput") == 0) {
 			String data = cmd.substring(cmd.indexOf(" ") + 1);
-			this.inputString(data);
+			if ("enter".equals(data)) {
+				this.inputEnter();
+			} else if ("tab".equals(data)) {
+				this.inputTab();
+			} else {
+				this.inputString(data);
+			}
 		}
 	}
 
@@ -90,6 +96,16 @@ public class TradeSoftwareController extends
 				inputKey((int) chars[i]);
 			}
 		}
+	}
+
+	private void inputEnter() {
+		robot.keyPress(KeyEvent.VK_ENTER);
+		robot.keyRelease(KeyEvent.VK_ENTER);
+	}
+
+	private void inputTab() {
+		robot.keyPress(KeyEvent.VK_TAB);
+		robot.keyRelease(KeyEvent.VK_TAB);
 	}
 
 	private void inputKey(int key) {

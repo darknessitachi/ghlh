@@ -171,6 +171,7 @@ public class TradeUtil {
 	public static final int PRICE_OPEN = 1;
 	public static final int PRICE_CLOSE = 2;
 	public static final int PRICE_NOON = 3;
+	public static final int PRICE_10 = 10;
 
 	private static String getEventMessage(String stockId, int number,
 			double price, String cmd, boolean isPending, int priceType) {
@@ -209,6 +210,10 @@ public class TradeUtil {
 		case PRICE_NOON:
 			message += "(午盘价)";
 			break;
+		case PRICE_10:
+			message += "(10点 盘中盘价)";
+			break;
+
 		default:
 		}
 		return message;

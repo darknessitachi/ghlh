@@ -39,7 +39,6 @@ public class AutoTradeAfterCloseJob implements Job {
 		Date now = new Date();
 		for (int i = 0; i < list.size(); i++) {
 			StockQuotesBean sqb = (StockQuotesBean) list.get(i);
-			System.out.println(i);
 			GhlhDAO.createStockDailyIinfo(sqb, now);
 		}
 	}

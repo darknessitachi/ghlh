@@ -14,6 +14,7 @@ import com.ghlh.data.db.StockdailyinfoVO;
 import com.ghlh.stockquotes.EastMoneyStockQuotesInquirer;
 import com.ghlh.stockquotes.InternetStockQuotesInquirer;
 import com.ghlh.stockquotes.StockQuotesBean;
+import com.ghlh.strategy.morning4percent.Buyer;
 import com.ghlh.util.EastMoneyUtil;
 import com.ghlh.util.StockMarketUtil;
 
@@ -44,6 +45,7 @@ public class AutoDataCollectingJob implements Job {
 		StockdailyinfoVO.TABLE_NAME = "stockdailyinfo";
 		message = "½áÊø" + sTime + "Collecting Data";
 		EventRecorder.recordEvent(this.getClass(), message);
+		new Buyer().buy(now);
 	}
 
 	private void collectDataForZS(Date now) {
@@ -59,7 +61,6 @@ public class AutoDataCollectingJob implements Job {
 		Date now = new Date();
 		try {
 			adcj.collectDataForZS(now);
-
 		} catch (Exception ex) {
 			ex.printStackTrace();
 

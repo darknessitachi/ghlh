@@ -45,7 +45,10 @@ public class AutoDataCollectingJob implements Job {
 		StockdailyinfoVO.TABLE_NAME = "stockdailyinfo";
 		message = "½áÊø" + sTime + "Collecting Data";
 		EventRecorder.recordEvent(this.getClass(), message);
-		new Buyer().buy(now);
+		if (hour == 10) {
+			new Buyer().buy(now);
+		}
+
 	}
 
 	private void collectDataForZS(Date now) {

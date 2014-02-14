@@ -2,26 +2,19 @@ package com.ghlh.autotrade;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-import com.ghlh.data.db.GhlhDAO;
-import com.ghlh.data.db.StockdailyinfoVO;
-import com.ghlh.stockquotes.EastMoneyStockQuotesInquirer;
-import com.ghlh.stockquotes.InternetStockQuotesInquirer;
-import com.ghlh.stockquotes.StockQuotesBean;
 import com.ghlh.strategy.morning4percent.Buyer;
-import com.ghlh.util.EastMoneyUtil;
 import com.ghlh.util.StockMarketUtil;
 
 public class AutoDataCollectingJob implements Job {
 	private static Logger logger = Logger
 			.getLogger(AutoDataCollectingJob.class);
-	public final String[] zs = { "000001", "399001", "399005", "399006" };
+	DataCollector dc = new DataCollector();
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
@@ -32,17 +25,8 @@ public class AutoDataCollectingJob implements Job {
 		if (StockMarketUtil.isMarketRest()) {
 			return;
 		}
-		List<StockQuotesBean> list = EastMoneyUtil
-				.collectData(Constants.SZ_STOCK_COUNT);
 		Date now = new Date();
-		String table = "stockdailyinfo" + hour;
-		StockdailyinfoVO.TABLE_NAME = table;
-		for (int i = 0; i < list.size(); i++) {
-			StockQuotesBean sqb = list.get(i);
-			GhlhDAO.createStockDailyIinfo(sqb, now);
-		}
-		collectDataForZS(now);
-		StockdailyinfoVO.TABLE_NAME = "stockdailyinfo";
+		dc.collectDailyInfo(now, true);
 		message = "½áÊø" + sTime + "Collecting Data";
 		EventRecorder.recordEvent(this.getClass(), message);
 		if (hour == 10) {
@@ -51,19 +35,11 @@ public class AutoDataCollectingJob implements Job {
 
 	}
 
-	private void collectDataForZS(Date now) {
-		for (int i = 0; i < zs.length; i++) {
-			StockQuotesBean sqb = ((EastMoneyStockQuotesInquirer) InternetStockQuotesInquirer
-					.getEastMoneyInstance()).getZSStockQuotes(zs[i]);
-			GhlhDAO.createStockDailyIinfo(sqb, now);
-		}
-	}
-
 	public static void main(String[] args) {
 		AutoDataCollectingJob adcj = new AutoDataCollectingJob();
 		Date now = new Date();
 		try {
-			adcj.collectDataForZS(now);
+			adcj.execute(null);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 

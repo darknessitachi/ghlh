@@ -149,6 +149,9 @@ public class StockMarketUtil {
 	public static boolean isMarketRest() {
 		boolean result = false;
 		String cause = getMarketRestCause();
+		if (cause != null && !("").equals(cause)) {
+			logger.info(cause);
+		}
 		if (cause != null) {
 			String message = "自动交易监控已开启， " + cause;
 			AutoTradeMonitor.getInstance().appendMonitorInfo(message);
@@ -169,8 +172,8 @@ public class StockMarketUtil {
 		}
 		return result;
 	}
-	
-	public static void main(String[] args){
+
+	public static void main(String[] args) {
 		String cause = StockMarketUtil.getMarketRestCause();
 		System.out.println("cause = " + cause);
 	}

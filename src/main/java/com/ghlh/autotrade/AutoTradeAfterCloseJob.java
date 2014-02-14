@@ -35,16 +35,17 @@ public class AutoTradeAfterCloseJob implements Job {
 	}
 
 	private void collectStockDailyInfo() {
-		List<StockQuotesBean> list = EastMoneyUtil.collectData(Constants.SZ_STOCK_COUNT);
 		Date now = new Date();
-		for (int i = 0; i < list.size(); i++) {
-			StockQuotesBean sqb = (StockQuotesBean) list.get(i);
-			GhlhDAO.createStockDailyIinfo(sqb, now);
-		}
+		new DataCollector().collectDailyInfo(now, false);
 	}
 
 	public static void main(String[] args) {
-		new AutoTradeAfterCloseJob().collectStockDailyInfo();
+		try {
+			new AutoTradeAfterCloseJob().execute(null);
+		} catch (Exception ex) {
+			System.out.println();
+		}
+
 	}
 
 	private void processPredoneOrders() {

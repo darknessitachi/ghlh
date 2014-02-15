@@ -20,6 +20,7 @@ public class EastMoneyStockQuotesInquirer extends InternetStockQuotesInquirer {
 			stockId += "2";
 		}
 		url = url + stockId + url1;
+		System.out.println(url);
 		return url;
 
 	}
@@ -121,8 +122,7 @@ public class EastMoneyStockQuotesInquirer extends InternetStockQuotesInquirer {
 	public static void main(String[] args) {
 		try {
 			EastMoneyStockQuotesInquirer internetStockQuotesInquirer = new EastMoneyStockQuotesInquirer();
-			StockQuotesBean stockQuotesBean = internetStockQuotesInquirer
-					.getZSStockQuotes("399006");
+			StockQuotesBean stockQuotesBean = internetStockQuotesInquirer.getStockQuotesBean("600730");
 			System.out.println(stockQuotesBean);
 		} catch (Exception ex) {
 			ex.printStackTrace();

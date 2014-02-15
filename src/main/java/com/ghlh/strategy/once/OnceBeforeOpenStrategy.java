@@ -34,11 +34,7 @@ public class OnceBeforeOpenStrategy implements OneTimeStrategy {
 				.getInstance().getStockQuotesBean(monitorstockVO.getStockid());
 		double currentPrice = stockQuotesBean.getCurrentPrice();
 		if (currentPrice == 0) {
-			currentPrice = InternetStockQuotesInquirer.getInstance()
-					.getLatestPrice(monitorstockVO.getStockid());
-			if (currentPrice == 0) {
-				return;
-			}
+			currentPrice = stockQuotesBean.getYesterdayClose();
 		}
 
 		double possibleMaxPrice = currentPrice * TradeConstants.MAX_ZF;

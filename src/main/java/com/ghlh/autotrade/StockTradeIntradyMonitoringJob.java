@@ -45,17 +45,21 @@ public class StockTradeIntradyMonitoringJob {
 			List stockMonitors = retrieveStockMonitors(monitorStocksList);
 
 			while (AutoTradeSwitch.getInstance().isStart()) {
-				if (StockMarketUtil.isMarketBreak()) {
-					break;
-				}
-				setMonitoringStatus();
-				monitoringIntrady(stockMonitors);
-				TimeUtil.pause(200);
-				int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-				int mins = Calendar.getInstance().get(Calendar.MINUTE);
-				if (hour == 14 && mins == 58) {
-					processBeforeCloseBuy(monitorStocksList);
-					break;
+				try {
+					if (StockMarketUtil.isMarketBreak()) {
+						break;
+					}
+					setMonitoringStatus();
+					monitoringIntrady(stockMonitors);
+					TimeUtil.pause(200);
+					int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+					int mins = Calendar.getInstance().get(Calendar.MINUTE);
+					if (hour == 14 && mins == 58) {
+						processBeforeCloseBuy(monitorStocksList);
+						break;
+					}
+				} catch (Exception ex) {
+					logger.error("Stock Monitoring Trade throw : ", ex);
 				}
 			}
 			if (!AutoTradeSwitch.getInstance().isStart()) {
@@ -108,8 +112,8 @@ public class StockTradeIntradyMonitoringJob {
 					.getStockQuotesBean(
 							monitor.getMonitorstockVO().getStockid());
 			if (TradeUtil.isStopTrade(sqb)) {
-				AutoTradeMonitor.getInstance().setMonitorStock(sqb.getStockId(),
-						sqb.getName() + " Í£ÅÆ ");
+				AutoTradeMonitor.getInstance().setMonitorStock(
+						sqb.getStockId(), sqb.getName() + " Í£ÅÆ ");
 				TimeUtil.pause(200);
 				continue;
 			}

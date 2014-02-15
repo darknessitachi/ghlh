@@ -100,7 +100,7 @@ public class StockSettingButtonActionListener extends
 		MonitorstockVO monitorStockVO = this.collectMonitorstockVO();
 		monitorStockVO.setCreatedtimestamp(new Date());
 		monitorStockVO.setLastmodifiedtimestamp(new Date());
-
+		monitorStockVO.setOnmonitoring("true");
 		try {
 			int id = IDGenerator.generateId(MonitorstockVO.TABLE_NAME);
 			monitorStockVO.setId(id);
@@ -204,6 +204,21 @@ public class StockSettingButtonActionListener extends
 		}
 	}
 
+	private boolean isOnlyListMorningStocks = false;
+	public void button5ActionPerformed(ActionEvent e) {
+		isOnlyListMorningStocks = !isOnlyListMorningStocks;
+		if(isOnlyListMorningStocks){
+			((JButton) this.getjButtons().get(4)).setText("显示全部股票");
+			((StockSettingContentPanel) this.getContentPanel()).refreshStockTable(true);
+			
+		}else{
+			((JButton) this.getjButtons().get(4)).setText("仅显示监控股票");
+			((StockSettingContentPanel) this.getContentPanel()).refreshStockTable(false);
+		}
+		this.enterNewStatus();
+	}
+
+	
 	protected void initButtonStatus() {
 		this.enterNewStatus();
 	}

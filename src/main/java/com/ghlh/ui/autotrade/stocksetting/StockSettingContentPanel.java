@@ -110,7 +110,8 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 	private void clickMonitoring() {
 		int row = stockTable.getSelectedRow();
 		if (stockTable.getSelectedColumn() == 3) {
-			boolean monitoring = ((Boolean) stockTable.getValueAt(row, 3)).booleanValue();
+			boolean monitoring = ((Boolean) stockTable.getValueAt(row, 3))
+					.booleanValue();
 			// String action = null;
 			// if (monitoring) {
 			// action = "新增";
@@ -146,13 +147,39 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 				.setColumnIdentifiers(columnNames);
 
 		try {
-			// FileStockPoolAccessor accessor = new FileStockPoolAccessor();
 			msbList = MonitorstockDAO.getMonitorStock();
 			for (int i = 0; i < msbList.size(); i++) {
 				MonitorstockVO msb = msbList.get(i);
 				Vector rowV = convertMonitorStockBeanToVector(msb);
 				((DefaultTableModel) this.stockTable.getModel()).addRow(rowV);
 			}
+		} catch (Exception ex) {
+			logger.error("Read stock list throw", ex);
+		}
+	}
+
+	public void refreshStockTable(boolean onlyMonitoring) {
+		String[] columnNames = { "交易策略", "股票代码", "股票名称", "是否监控" };
+		Vector columnV = new Vector();
+		for (int i = 0; i < columnNames.length; i++) {
+			columnV.add(columnNames[i]);
+		}
+		Vector data = new Vector();
+		try {
+			if (onlyMonitoring) {
+				msbList = MonitorstockDAO.getOnlyMonitoringStocks();
+			} else {
+				msbList = MonitorstockDAO.getMonitorStock();
+			}
+
+			for (int i = 0; i < msbList.size(); i++) {
+				MonitorstockVO msb = msbList.get(i);
+				Vector rowV = convertMonitorStockBeanToVector(msb);
+				data.add(rowV);
+			}
+			((DefaultTableModel) this.stockTable.getModel()).setDataVector(
+					data, columnV);
+			((DefaultTableModel) this.stockTable.getModel()).fireTableDataChanged();
 		} catch (Exception ex) {
 			logger.error("Read stock list throw", ex);
 		}

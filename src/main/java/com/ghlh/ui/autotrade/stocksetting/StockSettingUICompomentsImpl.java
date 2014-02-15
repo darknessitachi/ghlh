@@ -19,6 +19,8 @@ public class StockSettingUICompomentsImpl implements UIComponentsI {
 		buttons.add("保存");
 		buttons.add("取消");
 		buttons.add("删除");
+		buttons.add("只显示监控股票");
+		
 		ComponentsBean result = new ComponentsBean();
 		result.setButtons(buttons);
 		List components = new ArrayList();

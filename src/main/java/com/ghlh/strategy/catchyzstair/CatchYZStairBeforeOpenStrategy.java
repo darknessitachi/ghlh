@@ -54,7 +54,15 @@ public class CatchYZStairBeforeOpenStrategy implements OneTimeStrategy {
 		StockQuotesBean sqb = InternetStockQuotesInquirer
 				.getEastMoneyInstance().getStockQuotesBean(
 						monitorstockVO.getStockid());
-		double buyPrice = sqb.getCurrentPrice() * (1 + aib.getBuyZdf());
+		double currentPrice = sqb.getCurrentPrice();
+		if(currentPrice == 0){
+			currentPrice = InternetStockQuotesInquirer.getInstance()
+					.getLatestPrice(monitorstockVO.getStockid());
+			if(currentPrice == 0){
+				return;
+			}
+		}
+		double buyPrice = currentPrice * (1 + aib.getBuyZdf());
 		buyPrice = MathUtil.formatDoubleWith2QuanJin(buyPrice);
 		
 		double winSellPrice = buyPrice * (1 + aib.getTargetZf());

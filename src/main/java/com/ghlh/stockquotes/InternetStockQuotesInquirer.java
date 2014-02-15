@@ -3,6 +3,7 @@ package com.ghlh.stockquotes;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
@@ -10,6 +11,8 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.log4j.Logger;
 
 import com.ghlh.autotrade.AutoDataCollectingJob;
+import com.ghlh.data.db.GhlhDAO;
+import com.ghlh.data.db.StockdailyinfoVO;
 
 public abstract class InternetStockQuotesInquirer implements
 		StockQuotesInquirer {
@@ -24,7 +27,7 @@ public abstract class InternetStockQuotesInquirer implements
 	public static StockQuotesInquirer getInstance() {
 		return instance;
 	}
-	
+
 	private static StockQuotesInquirer eastMoneyInstance = new EastMoneyStockQuotesInquirer();
 
 	public static StockQuotesInquirer getEastMoneyInstance() {
@@ -32,7 +35,7 @@ public abstract class InternetStockQuotesInquirer implements
 	}
 
 	public StockQuotesBean getStockQuotesBean(String stockId) {
-		if(testingInjectStockQuotesBean != null){
+		if (testingInjectStockQuotesBean != null) {
 			return testingInjectStockQuotesBean;
 		}
 		StockQuotesBean result = null;
@@ -42,7 +45,7 @@ public abstract class InternetStockQuotesInquirer implements
 			String data = getStockQuotesInfoFromInternet(url);
 			result = parseStockQuotes(data);
 		} catch (StockQuotesException ex) {
-			logger.error("getStockQuotesBean throw : ",ex);
+			logger.error("getStockQuotesBean throw : ", ex);
 		}
 		return result;
 	}
@@ -60,8 +63,8 @@ public abstract class InternetStockQuotesInquirer implements
 		}
 		return result;
 	}
-	
-	protected String getCharset(){
+
+	protected String getCharset() {
 		return "gb2312";
 	}
 
@@ -87,5 +90,18 @@ public abstract class InternetStockQuotesInquirer implements
 
 	protected abstract StockQuotesBean parseStockQuotes(String stockInfo)
 			throws StockQuotesException;
+
+	public double getLatestPrice(String stockId) {
+		String sql = "SELECT * FROM stockdailyinfo WHERE stockid = '" + stockId
+				+ "' ORDER BY DATE DESC";
+		double result = 0;
+		List list = GhlhDAO
+				.list(sql, "com.ghlh.data.db.StockdailyinfoVO", 0, 1);
+		if (list.size() > 0) {
+			StockdailyinfoVO stockdailyinfoVO = (StockdailyinfoVO) list.get(0);
+			result = stockdailyinfoVO.getCurrentprice();
+		}
+		return result;
+	}
 
 }

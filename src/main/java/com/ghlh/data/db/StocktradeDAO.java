@@ -131,7 +131,7 @@ public class StocktradeDAO {
 		GhlhDAO.edit(stocktradeVO1);
 	}
 	
-	public static void updateStocktradeFailure(int id) {
+		public static void updateStocktradeFailure(int id) {
 		StocktradeVO stocktradeVO1 = new StocktradeVO();
 		stocktradeVO1.setId(id);
 		stocktradeVO1.setWhereId(true);

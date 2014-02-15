@@ -13,6 +13,7 @@ import com.ghlh.strategy.BuyStockBean;
 import com.ghlh.strategy.OneTimeStrategy;
 import com.ghlh.strategy.TradeConstants;
 import com.ghlh.strategy.TradeUtil;
+import com.ghlh.strategy.once.AdditionalInfoBean;
 import com.ghlh.util.MathUtil;
 
 public class Morning4PercentBeforeOpenStrategy implements OneTimeStrategy {
@@ -20,20 +21,53 @@ public class Morning4PercentBeforeOpenStrategy implements OneTimeStrategy {
 		List stockTradeList = StocktradeDAO
 				.getUnfinishedTradeRecords(monitorstockVO.getStockid(),
 						monitorstockVO.getTradealgorithm());
-		if (stockTradeList.size() == 0) {
-			if (Boolean.parseBoolean(monitorstockVO.getOnmonitoring())) {
-				dealBuy(monitorstockVO);
-			}
-		} else {
+		if (stockTradeList.size() >= 0) {
 			dealSell(monitorstockVO, stockTradeList);
 		}
 	}
 
 	private void dealSell(MonitorstockVO monitorstockVO, List stockTradeList) {
+		StockQuotesBean stockQuotesBean = InternetStockQuotesInquirer
+				.getInstance().getStockQuotesBean(monitorstockVO.getStockid());
+		double currentPrice = stockQuotesBean.getCurrentPrice();
+		if (currentPrice == 0) {
+			currentPrice = stockQuotesBean.getYesterdayClose();
+		}
 
+		double possibleMaxPrice = currentPrice * TradeConstants.MAX_ZF;
+		double possibleMinPrice = currentPrice * TradeConstants.MAX_DF;
+
+		StocktradeVO stocktradeVO = (StocktradeVO) stockTradeList.get(0);
+		AdditionalInfoBean aib = (AdditionalInfoBean) AdditionInfoUtil
+				.parseAdditionalInfoBean(monitorstockVO.getAdditioninfo(),
+						monitorstockVO.getTradealgorithm());
+		if (aib.getTargetZf() != 0) {
+			double winSellPrice = stocktradeVO.getBuyprice()
+					* (1 + aib.getTargetZf());
+			winSellPrice = MathUtil.formatDoubleWith2QuanShe(winSellPrice);
+			stocktradeVO.setWinsellprice(winSellPrice);
+			if (aib.getLostDf() > 0) {
+				double lostSellPrice = aib.getBuyPrice()
+						* (1 - aib.getLostDf());
+				lostSellPrice = MathUtil
+						.formatDoubleWith2QuanShe(lostSellPrice);
+				stocktradeVO.setLostsellprice(lostSellPrice);
+			}
+			if (stocktradeVO.getWinsellprice() < possibleMaxPrice
+					|| stocktradeVO.getLostsellprice() > possibleMinPrice) {
+				TradeUtil.decideSellPrice(stocktradeVO);
+				String message = TradeUtil.getPendingSellMessage(
+						stocktradeVO.getStockid(), stocktradeVO.getNumber(),
+						stocktradeVO.getWinsellprice(),
+						stocktradeVO.getLostsellprice());
+				EventRecorder.recordEvent(this.getClass(), message);
+				TradeUtil.dealSell(stocktradeVO);
+			}
+		} else {
+			String message = TradeUtil.getOpenPriceSellMessage(
+					stocktradeVO.getStockid(), stocktradeVO.getNumber());
+			EventRecorder.recordEvent(this.getClass(), message);
+			TradeUtil.dealSell(stocktradeVO);
+		}
 	}
-
-	private void dealBuy(MonitorstockVO monitorstockVO) {
-	}
-
 }

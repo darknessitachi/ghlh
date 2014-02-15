@@ -126,6 +126,18 @@ public class TradeUtil {
 		GhlhDAO.edit(stocktradeVO1);
 	}
 
+	public static void decideSellPrice(StocktradeVO stocktradeVO) {
+		// SoftwareTrader.getInstance().sellStock(stocktradeVO.getStockid(),
+		// stocktradeVO.getNumber(), stocktradeVO.getWinsellprice());
+		StocktradeVO stocktradeVO1 = new StocktradeVO();
+		stocktradeVO1.setId(stocktradeVO.getId());
+		stocktradeVO1.setWhereId(true);
+		stocktradeVO1.setWinsellprice(stocktradeVO.getWinsellprice());
+		stocktradeVO1.setLostsellprice(stocktradeVO.getLostsellprice());
+		GhlhDAO.edit(stocktradeVO1);
+	}
+
+	
 	public static String getOpenPriceBuyMessage(String stockId, int number,
 			double price) {
 		return getEventMessage(stockId, number, price, "buy", false, PRICE_OPEN);
@@ -147,9 +159,19 @@ public class TradeUtil {
 				lostPrice);
 	}
 
+	public static String getOpenPriceSellMessage(String stockId, int number) {
+		return getEventMessage(stockId, number, 0, "sell", true, PRICE_OPEN,
+				0);
+	}
+	
 	public static String getConfirmedSellMessage(String stockId, int number,
 			double price) {
 		return getEventMessage(stockId, number, price, "sell", false, 0);
+	}
+	
+	public static String getOpenPriceSellMessage(String stockId, int number,
+			double price) {
+		return getEventMessage(stockId, number, price, "sell", false, PRICE_OPEN);
 	}
 
 	public static String getPendingBuyMessage(String stockId, int number,

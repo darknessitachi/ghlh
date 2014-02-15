@@ -88,7 +88,7 @@ public class OnceIntradyFirstBuyStrategyTest {
 		monitorstockVO.setStockid("601118");
 		monitorstockVO.setName("海南橡胶");
 		monitorstockVO.setTradealgorithm("Once");
-		monitorstockVO.setAdditioninfo("开盘价,11.0,0.05,10000.0,0.02");
+		monitorstockVO.setAdditioninfo("开盘价,11.0,0.05,10000.0,0.02,abc");
 		monitorstockVO.setOnmonitoring("true");
 		return monitorstockVO;
 	}
@@ -99,7 +99,7 @@ public class OnceIntradyFirstBuyStrategyTest {
 		monitorstockVO.setStockid("601118");
 		monitorstockVO.setName("海南橡胶");
 		monitorstockVO.setTradealgorithm("Once");
-		monitorstockVO.setAdditioninfo("午盘价,11.0,0.05,10000.0,0.02");
+		monitorstockVO.setAdditioninfo("午盘价,11.0,0.05,10000.0,0.02,abc");
 		monitorstockVO.setOnmonitoring("true");
 		return monitorstockVO;
 	}

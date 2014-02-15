@@ -6,6 +6,8 @@ import org.junit.runners.Suite;
 import com.ghlh.autotrade.AutoTradeTestSuites;
 import com.ghlh.strategy.catchyzstair.CatchYZStairBeforeOpenStrategyTest;
 import com.ghlh.strategy.catchyzstair.CatchYZStairIntradayStrategyTest;
+import com.ghlh.strategy.morning4percent.Morning4PercentBeforeOpenStrategyTest;
+import com.ghlh.strategy.morning4percent.Morning4PercentIntradayStrategyTest;
 import com.ghlh.strategy.once.OnceBeforeCloseStrategyTest;
 import com.ghlh.strategy.once.OnceBeforeOpenStrategyTest;
 import com.ghlh.strategy.once.OnceIntradyFirstBuyStrategyTest;
@@ -18,6 +20,7 @@ import com.ghlh.strategy.stair.StairIntradyFirstBuyStrategyTest;
 		OnceIntradyFirstBuyStrategyTest.class,
 		StairBeforeOpenStrategyTest.class, StairIntradayStrategyTest.class,
 		StairIntradyFirstBuyStrategyTest.class,
-		OnceBeforeCloseStrategyTest.class , CatchYZStairBeforeOpenStrategyTest.class,CatchYZStairIntradayStrategyTest.class})
+		OnceBeforeCloseStrategyTest.class , CatchYZStairBeforeOpenStrategyTest.class,CatchYZStairIntradayStrategyTest.class,
+		Morning4PercentBeforeOpenStrategyTest.class,Morning4PercentIntradayStrategyTest.class})
 public class StrategyTestSuites {
 }

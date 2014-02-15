@@ -22,7 +22,7 @@ public class StairTestDataGenerator {
 		monitorstockVO.setName("海南橡胶");
 		monitorstockVO.setTradealgorithm(StairConstants.STAIR_STRATEGY_NAME);
 		monitorstockVO.setAdditioninfo("25000," + stairNumber + "," + zdf
-				+ ",设定价,10");
+				+ ",设定价,10,abc");
 		monitorstockVO.setOnmonitoring("true");
 		return monitorstockVO;
 	}

@@ -142,7 +142,7 @@ public class StairIntradyFirstBuyStrategyTest {
 		monitorstockVO.setStockid("601118");
 		monitorstockVO.setName("海南橡胶");
 		monitorstockVO.setTradealgorithm("Stair");
-		monitorstockVO.setAdditioninfo("25000.0,4,0.05,午盘价,25.0");
+		monitorstockVO.setAdditioninfo("25000.0,4,0.05,午盘价,25.0,abc");
 		monitorstockVO.setOnmonitoring("true");
 		return monitorstockVO;
 	}
@@ -154,7 +154,7 @@ public class StairIntradyFirstBuyStrategyTest {
 		monitorstockVO.setStockid("601118");
 		monitorstockVO.setName("海南橡胶");
 		monitorstockVO.setTradealgorithm("Stair");
-		monitorstockVO.setAdditioninfo("25000.0,4,0.05,开盘价,25.0");
+		monitorstockVO.setAdditioninfo("25000.0,4,0.05,开盘价,25.0,abc");
 		monitorstockVO.setOnmonitoring("true");
 		return monitorstockVO;
 	}

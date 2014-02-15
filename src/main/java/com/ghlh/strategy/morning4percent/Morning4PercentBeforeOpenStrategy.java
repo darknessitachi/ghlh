@@ -13,7 +13,6 @@ import com.ghlh.strategy.BuyStockBean;
 import com.ghlh.strategy.OneTimeStrategy;
 import com.ghlh.strategy.TradeConstants;
 import com.ghlh.strategy.TradeUtil;
-import com.ghlh.strategy.once.AdditionalInfoBean;
 import com.ghlh.util.MathUtil;
 
 public class Morning4PercentBeforeOpenStrategy implements OneTimeStrategy {
@@ -47,7 +46,7 @@ public class Morning4PercentBeforeOpenStrategy implements OneTimeStrategy {
 			winSellPrice = MathUtil.formatDoubleWith2QuanShe(winSellPrice);
 			stocktradeVO.setWinsellprice(winSellPrice);
 			if (aib.getLostDf() > 0) {
-				double lostSellPrice = aib.getBuyPrice()
+				double lostSellPrice = stocktradeVO.getBuyprice()
 						* (1 - aib.getLostDf());
 				lostSellPrice = MathUtil
 						.formatDoubleWith2QuanShe(lostSellPrice);

@@ -91,7 +91,7 @@ public class OnceBeforeOpenStrategyTest {
 		monitorstockVO.setStockid("601118");
 		monitorstockVO.setName("海南橡胶");
 		monitorstockVO.setTradealgorithm("Once");
-		monitorstockVO.setAdditioninfo("设定价,10.0,0.05,10000.0,0.0");
+		monitorstockVO.setAdditioninfo("设定价,10.0,0.05,10000.0,0.0,abc");
 		monitorstockVO.setOnmonitoring("true");
 		return monitorstockVO;
 	}

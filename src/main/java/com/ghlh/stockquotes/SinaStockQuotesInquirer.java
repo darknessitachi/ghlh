@@ -24,7 +24,7 @@ public class SinaStockQuotesInquirer extends InternetStockQuotesInquirer {
 			throws StockQuotesException {
 		try {
 			StockQuotesBean result = new StockQuotesBean();
-			String stockId = stockInfo.substring(0, stockInfo.indexOf("=") - 1);
+			String stockId = stockInfo.substring(0, stockInfo.indexOf("="));
 			stockId = stockId.substring(stockId.length() - 6);
 			result.setStockId(stockId);
 
@@ -54,7 +54,7 @@ public class SinaStockQuotesInquirer extends InternetStockQuotesInquirer {
 		try {
 			StockQuotesInquirer internetStockQuotesInquirer = new SinaStockQuotesInquirer();
 			StockQuotesBean stockQuotesBean = internetStockQuotesInquirer
-					.getStockQuotesBean("300001");
+					.getStockQuotesBean("002520");
 			System.out.println(stockQuotesBean);
 
 		} catch (Exception ex) {

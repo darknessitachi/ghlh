@@ -30,13 +30,7 @@ public class TradeUtil {
 	}
 
 	public static boolean isStopTrade(StockQuotesBean sqb) {
-		boolean result = false;
-		if (sqb.getCurrentPrice() == 0) {
-			logger.error(" Stock : " + sqb.getStockId()
-					+ " is stopped to trade now");
-			result = true;
-		}
-		return result;
+		return sqb.getCurrentPrice() == 0;
 	}
 
 	public static void dealBuyStockSuccessfully(String stockId,

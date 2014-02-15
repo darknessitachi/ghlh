@@ -25,22 +25,30 @@ public class Buyer {
 
 	public void buy(Date date) {
 		String sDate = DateUtil.formatDate(date);
-		//String sDate = "2014-02-07 10:09:31";
-		String sql = "SELECT * FROM stockdailyinfo10 WHERE DATE = '"
-				+ sDate
-				+ "' AND zdf >= 3.5 AND zdf <= 5.5"
-				+ " AND (todayopenprice-yesterdaycloseprice)/yesterdaycloseprice <0.02 "
-				+ " ORDER BY hsl DESC";
+		// String sDate = "2014-02-07 10:09:31";
+		// String sql = "SELECT * FROM stockdailyinfo10 WHERE DATE = '"
+		// + sDate
+		// + "' AND zdf >= 3.5 AND zdf <= 5.5"
+		// +
+		// " AND (todayopenprice-yesterdaycloseprice)/yesterdaycloseprice <0.02 "
+		// + " ORDER BY hsl DESC";
+
+		String sql = "SELECT * FROM stockdailyinfo WHERE DATE = '" + sDate
+				+ "' AND zdf >= 3.5 AND zdf <= 5.5 ORDER BY hsl DESC";
+
 		List list = GhlhDAO
-				.list(sql, "com.ghlh.data.db.StockdailyinfoVO", 0, 1);
-		if (list.size() > 0) {
-			StockdailyinfoVO stockdailyinfoVO = (StockdailyinfoVO) list.get(0);
+				.list(sql, "com.ghlh.data.db.StockdailyinfoVO", 0, 3);
+		for (int i = 0; i < list.size(); i++) {
+			StockdailyinfoVO stockdailyinfoVO = (StockdailyinfoVO) list.get(i);
 			String stockId = stockdailyinfoVO.getStockid();
 			MonitorstockVO monitorstockVO = new MonitorstockVO();
 			monitorstockVO.setTradealgorithm("Morning4Percent");
 			monitorstockVO.setStockid(stockId);
 			StockQuotesBean sqb = InternetStockQuotesInquirer.getInstance()
 					.getStockQuotesBean(stockId);
+			if (sqb.getName().indexOf("ST") >= 0) {
+				continue;
+			}
 			monitorstockVO.setName(sqb.getName());
 			int id = IDGenerator.generateId(MonitorstockVO.TABLE_NAME);
 			monitorstockVO.setId(id);
@@ -71,6 +79,7 @@ public class Buyer {
 			buyStockBean.setLostSellPrice(0);
 			buyStockBean.setStrategy(monitorstockVO.getTradealgorithm());
 			TradeUtil.dealBuyStockSuccessfully(buyStockBean);
+			break;
 		}
 	}
 

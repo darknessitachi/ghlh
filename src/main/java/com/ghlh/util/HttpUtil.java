@@ -23,6 +23,7 @@ public class HttpUtil {
 			BufferedReader br = new BufferedReader(new InputStreamReader(in,
 					"utf-8"));
 			line = br.readLine();
+			method.releaseConnection();
 		} catch (Exception ex) {
 			logger.error("Quote stock info from " + stockQuotesURL
 					+ " throw : ", ex);

@@ -77,6 +77,7 @@ public abstract class InternetStockQuotesInquirer implements
 			BufferedReader br = new BufferedReader(new InputStreamReader(in,
 					getCharset()));
 			String result = br.readLine();
+			method.releaseConnection();
 			return result;
 		} catch (Exception ex) {
 			ex.printStackTrace();

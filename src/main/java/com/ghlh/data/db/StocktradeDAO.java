@@ -23,11 +23,11 @@ public class StocktradeDAO {
 	public static List getIntradyHoldingTradeRecords(String stockId,
 			String strategy) {
 		String sql = "SELECT * FROM stocktrade where  stockId = '" + stockId
-				+ "' and tradeAlgorithm = '" + strategy + "' and status = "
+				+ "' and tradeAlgorithm = '" + strategy + "' and (status = "
 				+ TradeConstants.STATUS_HOLDING + " or status = "
 				+ TradeConstants.STATUS_POSSIBLE_SELL + " or status = "
 				+ TradeConstants.STATUS_T_0_BUY;
-		sql += " ORDER BY buyPrice desc ";
+		sql += ") ORDER BY buyPrice desc ";
 		List result = GhlhDAO.list(sql, "com.ghlh.data.db.StocktradeVO");
 		return result;
 	}

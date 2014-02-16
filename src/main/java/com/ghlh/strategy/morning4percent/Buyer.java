@@ -25,14 +25,6 @@ public class Buyer {
 
 	public void buy(Date date) {
 		String sDate = DateUtil.formatDate(date);
-		// String sDate = "2014-02-07 10:09:31";
-		// String sql = "SELECT * FROM stockdailyinfo10 WHERE DATE = '"
-		// + sDate
-		// + "' AND zdf >= 3.5 AND zdf <= 5.5"
-		// +
-		// " AND (todayopenprice-yesterdaycloseprice)/yesterdaycloseprice <0.02 "
-		// + " ORDER BY hsl DESC";
-
 		String sql = "SELECT * FROM stockdailyinfo WHERE DATE = '" + sDate
 				+ "' AND zdf >= 3.5 AND zdf <= 5.5 ORDER BY hsl DESC";
 

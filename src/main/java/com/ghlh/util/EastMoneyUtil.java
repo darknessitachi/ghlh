@@ -40,13 +40,16 @@ public class EastMoneyUtil {
 		return result;
 	}
 
-	public static List<StockQuotesBean> collectData(int pageSize) {
+	public static List<StockQuotesBean> collectData(int pageSize, int marketCode) {
 		List<StockQuotesBean> result = new ArrayList<StockQuotesBean>();
 		String url = "http://hqdigi2.eastmoney.com/EM_Quote2010NumericApplication/index.aspx?"
 				+ "type=s&sortType=C&sortRule=-1&pageSize="
 				+ pageSize
 				+ "&page=1&jsName=quote_123"
-				+ "&style=20&_g=0.5124112195048514";
+				+ "&style="
+				+ marketCode
+				+ "&_g=0.5124112195048514";
+		System.out.println(" url = " + url);
 		String content = HttpUtil.accessInternet(url);
 		content = content.substring(content.indexOf("[") + 1);
 		content = content.substring(0, content.indexOf("]"));
@@ -61,6 +64,11 @@ public class EastMoneyUtil {
 		StockQuotesBean sqb = EastMoneyUtil.parseStockQuotes(content);
 		result.add(sqb);
 		return result;
+	}
+
+	public static void main(String[] args) {
+		collectData(200, 20);
+		collectData(200, 10);
 	}
 
 }

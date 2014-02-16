@@ -16,21 +16,26 @@ public class DataCollector {
 	public final String[] zs = { "000001", "399001", "399005", "399006" };
 
 	public void collectDailyInfo(Date now, boolean isPanzhong) {
-		List<StockQuotesBean> list = EastMoneyUtil
-				.collectData(Constants.SZ_STOCK_COUNT);
 		if (isPanzhong) {
 			int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 			String table = "stockdailyinfo" + hour;
 			StockdailyinfoVO.TABLE_NAME = table;
 		}
+		collectStocks(now, 10);
+		collectStocks(now, 20);
+		collectDataForZS(now);
+		StockdailyinfoVO.TABLE_NAME = "stockdailyinfo";
+	}
+
+	private void collectStocks(Date now, int marketCode) {
+		List<StockQuotesBean> list = EastMoneyUtil.collectData(
+				Constants.SZ_STOCK_COUNT, 10);
 		for (int i = 0; i < list.size(); i++) {
 			StockQuotesBean sqb = list.get(i);
 			if (sqb.getCurrentPrice() != 0) {
 				GhlhDAO.createStockDailyIinfo(sqb, now);
 			}
 		}
-		collectDataForZS(now);
-		StockdailyinfoVO.TABLE_NAME = "stockdailyinfo";
 	}
 
 	private void collectDataForZS(Date now) {

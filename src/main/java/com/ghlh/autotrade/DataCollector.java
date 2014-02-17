@@ -29,7 +29,7 @@ public class DataCollector {
 
 	private void collectStocks(Date now, int marketCode) {
 		List<StockQuotesBean> list = EastMoneyUtil.collectData(
-				Constants.SZ_STOCK_COUNT, 10);
+				Constants.SZ_STOCK_COUNT, marketCode);
 		for (int i = 0; i < list.size(); i++) {
 			StockQuotesBean sqb = list.get(i);
 			if (sqb.getCurrentPrice() != 0) {

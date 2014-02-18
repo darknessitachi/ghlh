@@ -106,22 +106,26 @@ public class StockTradeIntradyMonitoringJob {
 
 	public void monitoringIntrady(List stockMonitors) {
 		for (int i = 0; i < stockMonitors.size(); i++) {
-			StockTradeIntradyMonitor monitor = (StockTradeIntradyMonitor) stockMonitors
-					.get(i);
-			StockQuotesBean sqb = InternetStockQuotesInquirer.getInstance()
-					.getStockQuotesBean(
-							monitor.getMonitorstockVO().getStockid());
-			if (TradeUtil.isStopTrade(sqb)) {
+			try {
+				StockTradeIntradyMonitor monitor = (StockTradeIntradyMonitor) stockMonitors
+						.get(i);
+				StockQuotesBean sqb = InternetStockQuotesInquirer.getInstance()
+						.getStockQuotesBean(
+								monitor.getMonitorstockVO().getStockid());
+				if (TradeUtil.isStopTrade(sqb)) {
+					AutoTradeMonitor.getInstance().setMonitorStock(
+							sqb.getStockId(), sqb.getName() + " Í£ÅÆ ");
+					TimeUtil.pause(200);
+					continue;
+				}
 				AutoTradeMonitor.getInstance().setMonitorStock(
-						sqb.getStockId(), sqb.getName() + " Í£ÅÆ ");
+						sqb.getStockId(), sqb.getName());
+				monitor.processBuy(sqb);
+				monitor.processSell(sqb);
 				TimeUtil.pause(200);
-				continue;
+			} catch (Exception ex) {
+				logger.error("monitoringIntrady", ex);
 			}
-			AutoTradeMonitor.getInstance().setMonitorStock(sqb.getStockId(),
-					sqb.getName());
-			monitor.processBuy(sqb);
-			monitor.processSell(sqb);
-			TimeUtil.pause(200);
 		}
 	}
 

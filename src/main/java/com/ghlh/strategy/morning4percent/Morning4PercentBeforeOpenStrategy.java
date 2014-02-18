@@ -20,7 +20,7 @@ public class Morning4PercentBeforeOpenStrategy implements OneTimeStrategy {
 		List stockTradeList = StocktradeDAO
 				.getUnfinishedTradeRecords(monitorstockVO.getStockid(),
 						monitorstockVO.getTradealgorithm());
-		if (stockTradeList.size() >= 0) {
+		if (stockTradeList.size() > 0) {
 			dealSell(monitorstockVO, stockTradeList);
 		}
 	}

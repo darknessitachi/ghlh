@@ -106,9 +106,9 @@ public class StockTradeIntradyMonitoringJob {
 
 	public void monitoringIntrady(List stockMonitors) {
 		for (int i = 0; i < stockMonitors.size(); i++) {
+			StockTradeIntradyMonitor monitor = (StockTradeIntradyMonitor) stockMonitors
+					.get(i);
 			try {
-				StockTradeIntradyMonitor monitor = (StockTradeIntradyMonitor) stockMonitors
-						.get(i);
 				StockQuotesBean sqb = InternetStockQuotesInquirer.getInstance()
 						.getStockQuotesBean(
 								monitor.getMonitorstockVO().getStockid());
@@ -124,7 +124,8 @@ public class StockTradeIntradyMonitoringJob {
 				monitor.processSell(sqb);
 				TimeUtil.pause(200);
 			} catch (Exception ex) {
-				logger.error("monitoringIntrady", ex);
+				logger.error("monitoringIntrady with stock : "
+						+ monitor.getMonitorstockVO().getStockid(), ex);
 			}
 		}
 	}

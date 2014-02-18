@@ -16,15 +16,16 @@ public class OneTimeJobUtil {
 	public static void processOneTimeStrategy(String oneTimeType) {
 		List monitorStocksList = MonitorstockDAO.getMonitorStock();
 		for (int i = 0; i < monitorStocksList.size(); i++) {
+			MonitorstockVO monitorstockVO = (MonitorstockVO) monitorStocksList
+					.get(i);
 			try {
-				MonitorstockVO monitorstockVO = (MonitorstockVO) monitorStocksList
-						.get(i);
 				OneTimeStrategy ts = (OneTimeStrategy) ReflectUtil
 						.getClassInstance("com.ghlh.strategy",
 								monitorstockVO.getTradealgorithm(), oneTimeType);
 				ts.processStockTrade(monitorstockVO);
 			} catch (Exception ex) {
-				logger.error("processOneTimeStrategy ", ex);
+				logger.error("processOneTimeStrategy with stock : "
+						+ monitorstockVO.getStockid(), ex);
 			}
 		}
 	}

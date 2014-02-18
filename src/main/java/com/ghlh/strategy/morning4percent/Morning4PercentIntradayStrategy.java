@@ -45,6 +45,7 @@ public class Morning4PercentIntradayStrategy implements MonitoringStrategy {
 		StocktradeVO stocktradeVO1 = new StocktradeVO();
 		stocktradeVO1.setId(stocktradeVO.getId());
 		stocktradeVO1.setWhereId(true);
+		stocktradeVO1.setSelldate(new Date());
 		if (sqb.getCurrentPrice() > stocktradeVO.getBuyprice()) {
 			stocktradeVO.setStatus(TradeConstants.STATUS_SUCCESS);
 			stocktradeVO1.setWinsellprice(sqb.getCurrentPrice());

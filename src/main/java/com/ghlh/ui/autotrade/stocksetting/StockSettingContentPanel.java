@@ -314,24 +314,25 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 			int currentRow = ((StockSettingButtonActionListener) this.getBal())
 					.getCurrentRow();
 			if (selectRow != currentRow) {
-				int confirm = ((StockSettingButtonActionListener) this.getBal())
-						.confirmInputOrChange();
-				if (confirm == 0 || confirm == -1) {
+//				int confirm = ((StockSettingButtonActionListener) this.getBal())
+//						.confirmInputOrChange();
+//				System.out.println("confirm = " + confirm);
+//				if (confirm == 0 || confirm == -1) {
 					putCertainMSBIntoEdit(selectRow);
 					MonitorstockVO msb = msbList.get(selectRow);
 					((StockSettingButtonActionListener) this.getBal())
 							.enterEditStatus(msb, selectRow);
-				} else {
-					currentRow = ((StockSettingButtonActionListener) this
-							.getBal()).getCurrentRow();
-					if (currentRow == -1) {
-						this.notSelectRow();
-					} else {
-						this.stockTable.getSelectionModel()
-								.setSelectionInterval(currentRow, currentRow);
-					}
-
-				}
+//				} else {
+//					currentRow = ((StockSettingButtonActionListener) this
+//							.getBal()).getCurrentRow();
+//					if (currentRow == -1) {
+//						this.notSelectRow();
+//					} else {
+//						this.stockTable.getSelectionModel()
+//								.setSelectionInterval(currentRow, currentRow);
+//					}
+//
+//				}
 			}
 		} else {
 			this.notSelectRow();

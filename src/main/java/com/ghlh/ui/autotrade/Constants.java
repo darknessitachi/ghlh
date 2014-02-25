@@ -5,4 +5,6 @@ public class Constants {
 	public final static String LABEL_TRADE_SOFTWARE_SETTING = "交易软件设置";
 	public final static String LABEL_AUTO_TRADE_TESTING = "自动交易测试";
 	public final static String LABEL_STOCK_SETTING = "股票设置";
+	public final static String ALL_STRATEGIES_LABEL = "全部策略";
+	public final static String ALL_STRATEGIES_NAME = "All";
 }

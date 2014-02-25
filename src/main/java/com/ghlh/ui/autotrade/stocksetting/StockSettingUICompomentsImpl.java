@@ -28,11 +28,7 @@ public class StockSettingUICompomentsImpl implements UIComponentsI {
 		UIComponentMetadata component = new UIComponentMetadata();
 		component.setLabel("自动交易策略");
 		component.setCompomentType(UIComponentType.COMBOX_FIELD);
-		Map map = StrategyAddiComMetaReader.getInstance()
-				.getStrategyNameAsKey();
-		Set strategyNames = map.keySet();
-		List comboList = new ArrayList();
-		comboList.addAll(strategyNames);
+		List comboList = getStrateNameList();
 		component.setSelectList(comboList);
 		component.setDefaultValue(StrategyAddiComMetaReader.getInstance()
 				.getDefaultStrategyName());
@@ -57,6 +53,15 @@ public class StockSettingUICompomentsImpl implements UIComponentsI {
 						.getDefaultStrategyName()));
 		result.setMenuCmd("StockSetting");
 		return result;
+	}
+
+	public List getStrateNameList() {
+		Map map = StrategyAddiComMetaReader.getInstance()
+				.getStrategyNameAsKey();
+		Set strategyNames = map.keySet();
+		List comboList = new ArrayList();
+		comboList.addAll(strategyNames);
+		return comboList;
 	}
 
 	private int getFieldType(String fieldType) {

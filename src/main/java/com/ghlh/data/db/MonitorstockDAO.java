@@ -10,13 +10,26 @@ public class MonitorstockDAO {
 		return result;
 	}
 
+	public static List getMonitorStock(String strategyName) {
+		String sql = "SELECT * FROM monitorstock where tradeAlgorithm = '"
+				+ strategyName + "'";
+		List result = GhlhDAO.list(sql, "com.ghlh.data.db.MonitorstockVO");
+		return result;
+	}
+
 	public static List getOnlyMonitoringStocks() {
 		String sql = "SELECT * FROM monitorstock where onMonitoring = 'true' ";
 		List result = GhlhDAO.list(sql, "com.ghlh.data.db.MonitorstockVO");
 		return result;
 	}
 
-	
+	public static List getOnlyMonitoringStocks(String strategyName) {
+		String sql = "SELECT * FROM monitorstock where onMonitoring = 'true' and tradeAlgorithm = '"
+				+ strategyName + "'";
+		List result = GhlhDAO.list(sql, "com.ghlh.data.db.MonitorstockVO");
+		return result;
+	}
+
 	public static List getBackMA10MonitorStock() {
 		String sql = "SELECT * FROM monitorstock where tradeAlgorithm = 'BackMA10'";
 		List result = GhlhDAO.list(sql, "com.ghlh.data.db.MonitorstockVO");

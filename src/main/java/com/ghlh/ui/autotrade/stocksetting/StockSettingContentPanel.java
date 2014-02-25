@@ -8,12 +8,14 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -26,23 +28,24 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 import org.apache.log4j.Logger;
 
-import com.ghlh.data.FileStockPoolAccessor;
-import com.ghlh.data.MonitorStockBean;
 import com.ghlh.data.db.MonitorstockDAO;
 import com.ghlh.data.db.MonitorstockVO;
 import com.ghlh.strategy.AdditionInfoUtil;
 import com.ghlh.ui.AbstractButtonActionListener;
 import com.ghlh.ui.autotrade.AbstractContentPanel;
+import com.ghlh.ui.autotrade.Constants;
 import com.ghlh.ui.autotrade.ContentPanelUtil;
 import com.ghlh.ui.autotrade.StockIdFieldFocusListener;
 import com.ghlh.ui.bean.ComponentsBean;
 import com.ghlh.ui.bean.UIComponentMetadata;
 import com.ghlh.ui.bean.UIComponentType;
-import com.ghlh.util.GUIUtil;
-import com.ghlh.util.MiscUtil;
+import com.ghlh.ui.gtable.ComboRenderer;
+import com.ghlh.ui.gtable.EditableHeader;
+import com.ghlh.ui.gtable.EditableHeaderTableColumn;
 
 public class StockSettingContentPanel extends AbstractContentPanel {
 	private static Logger logger = Logger
@@ -84,6 +87,7 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 		});
 
 		initTableData();
+		initComboBoxForStrategyHeader();
 
 		stockTable.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
@@ -93,12 +97,55 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 				});
 		stockTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				// System.out.println(e.getSource().toString());
-				// if (e.getSource().toString().indexOf("invalid") > 0) {
 				clickMonitoring();
-				// }
 			}
 		});
+	}
+
+	private void switchStragetegy(String strategyLabel) {
+		if (!strategyLabel.equals(currentStrategyLabel)) {
+			this.currentStrategyLabel = strategyLabel;
+			if (strategyLabel.equals(Constants.ALL_STRATEGIES_LABEL)) {
+				currentStrategyName = Constants.ALL_STRATEGIES_NAME;
+			} else {
+				String strategyName = StockSettingUICompomentsImpl
+						.getStrategy(strategyLabel);
+				currentStrategyName = strategyName;
+			}
+			refreshStockTable();
+		}
+	}
+
+	private String currentStrategyLabel = null;
+	private String currentStrategyName = null;
+
+	private void initComboBoxForStrategyHeader() {
+		List comboList = new StockSettingUICompomentsImpl().getStrateNameList();
+		comboList.add(0, Constants.ALL_STRATEGIES_LABEL);
+		currentStrategyLabel = Constants.ALL_STRATEGIES_LABEL;
+		currentStrategyName = Constants.ALL_STRATEGIES_NAME;
+		String[] items = (String[]) comboList.toArray(new String[0]);
+		JComboBox strategyComboHeader = new JComboBox();
+		for (int i = 0; i < items.length; i++) {
+			strategyComboHeader.addItem(items[i]);
+		}
+		strategyComboHeader.setSelectedIndex(0);
+		strategyComboHeader.addItemListener(new ItemListener() {
+			public void itemStateChanged(java.awt.event.ItemEvent ie) {
+				String strategyLabel = ((JComboBox) ie.getSource())
+						.getSelectedItem().toString();
+				switchStragetegy(strategyLabel);
+			}
+		});
+		ComboRenderer renderer = new ComboRenderer(items);
+
+		TableColumnModel columnModel = stockTable.getColumnModel();
+		stockTable.setTableHeader(new EditableHeader(columnModel));
+		EditableHeaderTableColumn col = (EditableHeaderTableColumn) stockTable
+				.getColumnModel().getColumn(0);
+		col.setHeaderValue(strategyComboHeader.getItemAt(0));
+		col.setHeaderRenderer(renderer);
+		col.setHeaderEditor(new DefaultCellEditor(strategyComboHeader));
 	}
 
 	List<MonitorstockVO> msbList = null;
@@ -158,30 +205,51 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 		}
 	}
 
+	private boolean onlyMonitoringStatus = false;
+
 	public void refreshStockTable(boolean onlyMonitoring) {
-		String[] columnNames = { "交易策略", "股票代码", "股票名称", "是否监控" };
-		Vector columnV = new Vector();
-		for (int i = 0; i < columnNames.length; i++) {
-			columnV.add(columnNames[i]);
-		}
-		Vector data = new Vector();
+		onlyMonitoringStatus = onlyMonitoring;
+		refreshStockTable();
+	}
+
+	private void refreshStockTable() {
 		try {
-			if (onlyMonitoring) {
-				msbList = MonitorstockDAO.getOnlyMonitoringStocks();
-			} else {
-				msbList = MonitorstockDAO.getMonitorStock();
+			initMonitorStockList();
+			int rowCount = ((DefaultTableModel) this.stockTable.getModel())
+					.getRowCount();
+			for (int i = 0; i < rowCount; i++) {
+				((DefaultTableModel) this.stockTable.getModel()).removeRow(0);
 			}
 
 			for (int i = 0; i < msbList.size(); i++) {
 				MonitorstockVO msb = msbList.get(i);
 				Vector rowV = convertMonitorStockBeanToVector(msb);
-				data.add(rowV);
+				((DefaultTableModel) this.stockTable.getModel()).addRow(rowV);
 			}
-			((DefaultTableModel) this.stockTable.getModel()).setDataVector(
-					data, columnV);
-			((DefaultTableModel) this.stockTable.getModel()).fireTableDataChanged();
+			((DefaultTableModel) this.stockTable.getModel())
+					.fireTableDataChanged();
 		} catch (Exception ex) {
 			logger.error("Read stock list throw", ex);
+		}
+	}
+
+	private void initMonitorStockList() {
+		if (onlyMonitoringStatus) {
+			if (this.currentStrategyName
+					.equals(Constants.ALL_STRATEGIES_NAME)) {
+				msbList = MonitorstockDAO.getOnlyMonitoringStocks();
+			} else {
+				msbList = MonitorstockDAO
+						.getOnlyMonitoringStocks(currentStrategyName);
+			}
+		} else {
+			if (this.currentStrategyName
+					.equals(Constants.ALL_STRATEGIES_NAME)) {
+				msbList = MonitorstockDAO.getMonitorStock();
+			} else {
+				msbList = MonitorstockDAO
+						.getMonitorStock(currentStrategyName);
+			}
 		}
 	}
 

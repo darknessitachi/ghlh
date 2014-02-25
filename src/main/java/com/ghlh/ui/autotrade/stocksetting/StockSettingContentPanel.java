@@ -92,7 +92,9 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 		stockTable.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
 					public void valueChanged(ListSelectionEvent event) {
-						tableRowSelectionActionPerformed(event);
+						if(!isRowRemove){
+							tableRowSelectionActionPerformed(event);
+						}
 					}
 				});
 		stockTable.addMouseListener(new MouseAdapter() {
@@ -212,15 +214,19 @@ public class StockSettingContentPanel extends AbstractContentPanel {
 		refreshStockTable();
 	}
 
+	boolean isRowRemove = false;
 	private void refreshStockTable() {
 		try {
 			initMonitorStockList();
 			int rowCount = ((DefaultTableModel) this.stockTable.getModel())
 					.getRowCount();
 			for (int i = 0; i < rowCount; i++) {
+				isRowRemove = true;
 				((DefaultTableModel) this.stockTable.getModel()).removeRow(0);
+				isRowRemove = false;
 			}
-
+			
+			
 			for (int i = 0; i < msbList.size(); i++) {
 				MonitorstockVO msb = msbList.get(i);
 				Vector rowV = convertMonitorStockBeanToVector(msb);

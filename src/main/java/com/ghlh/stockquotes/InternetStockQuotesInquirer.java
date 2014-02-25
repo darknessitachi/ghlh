@@ -47,6 +47,14 @@ public abstract class InternetStockQuotesInquirer implements
 		} catch (StockQuotesException ex) {
 			logger.error("getStockQuotesBean throw : ", ex);
 		}
+
+		if (result == null) {
+			if (this.getClass().equals(SinaStockQuotesInquirer.class)) {
+				logger.error("There didn't get stock through sina, so access through EastMOney");
+				result = InternetStockQuotesInquirer.getEastMoneyInstance()
+						.getStockQuotesBean(stockId);
+			}
+		}
 		return result;
 	}
 
@@ -80,7 +88,7 @@ public abstract class InternetStockQuotesInquirer implements
 			method.releaseConnection();
 			return result;
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("access url = " + url + " throw exception: ", ex);
 			throw new StockQuotesException(
 					"There is an exception while reading quotes from sohu ", ex);
 

@@ -33,45 +33,49 @@ public class Buyer {
 		for (int i = 0; i < list.size(); i++) {
 			StockdailyinfoVO stockdailyinfoVO = (StockdailyinfoVO) list.get(i);
 			String stockId = stockdailyinfoVO.getStockid();
-			MonitorstockVO monitorstockVO = new MonitorstockVO();
-			monitorstockVO.setTradealgorithm("Morning4Percent");
-			monitorstockVO.setStockid(stockId);
-			StockQuotesBean sqb = InternetStockQuotesInquirer.getInstance()
-					.getStockQuotesBean(stockId);
-			if (sqb.getName().indexOf("ST") >= 0) {
-				continue;
+			try {
+				MonitorstockVO monitorstockVO = new MonitorstockVO();
+				monitorstockVO.setTradealgorithm("Morning4Percent");
+				monitorstockVO.setStockid(stockId);
+				StockQuotesBean sqb = InternetStockQuotesInquirer.getInstance()
+						.getStockQuotesBean(stockId);
+				if (sqb.getName().indexOf("ST") >= 0) {
+					continue;
+				}
+				monitorstockVO.setName(sqb.getName());
+				int id = IDGenerator.generateId(MonitorstockVO.TABLE_NAME);
+				monitorstockVO.setId(id);
+				AdditionalInfoBean aib = new AdditionalInfoBean();
+				aib.setLostDf(0);
+				aib.setTargetZf(0);
+				aib.setTradeMoney(20000);
+				String additionalInfo = AdditionInfoUtil
+						.parseAdditionalInfoBeanBack(aib, "Morning4Percent");
+				monitorstockVO.setAdditioninfo(additionalInfo);
+				monitorstockVO.setOnmonitoring("false");
+				monitorstockVO.setCreatedtimestamp(date);
+				monitorstockVO.setCreatedtimestamp(date);
+				GhlhDAO.create(monitorstockVO);
+				double winSellPrice = 0;
+				winSellPrice = MathUtil.formatDoubleWith2QuanShe(winSellPrice);
+				String message = TradeUtil.getIntradyPriceBuyMessage(
+						monitorstockVO.getStockid(),
+						TradeUtil.getTradeNumber(aib.getTradeMoney(),
+								sqb.getCurrentPrice()), sqb.getCurrentPrice(),
+						TradeUtil.PRICE_10);
+				EventRecorder.recordEvent(Buyer.class, message);
+				BuyStockBean buyStockBean = new BuyStockBean();
+				buyStockBean.setStockId(monitorstockVO.getStockid());
+				buyStockBean.setTradeMoney(aib.getTradeMoney());
+				buyStockBean.setBuyPrice(sqb.getCurrentPrice());
+				buyStockBean.setWinSellPrice(winSellPrice);
+				buyStockBean.setLostSellPrice(0);
+				buyStockBean.setStrategy(monitorstockVO.getTradealgorithm());
+				TradeUtil.dealBuyStockSuccessfully(buyStockBean);
+				break;
+			} catch (Exception ex) {
+				logger.error("Buy stock throw exception : ", ex);
 			}
-			monitorstockVO.setName(sqb.getName());
-			int id = IDGenerator.generateId(MonitorstockVO.TABLE_NAME);
-			monitorstockVO.setId(id);
-			AdditionalInfoBean aib = new AdditionalInfoBean();
-			aib.setLostDf(0);
-			aib.setTargetZf(0);
-			aib.setTradeMoney(20000);
-			String additionalInfo = AdditionInfoUtil
-					.parseAdditionalInfoBeanBack(aib, "Morning4Percent");
-			monitorstockVO.setAdditioninfo(additionalInfo);
-			monitorstockVO.setOnmonitoring("false");
-			monitorstockVO.setCreatedtimestamp(date);
-			monitorstockVO.setCreatedtimestamp(date);
-			GhlhDAO.create(monitorstockVO);
-			double winSellPrice = 0;
-			winSellPrice = MathUtil.formatDoubleWith2QuanShe(winSellPrice);
-			String message = TradeUtil.getIntradyPriceBuyMessage(
-					monitorstockVO.getStockid(),
-					TradeUtil.getTradeNumber(aib.getTradeMoney(),
-							sqb.getCurrentPrice()), sqb.getCurrentPrice(),
-					TradeUtil.PRICE_10);
-			EventRecorder.recordEvent(Buyer.class, message);
-			BuyStockBean buyStockBean = new BuyStockBean();
-			buyStockBean.setStockId(monitorstockVO.getStockid());
-			buyStockBean.setTradeMoney(aib.getTradeMoney());
-			buyStockBean.setBuyPrice(sqb.getCurrentPrice());
-			buyStockBean.setWinSellPrice(winSellPrice);
-			buyStockBean.setLostSellPrice(0);
-			buyStockBean.setStrategy(monitorstockVO.getTradealgorithm());
-			TradeUtil.dealBuyStockSuccessfully(buyStockBean);
-			break;
 		}
 	}
 

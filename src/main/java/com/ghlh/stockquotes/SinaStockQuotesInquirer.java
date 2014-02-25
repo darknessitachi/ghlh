@@ -2,7 +2,12 @@ package com.ghlh.stockquotes;
 
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 public class SinaStockQuotesInquirer extends InternetStockQuotesInquirer {
+	private static Logger logger = Logger
+			.getLogger(SinaStockQuotesInquirer.class);
+
 	protected String getStockQuotesPageURL(String stockId, boolean isSZ) {
 		String url = "http://hq.sinajs.cn/list=";
 		if (isSZ) {
@@ -44,7 +49,8 @@ public class SinaStockQuotesInquirer extends InternetStockQuotesInquirer {
 			result.setLowestPrice(Double.parseDouble(stockInfoPieces[5]));
 			return result;
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("parseStockQuotes throw exception, stockInfo = "
+					+ stockInfo, ex);
 			throw new StockQuotesException(
 					"There come up with error while parsing " + stockInfo, ex);
 		}
@@ -54,7 +60,7 @@ public class SinaStockQuotesInquirer extends InternetStockQuotesInquirer {
 		try {
 			StockQuotesInquirer internetStockQuotesInquirer = new SinaStockQuotesInquirer();
 			StockQuotesBean stockQuotesBean = internetStockQuotesInquirer
-					.getStockQuotesBean("002446");
+					.getStockQuotesBean("002197");
 			System.out.println(stockQuotesBean);
 
 		} catch (Exception ex) {

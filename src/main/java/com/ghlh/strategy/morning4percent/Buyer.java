@@ -27,7 +27,7 @@ public class Buyer {
 		String sDate = DateUtil.formatDate(date);
 		String sql = "SELECT * FROM stockdailyinfo10 WHERE DATE = '" + sDate
 				+ "' AND zdf >= 3.5 AND zdf <= 5.5 ORDER BY hsl DESC";
-
+		logger.info("sql = " + sql);
 		List list = GhlhDAO
 				.list(sql, "com.ghlh.data.db.StockdailyinfoVO", 0, 3);
 		for (int i = 0; i < list.size(); i++) {

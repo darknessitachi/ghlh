@@ -29,7 +29,9 @@ public class AutoDataCollectingJob implements Job {
 		dc.collectDailyInfo(now, true);
 		message = "½áÊø" + sTime + "Collecting Data";
 		EventRecorder.recordEvent(this.getClass(), message);
+		logger.info("test");
 		if (hour == 10) {
+			logger.info("test");
 			new Buyer().buy(now);
 		}
 

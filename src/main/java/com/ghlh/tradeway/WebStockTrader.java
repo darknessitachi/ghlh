@@ -17,13 +17,11 @@ public class WebStockTrader implements StockTrader {
 
 	}
 
-	@Override
 	public void buyStock(String stockId, int number, double price) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void sellStock(String stockId, int number, double price) {
 		// TODO Auto-generated method stub
 		

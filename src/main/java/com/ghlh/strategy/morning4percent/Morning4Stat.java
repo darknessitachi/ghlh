@@ -28,8 +28,17 @@ public class Morning4Stat {
 					+ sDate + "%' AND zdf >= " + lowPercentage + " AND zdf <= "
 					+ highPercentage + " ORDER BY hsl DESC";
 
+//			String sql1 = "SELECT count(*) FROM stockdailyinfo10 WHERE DATE LIKE '"
+//					+ sDate
+//					+ "%' AND zdf >= "
+//					+ lowPercentage
+//					+ " AND zdf <= "
+//					+ highPercentage + " ORDER BY hsl DESC";
+
 			List list = GhlhDAO.list(sql, "com.ghlh.data.db.StockdailyinfoVO",
 					0, stockCount + 2);
+//			String sCount = GhlhDAO.selectSingleValue(sql1);
+
 			int no = 0;
 
 			for (int i = 0; i < list.size(); i++) {
@@ -42,7 +51,7 @@ public class Morning4Stat {
 				}
 				no++;
 				processBuyStockResult(stockdailyinfoVO, sqb, date,
-						winPercentage, lostPercentage);
+						winPercentage, lostPercentage, "0");
 				if (no >= stockCount) {
 					break;
 				}
@@ -55,7 +64,7 @@ public class Morning4Stat {
 
 	public static void processBuyStockResult(StockdailyinfoVO stockdailyinfoVO,
 			StockQuotesBean sqb, Date date, double winPercentage,
-			double lostPercentage) {
+			double lostPercentage, String sCount) {
 		double buyPrice = stockdailyinfoVO.getCurrentprice();
 		double winPrice = MathUtil.formatDoubleWith2QuanShe(buyPrice
 				* (1 + winPercentage));
@@ -86,14 +95,14 @@ public class Morning4Stat {
 				System.out.println(date + " " + sqb.getStockId() + " "
 						+ sqb.getName() + "在第 " + (j + 1) + " 天盈利成交, 买入价:"
 						+ buyPrice + " 卖出价 :" + winPrice + " 卖出当日涨幅:"
-						+ stockdailyinfoVO1.getZdf());
+						+ stockdailyinfoVO1.getZdf() + " 买入当日数量:" + sCount);
 				break;
 			}
 			if (lowPrice <= lostPrice) {
 				System.out.println(date + " " + sqb.getStockId() + " "
 						+ sqb.getName() + "在第 " + (j + 1) + " 天亏损成交, 买入价:"
 						+ buyPrice + " 卖出价 :" + lostPrice + " 卖出当日涨幅:"
-						+ stockdailyinfoVO1.getZdf());
+						+ stockdailyinfoVO1.getZdf() + " 买入当日数量:" + sCount);
 				break;
 			}
 		}

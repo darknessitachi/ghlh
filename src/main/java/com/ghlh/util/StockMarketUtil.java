@@ -35,6 +35,20 @@ public class StockMarketUtil {
 		return result;
 	}
 
+
+	public static boolean isMarketOpen(Date date) {
+		DateFormat dateFormat = new SimpleDateFormat("MM-dd");
+		String sDate = dateFormat.format(date);
+		Map holidays = readMarketHoliday();
+		String holidayName = (String) holidays.get(sDate);
+		boolean result = true;
+		if (holidayName != null || isWeekend()) {
+			result = false;
+		}
+		return result;
+	}
+
+	
 	public static String getCloseCause() {
 		Date currentTime = Calendar.getInstance().getTime();
 		String result = null;

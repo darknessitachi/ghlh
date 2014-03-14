@@ -562,7 +562,7 @@ public class DBAgentOO {
 		} else {
 			List result1 = new ArrayList();
 			for (int i = 0; i < data.size(); i++) {
-				List v = (List) data.get(0);
+				List v = (List) data.get(i);
 				Object o = v.get(0);
 				result1.add(o);
 			}

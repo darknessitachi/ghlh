@@ -32,7 +32,7 @@ public class AutoDataCollectingJob implements Job {
 		logger.info("test");
 		if (hour == 10) {
 			logger.info("test");
-			new Buyer().buy(now);
+			//new Buyer().buy(now);
 		}
 
 	}

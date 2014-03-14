@@ -16,7 +16,41 @@ public class DateUtil {
 	}
 
 	public static Date getNextDay(Date date) {
-		Date result = new Date(date.getTime() + 24 * 60 * 60 * 1000);
+		return getNextNDay(date, 1);
+	}
+
+	private static Date getNextNDay(Date date, int n) {
+		Date result = new Date(date.getTime() + 24 * 60 * 60 * 1000 * n);
+		return result;
+	}
+
+	private static Date getPreviousNDay(Date date, int n) {
+		Date result = new Date(date.getTime() - 24 * 60 * 60 * 1000 * n);
+		return result;
+	}
+
+	public static Date getNext2MarketOpenDay(Date date) {
+		Date result = getNextNDay(date, 2);
+		while (!StockMarketUtil.isMarketOpen(result)) {
+			result = getNextNDay(date, 1);
+		}
+		return result;
+	}
+
+	public static Date getNextMarketOpenDay(Date date) {
+		Date result = getNextNDay(date, 1);
+		while (!StockMarketUtil.isMarketOpen(result)) {
+			result = getNextNDay(date, 1);
+		}
+		return result;
+	}
+
+	
+	public static Date getPrevious3MarketOpenDay(Date date) {
+		Date result = getPreviousNDay(date, 3);
+		while (!StockMarketUtil.isMarketOpen(result)) {
+			result = getPreviousNDay(date, 1);
+		}
 		return result;
 	}
 

@@ -46,9 +46,9 @@ public class Buyer {
 				int id = IDGenerator.generateId(MonitorstockVO.TABLE_NAME);
 				monitorstockVO.setId(id);
 				AdditionalInfoBean aib = new AdditionalInfoBean();
-				aib.setLostDf(0);
-				aib.setTargetZf(0);
-				aib.setTradeMoney(20000);
+				aib.setLostDf(0.1);
+				aib.setTargetZf(0.1);
+				aib.setTradeMoney(5000);
 				String additionalInfo = AdditionInfoUtil
 						.parseAdditionalInfoBeanBack(aib, "Morning4Percent");
 				monitorstockVO.setAdditioninfo(additionalInfo);

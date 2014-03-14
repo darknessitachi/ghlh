@@ -71,6 +71,28 @@ public class GhlhDAO {
 		return result;
 	}
 
+	public static List list(String sql) {
+		DBAgentOO dbAgentOO = new DBAgentOO();
+		List result = null;
+		try {
+			result = dbAgentOO.selectSingleList(sql);
+		} catch (Exception ex) {
+			logger.error("list with SQL = " + sql + " throw", ex);
+		}
+		return result;
+	}
+
+	public static String selectSingleValue(String sql) {
+		DBAgentOO dbAgentOO = new DBAgentOO();
+		String result = null;
+		try {
+			result = dbAgentOO.selectSingleValue(sql);
+		} catch (Exception ex) {
+			logger.error("list with SQL = " + sql + " throw", ex);
+		}
+		return result;
+	}
+
 	public static void createStockDailyIinfo(StockQuotesBean sqb, Date date) {
 		if (sqb != null) {
 			StockdailyinfoVO stockdailyinfoVO = new StockdailyinfoVO();

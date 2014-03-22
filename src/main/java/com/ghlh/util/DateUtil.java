@@ -15,6 +15,17 @@ public class DateUtil {
 		return df.format(date);
 	}
 
+	public static Date parseDay(String sDate) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		Date result = null;
+		try {
+			result = df.parse(sDate);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return result;
+	}
+
 	public static Date getNextDay(Date date) {
 		return getNextNDay(date, 1);
 	}
@@ -40,16 +51,30 @@ public class DateUtil {
 	public static Date getNextMarketOpenDay(Date date) {
 		Date result = getNextNDay(date, 1);
 		while (!StockMarketUtil.isMarketOpen(result)) {
-			result = getNextNDay(date, 1);
+			result = getNextNDay(result, 1);
 		}
 		return result;
 	}
 
-	
 	public static Date getPrevious3MarketOpenDay(Date date) {
 		Date result = getPreviousNDay(date, 3);
 		while (!StockMarketUtil.isMarketOpen(result)) {
 			result = getPreviousNDay(date, 1);
+		}
+		return result;
+	}
+
+	public static Date getPreviousMarketOpenDay(Date date, int n) {
+		if (n == 0) {
+			return date;
+		}
+		Date result = null;
+		for (int i = 1; i <= n; i++) {
+			result = getPreviousNDay(date, 1);
+			if (!StockMarketUtil.isMarketOpen(result)) {
+				i--;
+			}
+			date = result;
 		}
 		return result;
 	}
@@ -67,8 +92,9 @@ public class DateUtil {
 	}
 
 	public static void main(String[] args) {
-		Date now = new Date();
-		System.out.println(formatDate(now));
+		// Date now = new Date();
+		Date now = DateUtil.getDate(2014, 1, 14);
+		System.out.println(DateUtil.getPreviousMarketOpenDay(now, 5));
 
 	}
 }

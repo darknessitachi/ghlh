@@ -49,7 +49,6 @@ public class MathUtil {
 	}
 
 	public static double formatDoubleWith4(double abc) {
-		System.out.println("abc");
 		return formatDouble(abc, 4, TYPE_SISHEWURU);
 	}
 

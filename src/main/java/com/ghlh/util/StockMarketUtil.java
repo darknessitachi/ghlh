@@ -42,7 +42,7 @@ public class StockMarketUtil {
 		Map holidays = readMarketHoliday();
 		String holidayName = (String) holidays.get(sDate);
 		boolean result = true;
-		if (holidayName != null || isWeekend()) {
+		if (holidayName != null || isWeekend(date)) {
 			result = false;
 		}
 		return result;
@@ -66,6 +66,13 @@ public class StockMarketUtil {
 
 	private static boolean isWeekend() {
 		Calendar cal = Calendar.getInstance();
+		int weekday = cal.get(Calendar.DAY_OF_WEEK);
+		return (weekday == Calendar.SATURDAY || weekday == Calendar.SUNDAY);
+	}
+	
+	private static boolean isWeekend(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
 		int weekday = cal.get(Calendar.DAY_OF_WEEK);
 		return (weekday == Calendar.SATURDAY || weekday == Calendar.SUNDAY);
 	}

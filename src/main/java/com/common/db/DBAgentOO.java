@@ -127,7 +127,7 @@ public class DBAgentOO {
 				} else {
 					con = this.getConnection();
 				}
-				//System.out.println("exec sql = " + sql);
+				// System.out.println("exec sql = " + sql);
 				ps = con.prepareStatement(sql);
 
 				for (int i = 0; i < data.size(); i++) {
@@ -285,7 +285,7 @@ public class DBAgentOO {
 					con = this.getConnection();
 				}
 				ps = con.prepareStatement(sql);
-				//System.outprintln("exec sql = " + sql);
+				// System.outprintln("exec sql = " + sql);
 				for (int i = 0; i < updateData.size(); i++) {
 					Object value = updateData.elementAt(i);
 					if (value instanceof java.util.Date) {
@@ -358,7 +358,7 @@ public class DBAgentOO {
 				} else {
 					con = this.getConnection();
 				}
-				//System.outprintln("exec sql = " + sql);
+				// System.outprintln("exec sql = " + sql);
 				ps = con.prepareStatement(sql);
 				for (int i = 0; i < whereData.size(); i++) {
 					Object value = whereData.elementAt(i);
@@ -472,7 +472,7 @@ public class DBAgentOO {
 	}
 
 	public List selectDataList(String sql) throws Exception {
-		//System.outprintln("sql = " + sql);
+		// System.outprintln("sql = " + sql);
 		Connection conn = null;
 		if (this.isInTransaction) {
 			conn = this.connection;
@@ -507,7 +507,8 @@ public class DBAgentOO {
 
 	public List<Object> selectData(String sql, String className, int startPos,
 			int size) throws Exception {
-		//System.out.println("sql = " + sql);
+
+		// System.out.println("sql = " + sql);
 		Connection conn = null;
 		if (this.isInTransaction) {
 			conn = this.connection;
@@ -515,25 +516,35 @@ public class DBAgentOO {
 			conn = this.getConnection();
 		}
 		Statement st = conn.createStatement();
-		ResultSet rs = st.executeQuery(sql);
 		List<Object> data = new ArrayList<Object>();
-		if (startPos != 1 && startPos != 0) {
-			rs.absolute(startPos);
-		}
-		int count = 0;
-		while (rs.next()) {
-			Class c = Class.forName(className);
-			Object o = c.getConstructor(null).newInstance(null);
-			int columnCount = rs.getMetaData().getColumnCount();
-			this.getObjectFromRS(o, c, rs, columnCount);
-			data.add(o);
-			count++;
-			if (size > 0 && count >= size) {
-				break;
+		try {
+			ResultSet rs = st.executeQuery(sql);
+			if (startPos != 1 && startPos != 0) {
+				rs.absolute(startPos);
+			}
+			int count = 0;
+			while (rs.next()) {
+				Class c = Class.forName(className);
+				Object o = c.getConstructor(null).newInstance(null);
+				int columnCount = rs.getMetaData().getColumnCount();
+				this.getObjectFromRS(o, c, rs, columnCount);
+				data.add(o);
+				count++;
+				if (size > 0 && count >= size) {
+					break;
+				}
+			}
+			rs.close();
+			st.close();
+		} finally {
+			if (st != null) {
+				st.close();
+			}
+			if (!this.isInTransaction && conn != null) {
+				conn.close();
 			}
 		}
-		rs.close();
-		st.close();
+
 		return data;
 	}
 

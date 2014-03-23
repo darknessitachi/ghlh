@@ -14,12 +14,12 @@ import org.apache.log4j.Logger;
 import com.ghlh.tradeway.software.ControllScriptReader;
 import com.ghlh.util.DateUtil;
 
-public class QiangZSFactorsReader {
-	private Logger logger = Logger.getLogger(QiangZSFactorsReader.class);
+public class QiangZTFactorsReader {
+	private Logger logger = Logger.getLogger(QiangZTFactorsReader.class);
 
-	private static QiangZSFactorsReader instance = new QiangZSFactorsReader();
+	private static QiangZTFactorsReader instance = new QiangZTFactorsReader();
 
-	public static QiangZSFactorsReader getInstance() {
+	public static QiangZTFactorsReader getInstance() {
 		return instance;
 	}
 
@@ -29,8 +29,8 @@ public class QiangZSFactorsReader {
 		return factors;
 	}
 
-	private QiangZSFactorsReader() {
-		InputStream is = QiangZSFactorsReader.class
+	private QiangZTFactorsReader() {
+		InputStream is = QiangZTFactorsReader.class
 				.getResourceAsStream("qiangztfactors.properties");
 		String line = null;
 		if (is != null) {
@@ -82,7 +82,7 @@ public class QiangZSFactorsReader {
 	}
 
 	public static void main(String[] args) {
-		Map map = QiangZSFactorsReader.getInstance().getFactors();
+		Map map = QiangZTFactorsReader.getInstance().getFactors();
 		System.out.println("Map = " + map);
 	}
 

@@ -1,6 +1,6 @@
 package com.ghlh.analysis;
 
-public class QiangZSResultBean {
+public class QiangZTResultBean {
 	private int yinLi;
 
 	public int getYinLi() {

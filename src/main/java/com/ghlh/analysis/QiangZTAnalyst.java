@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class QiangZSAnalyst {
+public class QiangZTAnalyst {
 	private String[] factorNames = { "date", "zdts", "minzdf", "maxzdf",
 			"maxavg", "minavg", "closezt", "winpercentage", "lostpercentage",
 			"lowopen", "basedonyesterdayclosepercentage",
@@ -13,7 +13,7 @@ public class QiangZSAnalyst {
 	private int[] lastPos = null;
 	private Map factors;
 
-	public QiangZSAnalyst(Map factors) {
+	public QiangZTAnalyst(Map factors) {
 		this.factors = factors;
 		lastPos = new int[factorNames.length];
 		for (int i = 0; i < factorNames.length; i++) {
@@ -25,7 +25,7 @@ public class QiangZSAnalyst {
 
 	public void checkBean() {
 		FactorsBean result = null;
-		QiangZSOpitimizator opitimizator = new QiangZSOpitimizator();
+		QiangZTOpitimizator opitimizator = new QiangZTOpitimizator();
 		for (Object o0 : (List) factors.get(factorNames[0])) {
 			result = new FactorsBean();
 			result.setDate((Date) o0);
@@ -47,7 +47,7 @@ public class QiangZSAnalyst {
 
 	}
 
-	private void huigu1(FactorsBean result, QiangZSOpitimizator opitimizator,
+	private void huigu1(FactorsBean result, QiangZTOpitimizator opitimizator,
 			Object o4) {
 		result.setMaxAvg(((Double) o4).doubleValue());
 
@@ -64,7 +64,7 @@ public class QiangZSAnalyst {
 		}
 	}
 
-	private void huigui2(FactorsBean result, QiangZSOpitimizator opitimizator,
+	private void huigui2(FactorsBean result, QiangZTOpitimizator opitimizator,
 			Object o7) {
 		result.setWinPercentage(((Double) o7).doubleValue());
 
@@ -80,7 +80,7 @@ public class QiangZSAnalyst {
 								.doubleValue());
 
 						times++;
-						QiangZSResultBean resultBean = opitimizator
+						QiangZTResultBean resultBean = opitimizator
 								.calculateResult(result);
 						System.out.println("times = " + times + " Result ="
 								+ resultBean + " Factors = " + result);
@@ -91,7 +91,7 @@ public class QiangZSAnalyst {
 	}
 
 	public static void main(String[] args) {
-		QiangZSAnalyst lib = new QiangZSAnalyst(QiangZSFactorsReader.getInstance()
+		QiangZTAnalyst lib = new QiangZTAnalyst(QiangZTFactorsReader.getInstance()
 				.getFactors());
 		lib.checkBean();
 	}

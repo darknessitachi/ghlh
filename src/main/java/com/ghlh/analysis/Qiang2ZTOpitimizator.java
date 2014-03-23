@@ -10,9 +10,9 @@ import com.ghlh.stockquotes.StockQuotesBean;
 import com.ghlh.util.DateUtil;
 import com.ghlh.util.MathUtil;
 
-public class QiangZSOpitimizator {
+public class Qiang2ZTOpitimizator {
 
-	public QiangZSResultBean calculateResult(FactorsBean bean) {
+	public QiangZTResultBean calculateResult(FactorsBean bean) {
 		pickup = 0;
 		yinLi = 0;
 		kuiSun = 0;
@@ -41,7 +41,8 @@ public class QiangZSOpitimizator {
 					+ " WHERE a.stockid = b.stockid AND maxzdf < " + maxZdf
 					+ " AND minzdf > " + minZdf + " AND avgzdf > " + minAvg
 					+ " and avgzdf < " + maxAvg;
-			List<QiangZSBean> list = GhlhDAO.list(sql,
+			
+			List<QiangZTBean> list = GhlhDAO.list(sql,
 					"com.ghlh.analysis.QiangZSBean");
 
 			if (list == null) {
@@ -50,7 +51,7 @@ public class QiangZSOpitimizator {
 			}
 
 			for (int i = 0; i < list.size(); i++) {
-				QiangZSBean zhuZTBean = list.get(i);
+				QiangZTBean zhuZTBean = list.get(i);
 				String stockId = zhuZTBean.getStockid();
 
 				StockQuotesBean sqb = InternetStockQuotesInquirer.getInstance()
@@ -93,7 +94,7 @@ public class QiangZSOpitimizator {
 			}
 			date = DateUtil.getNextMarketOpenDay(date);
 		}
-		QiangZSResultBean result = new QiangZSResultBean();
+		QiangZTResultBean result = new QiangZTResultBean();
 		result.setKuiSun(kuiSun);
 		result.setYinLi(yinLi);
 		result.setPickUp(pickup);

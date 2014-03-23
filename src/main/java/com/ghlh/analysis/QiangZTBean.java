@@ -1,6 +1,6 @@
 package com.ghlh.analysis;
 
-public class QiangZSBean {
+public class QiangZTBean {
 	private String stockid;
 	public String getStockid() {
 		return stockid;

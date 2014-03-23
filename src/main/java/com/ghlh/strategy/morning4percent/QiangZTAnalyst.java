@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class FactorsLib {
+public class QiangZTAnalyst {
 	private String[] factorNames = { "date", "zdts", "minzdf", "maxzdf",
 			"maxavg", "minavg", "closezt", "winpercentage", "lostpercentage",
 			"lowopen", "basedonyesterdayclosepercentage",
@@ -13,7 +13,7 @@ public class FactorsLib {
 	private int[] lastPos = null;
 	private Map factors;
 
-	public FactorsLib(Map factors) {
+	public QiangZTAnalyst(Map factors) {
 		this.factors = factors;
 		lastPos = new int[factorNames.length];
 		for (int i = 0; i < factorNames.length; i++) {
@@ -25,7 +25,7 @@ public class FactorsLib {
 
 	public void checkBean() {
 		FactorsBean result = null;
-		QiangZTOpitimization opitimizator = new QiangZTOpitimization();
+		QiangZTOpitimizator opitimizator = new QiangZTOpitimizator();
 		for (Object o0 : (List) factors.get(factorNames[0])) {
 			result = new FactorsBean();
 			result.setDate((Date) o0);
@@ -47,7 +47,7 @@ public class FactorsLib {
 
 	}
 
-	private void huigu1(FactorsBean result, QiangZTOpitimization opitimizator,
+	private void huigu1(FactorsBean result, QiangZTOpitimizator opitimizator,
 			Object o4) {
 		result.setMaxAvg(((Double) o4).doubleValue());
 
@@ -64,7 +64,7 @@ public class FactorsLib {
 		}
 	}
 
-	private void huigui2(FactorsBean result, QiangZTOpitimization opitimizator,
+	private void huigui2(FactorsBean result, QiangZTOpitimizator opitimizator,
 			Object o7) {
 		result.setWinPercentage(((Double) o7).doubleValue());
 
@@ -91,7 +91,7 @@ public class FactorsLib {
 	}
 
 	public static void main(String[] args) {
-		FactorsLib lib = new FactorsLib(QiangZTFactorsReader.getInstance()
+		QiangZTAnalyst lib = new QiangZTAnalyst(QiangZTFactorsReader.getInstance()
 				.getFactors());
 		lib.checkBean();
 	}

@@ -10,7 +10,7 @@ import com.ghlh.stockquotes.StockQuotesBean;
 import com.ghlh.util.DateUtil;
 import com.ghlh.util.MathUtil;
 
-public class QiangZTOpitimization {
+public class QiangZTOpitimizator {
 
 	public QiangZTResultBean calculateResult(FactorsBean bean) {
 		pickup = 0;

@@ -1,6 +1,6 @@
-package com.ghlh.strategy.morning4percent;
+package com.ghlh.analysis;
 
-public class QiangZTBean {
+public class QiangZSBean {
 	private String stockid;
 	public String getStockid() {
 		return stockid;

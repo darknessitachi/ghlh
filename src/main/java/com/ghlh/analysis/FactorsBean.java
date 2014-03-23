@@ -1,4 +1,4 @@
-package com.ghlh.strategy.morning4percent;
+package com.ghlh.analysis;
 
 import java.util.Date;
 

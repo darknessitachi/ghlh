@@ -1,10 +1,10 @@
-package com.ghlh.strategy.morning4percent;
+package com.ghlh.analysis;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class QiangZTAnalyst {
+public class QiangZSAnalyst {
 	private String[] factorNames = { "date", "zdts", "minzdf", "maxzdf",
 			"maxavg", "minavg", "closezt", "winpercentage", "lostpercentage",
 			"lowopen", "basedonyesterdayclosepercentage",
@@ -13,7 +13,7 @@ public class QiangZTAnalyst {
 	private int[] lastPos = null;
 	private Map factors;
 
-	public QiangZTAnalyst(Map factors) {
+	public QiangZSAnalyst(Map factors) {
 		this.factors = factors;
 		lastPos = new int[factorNames.length];
 		for (int i = 0; i < factorNames.length; i++) {
@@ -25,7 +25,7 @@ public class QiangZTAnalyst {
 
 	public void checkBean() {
 		FactorsBean result = null;
-		QiangZTOpitimizator opitimizator = new QiangZTOpitimizator();
+		QiangZSOpitimizator opitimizator = new QiangZSOpitimizator();
 		for (Object o0 : (List) factors.get(factorNames[0])) {
 			result = new FactorsBean();
 			result.setDate((Date) o0);
@@ -47,7 +47,7 @@ public class QiangZTAnalyst {
 
 	}
 
-	private void huigu1(FactorsBean result, QiangZTOpitimizator opitimizator,
+	private void huigu1(FactorsBean result, QiangZSOpitimizator opitimizator,
 			Object o4) {
 		result.setMaxAvg(((Double) o4).doubleValue());
 
@@ -64,7 +64,7 @@ public class QiangZTAnalyst {
 		}
 	}
 
-	private void huigui2(FactorsBean result, QiangZTOpitimizator opitimizator,
+	private void huigui2(FactorsBean result, QiangZSOpitimizator opitimizator,
 			Object o7) {
 		result.setWinPercentage(((Double) o7).doubleValue());
 
@@ -80,7 +80,7 @@ public class QiangZTAnalyst {
 								.doubleValue());
 
 						times++;
-						QiangZTResultBean resultBean = opitimizator
+						QiangZSResultBean resultBean = opitimizator
 								.calculateResult(result);
 						System.out.println("times = " + times + " Result ="
 								+ resultBean + " Factors = " + result);
@@ -91,7 +91,7 @@ public class QiangZTAnalyst {
 	}
 
 	public static void main(String[] args) {
-		QiangZTAnalyst lib = new QiangZTAnalyst(QiangZTFactorsReader.getInstance()
+		QiangZSAnalyst lib = new QiangZSAnalyst(QiangZSFactorsReader.getInstance()
 				.getFactors());
 		lib.checkBean();
 	}

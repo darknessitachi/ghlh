@@ -1,4 +1,4 @@
-package com.ghlh.strategy.morning4percent;
+package com.ghlh.analysis;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -14,12 +14,12 @@ import org.apache.log4j.Logger;
 import com.ghlh.tradeway.software.ControllScriptReader;
 import com.ghlh.util.DateUtil;
 
-public class QiangZTFactorsReader {
-	private Logger logger = Logger.getLogger(QiangZTFactorsReader.class);
+public class QiangZSFactorsReader {
+	private Logger logger = Logger.getLogger(QiangZSFactorsReader.class);
 
-	private static QiangZTFactorsReader instance = new QiangZTFactorsReader();
+	private static QiangZSFactorsReader instance = new QiangZSFactorsReader();
 
-	public static QiangZTFactorsReader getInstance() {
+	public static QiangZSFactorsReader getInstance() {
 		return instance;
 	}
 
@@ -29,8 +29,8 @@ public class QiangZTFactorsReader {
 		return factors;
 	}
 
-	private QiangZTFactorsReader() {
-		InputStream is = QiangZTFactorsReader.class
+	private QiangZSFactorsReader() {
+		InputStream is = QiangZSFactorsReader.class
 				.getResourceAsStream("qiangztfactors.properties");
 		String line = null;
 		if (is != null) {
@@ -82,7 +82,7 @@ public class QiangZTFactorsReader {
 	}
 
 	public static void main(String[] args) {
-		Map map = QiangZTFactorsReader.getInstance().getFactors();
+		Map map = QiangZSFactorsReader.getInstance().getFactors();
 		System.out.println("Map = " + map);
 	}
 

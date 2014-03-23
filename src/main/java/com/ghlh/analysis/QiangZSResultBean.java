@@ -1,6 +1,6 @@
-package com.ghlh.strategy.morning4percent;
+package com.ghlh.analysis;
 
-public class QiangZTResultBean {
+public class QiangZSResultBean {
 	private int yinLi;
 
 	public int getYinLi() {

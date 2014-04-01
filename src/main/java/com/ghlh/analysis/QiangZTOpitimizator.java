@@ -43,7 +43,7 @@ public class QiangZTOpitimizator {
 					+ " and avgzdf < " + maxAvg;
 			
 			List<QiangZTBean> list = GhlhDAO.list(sql,
-					"com.ghlh.analysis.QiangZSBean");
+					"com.ghlh.analysis.QiangZTBean");
 
 			if (list == null) {
 				date = DateUtil.getNextMarketOpenDay(date);

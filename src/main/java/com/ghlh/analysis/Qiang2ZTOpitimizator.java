@@ -27,26 +27,35 @@ public class Qiang2ZTOpitimizator {
 		double lostPercentage = bean.getLostPercentage();
 
 		Date now = new Date();
-		while (date.before(now)) {
+		Date next = DateUtil.getNextMarketOpenDay(date);
+
+		while (next.before(now)) {
 			String sDate = DateUtil.formatDay(date);
 			String zdStartDate = DateUtil.formatDay(DateUtil
 					.getPreviousMarketOpenDay(date, zdts));
-			String sql = "SELECT a.*, b.currentprice FROM "
+			String sql = "SELECT a.* FROM "
 					+ " (SELECT stockId,COUNT(zdf) tradedays, MAX(zdf) maxzdf, MIN(zdf) minzdf, AVG(zdf) avgzdf FROM stockdailyinfo WHERE DATE > '"
-					+ zdStartDate + "' AND DATE < '" + sDate
+					+ zdStartDate
+					+ "' AND DATE < '"
+					+ sDate
 					+ "' GROUP BY stockId) a,"
-					+ " (SELECT * FROM stockdailyinfo WHERE zdf > " + closeZT
-					+ " AND DATE LIKE '" + sDate
-					+ "%' AND highestprice <> lowestprice) b"
+					+ " (SELECT * FROM ("
+					+ "	SELECT stockid, SUM(zdf) zdf FROM stockdailyinfo WHERE  (DATE LIKE '"
+					+ sDate + "%' " + " OR DATE LIKE '"
+					+ DateUtil.formatDay(next)
+					+ "%') GROUP BY stockid) aa WHERE aa.zdf >= " + closeZT
+					+ " ORDER BY aa.zdf DESC) b "
 					+ " WHERE a.stockid = b.stockid AND maxzdf < " + maxZdf
 					+ " AND minzdf > " + minZdf + " AND avgzdf > " + minAvg
 					+ " and avgzdf < " + maxAvg;
-			
+
+			//System.out.println("sql = " + sql);
 			List<QiangZTBean> list = GhlhDAO.list(sql,
-					"com.ghlh.analysis.QiangZSBean");
+					"com.ghlh.analysis.QiangZTBean");
 
 			if (list == null) {
 				date = DateUtil.getNextMarketOpenDay(date);
+				next = DateUtil.getNextMarketOpenDay(next);
 				continue;
 			}
 
@@ -59,7 +68,7 @@ public class Qiang2ZTOpitimizator {
 				if (sqb.getName().indexOf("ST") >= 0) {
 					continue;
 				}
-				Date inDate = DateUtil.getNextMarketOpenDay(date);
+				Date inDate = DateUtil.getNextMarketOpenDay(next);
 				String sql1 = "SELECT * FROM stockdailyinfo WHERE DATE > '"
 						+ DateUtil.formatDay(inDate) + "' AND stockId = '"
 						+ stockId + "' ORDER BY DATE";
@@ -93,6 +102,7 @@ public class Qiang2ZTOpitimizator {
 				}
 			}
 			date = DateUtil.getNextMarketOpenDay(date);
+			next = DateUtil.getNextMarketOpenDay(next);
 		}
 		QiangZTResultBean result = new QiangZTResultBean();
 		result.setKuiSun(kuiSun);
@@ -132,4 +142,23 @@ public class Qiang2ZTOpitimizator {
 	private int kuiSun = 0;
 	private int yinLi = 0;
 	private int pickup = 0;
+
+	public static void main(String[] args) {
+		FactorsBean bean = new FactorsBean();
+		bean.setDate(DateUtil.getDate(2014, 2, 7));
+		bean.setZdts(20);
+		bean.setMinZdf(-5);
+		bean.setMaxZdf(5);
+		bean.setMaxAvg(0.3);
+		bean.setMinAvg(-0.3);
+		bean.setCloseZT(16);
+		bean.setWinPercentage(0.08);
+		bean.setLostPercentage(0.1);
+		bean.setLowOpen(false);
+		bean.setBasedonYesterdayClosePercentage(0);
+		bean.setBasedonTodayOpenPercentage(0);
+		QiangZTResultBean result = (new Qiang2ZTOpitimizator()).calculateResult(bean);
+		System.out.println("result = " + result);
+		
+	}
 }

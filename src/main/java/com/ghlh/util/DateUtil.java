@@ -49,11 +49,7 @@ public class DateUtil {
 	}
 
 	public static Date getNextMarketOpenDay(Date date) {
-		Date result = getNextNDay(date, 1);
-		while (!StockMarketUtil.isMarketOpen(result)) {
-			result = getNextNDay(result, 1);
-		}
-		return result;
+		return getNextMarketOpenDay(date, 1);
 	}
 
 	public static Date getPrevious3MarketOpenDay(Date date) {
@@ -71,6 +67,21 @@ public class DateUtil {
 		Date result = null;
 		for (int i = 1; i <= n; i++) {
 			result = getPreviousNDay(date, 1);
+			if (!StockMarketUtil.isMarketOpen(result)) {
+				i--;
+			}
+			date = result;
+		}
+		return result;
+	}
+
+	public static Date getNextMarketOpenDay(Date date, int n) {
+		if (n == 0) {
+			return date;
+		}
+		Date result = null;
+		for (int i = 1; i <= n; i++) {
+			result = getNextNDay(date, 1);
 			if (!StockMarketUtil.isMarketOpen(result)) {
 				i--;
 			}

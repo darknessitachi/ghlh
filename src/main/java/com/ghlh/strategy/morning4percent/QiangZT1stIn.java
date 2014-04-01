@@ -21,8 +21,8 @@ public class QiangZT1stIn {
 		double minAvg = -0.3;
 		int zdts = 20;
 		double closeZT = 8.5;
-		double winPercentage = 0.04;
-		double lostPercentage = 0.1;
+		double winPercentage = 0.03;
+		double lostPercentage = 0.2;
 		Date now = new Date();
 
 		while (date.before(now)) {

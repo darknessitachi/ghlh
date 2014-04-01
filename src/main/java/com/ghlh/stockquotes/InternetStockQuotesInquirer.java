@@ -19,9 +19,6 @@ public abstract class InternetStockQuotesInquirer implements
 	private static Logger logger = Logger
 			.getLogger(InternetStockQuotesInquirer.class);
 
-	private static HttpClient client = new HttpClient();
-	private static HttpMethod method = null;
-
 	private static StockQuotesInquirer instance = new SinaStockQuotesInquirer();
 
 	public static StockQuotesInquirer getInstance() {
@@ -78,8 +75,9 @@ public abstract class InternetStockQuotesInquirer implements
 
 	private String getStockQuotesInfoFromInternet(String url)
 			throws StockQuotesException {
+		HttpClient client = new HttpClient();
+		HttpMethod method = new GetMethod(url);
 		try {
-			method = new GetMethod(url);
 			client.executeMethod(method);
 			InputStream in = method.getResponseBodyAsStream();
 			BufferedReader br = new BufferedReader(new InputStreamReader(in,
@@ -92,6 +90,8 @@ public abstract class InternetStockQuotesInquirer implements
 			throw new StockQuotesException(
 					"There is an exception while reading quotes from sohu ", ex);
 
+		} finally {
+			method.releaseConnection();
 		}
 	}
 

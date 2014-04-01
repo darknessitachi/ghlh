@@ -3,7 +3,7 @@ package com.ghlh.strategy.morning4percent;
 import java.util.Date;
 import java.util.List;
 
-import com.ghlh.analysis.QiangZSBean;
+import com.ghlh.analysis.QiangZTBean;
 import com.ghlh.data.db.GhlhDAO;
 import com.ghlh.data.db.StockdailyinfoVO;
 import com.ghlh.stockquotes.InternetStockQuotesInquirer;
@@ -20,8 +20,8 @@ public class QiangZT1stIn {
 		double maxAvg = 0.3;
 		double minAvg = -0.3;
 		int zdts = 20;
-		double closeZT = 8;
-		double winPercentage = 0.08;
+		double closeZT = 8.5;
+		double winPercentage = 0.04;
 		double lostPercentage = 0.1;
 		Date now = new Date();
 
@@ -42,15 +42,15 @@ public class QiangZT1stIn {
 					+ " AND minzdf > " + minZdf + " AND avgzdf > " + minAvg
 					+ " and avgzdf < " + maxAvg;
 			 //System.out.println("SQL = " + sql);
-			List<QiangZSBean> list = GhlhDAO.list(sql,
-					"com.ghlh.strategy.morning4percent.QiangZTBean");
+			List<QiangZTBean> list = GhlhDAO.list(sql,
+					"com.ghlh.analysis.QiangZTBean");
 			if (list == null) {
 				date = DateUtil.getNextMarketOpenDay(date);
 				continue;
 			}
 
 			for (int i = 0; i < list.size(); i++) {
-				QiangZSBean zhuZTBean = list.get(i);
+				QiangZTBean zhuZTBean = list.get(i);
 				String stockId = zhuZTBean.getStockid();
 				if (zhuZTBean.getTradedays() < 20) {
 					continue;

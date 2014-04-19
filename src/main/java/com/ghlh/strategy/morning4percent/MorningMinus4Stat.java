@@ -10,12 +10,12 @@ import com.ghlh.stockquotes.StockQuotesBean;
 import com.ghlh.util.DateUtil;
 import com.ghlh.util.MathUtil;
 
-public class Morning4Stat {
+public class MorningMinus4Stat {
 
 	public static void main(String[] args) {
-		Date date = DateUtil.getDate(2014, 1, 7);
-		double lowPercentage = 3.5;
-		double highPercentage = 5.5;
+		Date date = DateUtil.getDate(2014, 3, 1);
+		double lowPercentage = -5.5;
+		double highPercentage = -3.5;
 		double lostPercentage = 0.15;
 		double winPercentage = 0.06;
 		int stockCount = 1;
@@ -24,7 +24,7 @@ public class Morning4Stat {
 
 		while (date.before(now)) {
 			String sDate = DateUtil.formatDay(date);
-			//String[] marketPrex = { "6", "3", "000", "002" };
+			//String[] marketPrex = {   "002" };
 			String[] marketPrex = { "" };
 			for (int j = 0; j < marketPrex.length; j++) {
 				String sql = "SELECT * FROM stockdailyinfo10 WHERE DATE LIKE '"
@@ -32,8 +32,8 @@ public class Morning4Stat {
 						+ " AND zdf <= " + highPercentage
 						+ " AND stockid LIKE '" + marketPrex[j]
 						+ "%' ORDER BY hsl";
-				//System.out.println("sql = " + sql);
-				
+				// System.out.println("sql = " + sql);
+
 				List list = GhlhDAO.list(sql,
 						"com.ghlh.data.db.StockdailyinfoVO", 0, stockCount + 2);
 
@@ -59,17 +59,19 @@ public class Morning4Stat {
 			date = DateUtil.getNextDay(date);
 
 		}
-		System.out.println("winTimes = " + winTimes + " lostTimes = " + lostTimes);
-
+		System.out.println("winTimes = " + winTimes + " lostTimes = "
+				+ lostTimes + " pickupTimes = " + pickupTimes);
 
 	}
-	
+
 	private static int lostTimes = 0;
 	private static int winTimes = 0;
+	private static int pickupTimes = 0;
 
 	public static void processBuyStockResult(StockdailyinfoVO stockdailyinfoVO,
 			StockQuotesBean sqb, Date date, double winPercentage,
 			double lostPercentage, String sCount) {
+		pickupTimes++;
 		double buyPrice = stockdailyinfoVO.getCurrentprice();
 		double winPrice = MathUtil.formatDoubleWith2QuanShe(buyPrice
 				* (1 + winPercentage));
@@ -84,6 +86,9 @@ public class Morning4Stat {
 
 		List dailyInfoList = GhlhDAO.list(sql1,
 				"com.ghlh.data.db.StockdailyinfoVO");
+		if(dailyInfoList.size() == 0){
+			System.out.println(date + sqb.getStockId() + "尚未有后续交易");
+		}
 		for (int j = 0; j < dailyInfoList.size(); j++) {
 			StockdailyinfoVO stockdailyinfoVO1 = (StockdailyinfoVO) dailyInfoList
 					.get(j);
@@ -112,6 +117,18 @@ public class Morning4Stat {
 				lostTimes++;
 				break;
 			}
+			if (j == dailyInfoList.size() - 1) {
+				double currentPrice = stockdailyinfoVO1.getCurrentprice();
+				double yikui = MathUtil
+						.formatDoubleWith2((currentPrice - buyPrice) / buyPrice
+								* 100);
+				System.out.println(date + sqb.getStockId() + " "
+						+ sqb.getName() + "在第 " + (j + 1) + " 天未达目标, 买入价:"
+						+ buyPrice + " 当前-------------------------------盈亏: "
+						+ yikui);
+
+			}
+
 		}
 	}
 

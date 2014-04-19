@@ -22,4 +22,14 @@ public class StockdailyinfoDAO {
 		return GhlhDAO.list(sql, className, 0, count);
 	}
 
+	public static List getDaysInfo(String stockId, Date date) {
+		String sql = "select * from stockdailyinfo where stockid = '" + stockId
+				+ "' AND DATE < '" + DateUtil.formatDay(date)
+				+ "' order by date desc";
+
+		String className = "com.ghlh.data.db.StockdailyinfoVO";
+		return GhlhDAO.list(sql, className);
+	}
+
+
 }

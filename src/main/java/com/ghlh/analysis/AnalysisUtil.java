@@ -7,6 +7,7 @@ import com.ghlh.data.db.GhlhDAO;
 import com.ghlh.data.db.StockdailyinfoVO;
 import com.ghlh.stockquotes.StockQuotesBean;
 import com.ghlh.util.DateUtil;
+import com.ghlh.util.KLineUtil;
 import com.ghlh.util.MathUtil;
 
 public class AnalysisUtil {
@@ -43,24 +44,54 @@ public class AnalysisUtil {
 			} else if (highPrice >= winPrice) {
 				if (log) {
 					System.out.println(inDate + " " + sqb.getStockId() + " "
-							+ sqb.getName() + "在第 " + (j + 1) + " 天盈利成交, 买入价:"
-							+ buyPrice + " 卖出价 :" + winPrice + " 卖出当日涨幅:"
+							+ sqb.getName() + "在第 " + (j + 1)
+							+ " 天盈利*******************成交, 买入价:" + buyPrice
+							+ " 卖出价 :" + winPrice + " 卖出当日涨幅:"
 							+ stockdailyinfoVO1.getZdf());
+					KLineUtil.saveUrlAs(
+							sqb.getStockId(),
+							"qzt",
+							DateUtil.formatDay(inDate) + "_" + (j + 1) + "天"
+									+ "成功" + "_" + sqb.getStockId() + "_"
+									+ sqb.getName());
+
 				}
 				result = Constants.WIN;
 				return result;
 			} else if (lowPrice <= lostPrice) {
 				if (log) {
 					System.out.println(inDate + " " + sqb.getStockId() + " "
-							+ sqb.getName() + "在第 " + (j + 1) + " 天亏损成交, 买入价:"
+							+ sqb.getName() + "在第 " + (j + 1)
+							+ " 天亏损_________________________成交, 买入价:"
 							+ buyPrice + " 卖出价 :" + lostPrice + " 卖出当日涨幅:"
 							+ stockdailyinfoVO1.getZdf());
+					KLineUtil.saveUrlAs(
+							sqb.getStockId(),
+							"qzt",
+							DateUtil.formatDay(inDate) + "_" + (j + 1) + "天"
+									+ "失败" + "_" + sqb.getStockId() + "_"
+									+ sqb.getName());
 				}
 				result = Constants.LOSE;
 				return result;
 			}
+			if (j == dailyInfoList.size() - 1) {
+				double currentPrice = stockdailyinfoVO1.getCurrentprice();
+				double yikui = MathUtil
+						.formatDoubleWith2((currentPrice - buyPrice) / buyPrice
+								* 100);
+				System.out.println(inDate + " " + sqb.getStockId() + " "
+						+ sqb.getName() + "在第 " + (j + 1) + " 天未达目标, 买入价:"
+						+ buyPrice + " 当前-------------------------------盈亏: "
+						+ yikui);
+
+				KLineUtil.saveUrlAs(sqb.getStockId(), "qzt",
+						DateUtil.formatDay(inDate) + "_" + (j + 1) + "天"
+								+ "当前盈亏_" + yikui + "_" + sqb.getStockId()
+								+ "_" + sqb.getName());
+
+			}
 		}
 		return result;
 	}
-
 }

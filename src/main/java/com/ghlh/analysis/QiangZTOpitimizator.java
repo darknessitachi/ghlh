@@ -1,5 +1,8 @@
 package com.ghlh.analysis;
 
+/**
+ * 抓涨停， 第二天介入， 根据qiangztfactors.properties里的参数来设置
+ */
 import java.util.Date;
 import java.util.List;
 
@@ -41,7 +44,8 @@ public class QiangZTOpitimizator {
 					+ " WHERE a.stockid = b.stockid AND maxzdf < " + maxZdf
 					+ " AND minzdf > " + minZdf + " AND avgzdf > " + minAvg
 					+ " and avgzdf < " + maxAvg;
-			
+
+			// System.out.println("sql = " + sql);
 			List<QiangZTBean> list = GhlhDAO.list(sql,
 					"com.ghlh.analysis.QiangZTBean");
 
@@ -59,15 +63,37 @@ public class QiangZTOpitimizator {
 				if (sqb.getName().indexOf("ST") >= 0) {
 					continue;
 				}
+
 				Date inDate = DateUtil.getNextMarketOpenDay(date);
+
+				String sql_3days = "SELECT * FROM stockdailyinfo WHERE stockid = '"
+						+ stockId
+						+ "' AND DATE < '"
+						+ DateUtil.formatDay(inDate) + "  ' and todayopenprice != 0 ORDER BY DATE DESC";
+				List dailyInfo_3days = GhlhDAO.list(sql_3days,
+						"com.ghlh.data.db.StockdailyinfoVO", 0, 4);
+				// if (!meetZF(dailyInfo_3days)) {
+				// continue;
+				// }
+				if (meetFJL(dailyInfo_3days)) {
+					System.out.println("放巨量 : " + stockId);
+					continue;
+				}
+
 				String sql1 = "SELECT * FROM stockdailyinfo WHERE DATE > '"
 						+ DateUtil.formatDay(inDate) + "' AND stockId = '"
-						+ stockId + "' ORDER BY DATE";
+						+ stockId + "'  and todayopenprice != 0 ORDER BY DATE";
 				List dailyInfoList = GhlhDAO.list(sql1,
 						"com.ghlh.data.db.StockdailyinfoVO", 0, 1);
 				StockdailyinfoVO stockdailyinfoVO = null;
 				if (dailyInfoList != null && dailyInfoList.size() != 0) {
 					stockdailyinfoVO = (StockdailyinfoVO) dailyInfoList.get(0);
+					if(stockdailyinfoVO.getTodayopenprice() == stockdailyinfoVO.getHighestprice() &&
+							stockdailyinfoVO.getHighestprice() == stockdailyinfoVO.getLowestprice()){
+						System.out.println("一字板 : " + stockId);
+						continue;
+					}
+					
 					inDate = stockdailyinfoVO.getDate();
 					inDate = DateUtil.parseDay(DateUtil.formatDay(inDate));
 					if (buyCondition(stockdailyinfoVO, bean)) {
@@ -103,13 +129,42 @@ public class QiangZTOpitimizator {
 
 	private double buyPrice;
 
+	public boolean meetZF(List dailyInfo_3days) {
+		boolean result = true;
+		for (int k = 1; k < dailyInfo_3days.size(); k++) {
+			StockdailyinfoVO sdiVO3days = (StockdailyinfoVO) dailyInfo_3days
+					.get(k);
+			double zfE = sdiVO3days.getHighestprice()
+					- sdiVO3days.getLowestprice();
+			double zF = zfE / sdiVO3days.getYesterdaycloseprice() * 100;
+			if (zF > 3) {
+				result = false;
+				break;
+			}
+		}
+		return result;
+	}
+
+	public boolean meetFJL(List dailyInfo_3days) {
+		if(dailyInfo_3days.size() < 2){
+			return false;
+		}
+		StockdailyinfoVO sdiVO3days = (StockdailyinfoVO) dailyInfo_3days.get(0);
+		StockdailyinfoVO sdiVO3daysPrevious = (StockdailyinfoVO) dailyInfo_3days
+				.get(1);
+		if (sdiVO3days.getHsl() / sdiVO3daysPrevious.getHsl() > 8.5) {
+			return true;
+		}
+		return false;
+	}
+
 	public boolean buyCondition(StockdailyinfoVO stockdailyinfoVO,
 			FactorsBean bean) {
 		boolean result = true;
 		buyPrice = stockdailyinfoVO.getTodayopenprice();
 		if (bean.isLowOpen()) {
 			result = stockdailyinfoVO.getTodayopenprice() < stockdailyinfoVO
-					.getYesterdaycloseprice();
+					.getYesterdaycloseprice() * 1.07;
 			buyPrice = stockdailyinfoVO.getTodayopenprice();
 		}
 		if (bean.getBasedonYesterdayClosePercentage() != 0) {

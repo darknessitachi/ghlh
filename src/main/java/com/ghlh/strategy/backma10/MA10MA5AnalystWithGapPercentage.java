@@ -10,42 +10,45 @@ import com.ghlh.stockquotes.StockQuotesBean;
 import com.ghlh.util.DateUtil;
 import com.ghlh.util.EastMoneyUtil;
 import com.ghlh.util.MathUtil;
-import com.ghlh.util.StockMarketUtil;
 
-public class MA10MA5Analyst {
+public class MA10MA5AnalystWithGapPercentage {
 	public final static int DAY_SIZE = 26;
 
 	public static void main(String[] args) {
-		List<StockQuotesBean> list2 = StockMarketUtil.getShenShiStockList();
-
-		int days_MA5ONMA10 = 2;
-		int days_MA5UnderMA10 = 15;
-		Date startDate = DateUtil.getDate(2014, 3, 16);
-		Date nextDay = DateUtil.getNextMarketOpenDay(startDate);
+		// List<StockQuotesBean> list1 = EastMoneyUtil.collectData(
+		// Constants.SZ_STOCK_COUNT, 10);
+		List<StockQuotesBean> list2 = EastMoneyUtil.collectData(
+				Constants.SZ_STOCK_COUNT, 20);
+		//
+		// int days_MA5ONMA10 = 17;
+		// int days_MA5UnderMA10 = 0;
+		Date startDate = DateUtil.getDate(2014, 2, 29);
+		// List<StockQuotesBean> list2 = new ArrayList<StockQuotesBean>();
+		// StockQuotesBean sqb1 = new StockQuotesBean();
+		// sqb1.setStockId("600155");
+		// list2.add(sqb1);
 		int no = 0;
 
 		for (int i = 0; i < list2.size(); i++) {
 			StockQuotesBean sqb = (StockQuotesBean) list2.get(i);
 			String stockId = sqb.getStockId();
 			List stockDailyInfo = StockdailyinfoDAO.getDaysInfo(stockId,
-					DAY_SIZE, nextDay);
-			boolean reachCondition = true;
-			for (int currentDay = 0; currentDay < days_MA5ONMA10
-					+ days_MA5UnderMA10; currentDay++) {
-				MaBean maBean = calculateMA(stockDailyInfo, currentDay);
-				if (maBean.getMa5() <= maBean.getMa10()) {
-					reachCondition = false;
-					break;
-				}
+					startDate);
+			// for (int currentDay = 0; currentDay < 20; currentDay++) {
+			MaBean maBean = calculateMA(stockDailyInfo, 0);
+			double ma5 = maBean.getMa5();
+			if (ma5 == 0) {
+				continue;
 			}
-			if (reachCondition) {
+			double ma10 = maBean.getMa10();
+			double percentage = MathUtil.formatDoubleWith2((ma5 - ma10) / ma5
+					* 100);
+			if (percentage > 5 && percentage <6 ) {
 				no++;
-				MaBean maBean = calculateMA(stockDailyInfo, 0);
-				StockdailyinfoVO sdi = (StockdailyinfoVO)stockDailyInfo.get(0);
-				if(sdi.getCurrentprice() <= maBean.getMa10()){
-					System.out.println("no = " + no + "stockId = " + stockId);
-				}
+				System.out.println("No = " + no + " StockId = " + stockId
+						+ " MA5 = " + ma5 + " Percentage = " + percentage);
 			}
+			// }
 		}
 	}
 

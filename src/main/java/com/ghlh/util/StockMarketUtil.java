@@ -8,10 +8,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.ghlh.autotrade.Constants;
 import com.ghlh.stockquotes.InternetStockQuotesInquirer;
 import com.ghlh.stockquotes.StockQuotesBean;
 import com.ghlh.ui.StatusField;
@@ -35,7 +37,6 @@ public class StockMarketUtil {
 		return result;
 	}
 
-
 	public static boolean isMarketOpen(Date date) {
 		DateFormat dateFormat = new SimpleDateFormat("MM-dd");
 		String sDate = dateFormat.format(date);
@@ -48,7 +49,6 @@ public class StockMarketUtil {
 		return result;
 	}
 
-	
 	public static String getCloseCause() {
 		Date currentTime = Calendar.getInstance().getTime();
 		String result = null;
@@ -69,7 +69,7 @@ public class StockMarketUtil {
 		int weekday = cal.get(Calendar.DAY_OF_WEEK);
 		return (weekday == Calendar.SATURDAY || weekday == Calendar.SUNDAY);
 	}
-	
+
 	private static boolean isWeekend(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
@@ -191,6 +191,21 @@ public class StockMarketUtil {
 			StatusField.getInstance().setPromptMessage(message);
 			result = true;
 		}
+		return result;
+	}
+
+	public static final int SHENSHI_INDEX = 20;
+	public static final int HUSHI_INDEX = 10;
+
+	public static List getShenShiStockList() {
+		List<StockQuotesBean> result = EastMoneyUtil.collectData(
+				Constants.SZ_STOCK_COUNT, SHENSHI_INDEX);
+		return result;
+	}
+
+	public static List getHuShiStockList() {
+		List<StockQuotesBean> result = EastMoneyUtil.collectData(
+				Constants.SZ_STOCK_COUNT, HUSHI_INDEX);
 		return result;
 	}
 

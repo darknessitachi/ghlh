@@ -10,7 +10,7 @@ import com.ghlh.util.KLineUtil;
 public class ZTCountAnalyst {
 
 	public static void main(String[] args) {
-		Date now = new Date();
+		Date now = DateUtil.getDate(2014, 2, 7);
 
 		Date next = DateUtil.getNextMarketOpenDay(now);
 		Date weeksAgo = DateUtil.getPreviousMarketOpenDay(now, 5);

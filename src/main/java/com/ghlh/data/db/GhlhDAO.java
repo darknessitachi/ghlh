@@ -106,6 +106,9 @@ public class GhlhDAO {
 			stockdailyinfoVO.setZde(sqb.getZde());
 			stockdailyinfoVO.setZdf(sqb.getZdf());
 			stockdailyinfoVO.setHsl(sqb.getHsl());
+			stockdailyinfoVO.setCje(sqb.getCje());
+			stockdailyinfoVO.setCjl(sqb.getCjl());
+			stockdailyinfoVO.setZf(sqb.getZf());
 			stockdailyinfoVO.setCreatedtime(new Date());
 			stockdailyinfoVO.setLastmodifiedtime(new Date());
 			create(stockdailyinfoVO);

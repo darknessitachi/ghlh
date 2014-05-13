@@ -13,11 +13,11 @@ import com.ghlh.util.MathUtil;
 public class Morning4Stat {
 
 	public static void main(String[] args) {
-		Date date = DateUtil.getDate(2014, 1, 7);
+		Date date = DateUtil.getDate(2014, 3, 7);
 		double lowPercentage = 3.5;
 		double highPercentage = 5.5;
-		double lostPercentage = 0.15;
-		double winPercentage = 0.06;
+		double lostPercentage = 0.1;
+		double winPercentage = 0.1;
 		int stockCount = 1;
 
 		Date now = new Date();

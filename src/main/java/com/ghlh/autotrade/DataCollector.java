@@ -18,8 +18,15 @@ public class DataCollector {
 	public void collectDailyInfo(Date now, boolean isPanzhong) {
 		if (isPanzhong) {
 			int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-			String table = "stockdailyinfo" + hour;
-			StockdailyinfoVO.TABLE_NAME = table;
+			if (hour != 9) {
+				String table = "stockdailyinfo" + hour;
+				StockdailyinfoVO.TABLE_NAME = table;
+			} else {
+				String table = "stockdailyinfo" + hour;
+				int mins = Calendar.getInstance().get(Calendar.MINUTE);
+				table = table + mins;
+				StockdailyinfoVO.TABLE_NAME = table;
+			}
 		}
 		collectStocks(now, 10);
 		collectStocks(now, 20);
@@ -51,4 +58,12 @@ public class DataCollector {
 		}
 	}
 
+
+	public static void main(String[] args){
+		Date now = new Date();
+		new DataCollector().collectDailyInfo(now, true);
+	}
+
+
+	
 }

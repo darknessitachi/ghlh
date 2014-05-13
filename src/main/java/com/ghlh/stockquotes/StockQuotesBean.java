@@ -105,4 +105,34 @@ public class StockQuotesBean {
 	public void setHsl(double hsl) {
 		this.hsl = hsl;
 	}
+	
+	private double cje;
+	public double getCje() {
+		return cje;
+	}
+
+	public void setCje(double cje) {
+		this.cje = cje;
+	}
+
+	public double getCjl() {
+		return cjl;
+	}
+
+	public void setCjl(double cjl) {
+		this.cjl = cjl;
+	}
+
+	private double cjl;
+	
+	private double zf;
+
+	public double getZf() {
+		return zf;
+	}
+
+	public void setZf(double zf) {
+		this.zf = zf;
+	}
+	
 }

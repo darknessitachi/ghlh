@@ -27,10 +27,18 @@ public class EastMoneyUtil {
 			result.setCurrentPrice(Double.parseDouble(stockInfoPieces[5]));
 			result.setHighestPrice(Double.parseDouble(stockInfoPieces[6]));
 			result.setLowestPrice(Double.parseDouble(stockInfoPieces[7]));
+			result.setCje(Double.parseDouble(stockInfoPieces[8]));
+			result.setCjl(Double.parseDouble(stockInfoPieces[9]));
+
 			result.setZde(Double.parseDouble(stockInfoPieces[10]));
 			String sZdf = stockInfoPieces[11].substring(0,
 					stockInfoPieces[11].length() - 1);
 			result.setZdf(Double.parseDouble(sZdf));
+
+			String sZf = stockInfoPieces[13].substring(0,
+					stockInfoPieces[13].length() - 1);
+			result.setZf(Double.parseDouble(sZf));
+
 			String sHsl = stockInfoPieces[23].substring(0,
 					stockInfoPieces[23].length() - 1);
 			result.setHsl(Double.parseDouble(sHsl));

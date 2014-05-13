@@ -17,7 +17,7 @@ import com.ghlh.util.DateUtil;
 import com.ghlh.util.KLineUtil;
 import com.ghlh.util.MathUtil;
 
-public class CatchYZAnalyst {
+public class CatchYZOpenBuyAnalyst {
 
 	static double yinliPercentage = 0;
 	static double kuiSunPercentage = 0;
@@ -32,14 +32,14 @@ public class CatchYZAnalyst {
 		double winPercentage = 0.04;
 		double lostPercentage = 0.3;
 		double openPercentage = 0.0;
-		Date date = DateUtil.getDate(2014, 3, 1);
-		Date now = new Date();
+		Date date = DateUtil.getDate(2014, 2, 1);
+		Date now = DateUtil.getDate(2014, 3, 1);
 		Map alreadyAnaystedMap = new HashMap();
 
 		while (date.before(now)) {
 			String sDate = DateUtil.formatDay(date);
 			// System.out.println("process date = " + sDate);
-			String sql = "SELECT * FROM stockdailyinfo WHERE todayopenprice = highestprice AND highestprice = lowestprice and zdf > 0 AND todayopenprice > 0 AND DATE LIKE '"
+			String sql = "SELECT * FROM stockdailyinfo WHERE todayopenprice = highestprice AND highestprice = lowestprice AND todayopenprice > 0 and zdf > 0 AND DATE LIKE '"
 					+ sDate + "%' ";
 
 			List<StockdailyinfoVO> list = GhlhDAO.list(sql,
@@ -56,7 +56,7 @@ public class CatchYZAnalyst {
 				if (alreadyAnaystedMap.get(stockId) != null) {
 					continue;
 				}
-				StockQuotesBean sqb = InternetStockQuotesInquirer.getInstance()
+				StockQuotesBean sqb = InternetStockQuotesInquirer.getEastMoneyInstance()
 						.getStockQuotesBean(stockId);
 				if (sqb.getName().indexOf("ST") >= 0) {
 					continue;
@@ -139,6 +139,26 @@ public class CatchYZAnalyst {
 						if (sdiVO1.getTodayopenprice() > 0) {
 							if (sdiVO1.getHighestprice() != sdiVO1
 									.getLowestprice()) {
+								// double openPercentage1 = MathUtil
+								// .formatDoubleWith2((sdiVO1
+								// .getTodayopenprice() - sdiVO1
+								// .getYesterdaycloseprice())
+								// / sdiVO1.getYesterdaycloseprice()
+								// * 100);
+								// if (openPercentage1 > 7) {
+								// break;
+								// }
+
+								double openPercentage1 = MathUtil
+										.formatDoubleWith2((sdiVO1
+												.getCurrentprice() - sdiVO1
+												.getTodayopenprice())
+												/ sdiVO1.getYesterdaycloseprice()
+												* 100);
+								if(openPercentage1 >= -2){
+									break;
+								}
+								
 								double inPrice = sdiVO1.getLowestprice();
 								double inPercentage = MathUtil
 										.formatDoubleWith2((inPrice - sdiVO1
@@ -178,7 +198,8 @@ public class CatchYZAnalyst {
 	private int pickup = 0;
 
 	public static void main(String[] args) {
-		QiangZTResultBean result = new CatchYZAnalyst().calculateResult();
+		QiangZTResultBean result = new CatchYZOpenBuyAnalyst()
+				.calculateResult();
 		System.out.println("Result = " + result + " 盈利总百分比  : "
 				+ MathUtil.formatDoubleWith2(yinliPercentage) + " 亏损总百分比 : "
 				+ MathUtil.formatDoubleWith2(kuiSunPercentage));

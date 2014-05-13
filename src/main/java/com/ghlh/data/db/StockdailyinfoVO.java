@@ -97,6 +97,25 @@ public class StockdailyinfoVO implements java.io.Serializable{
   public double getZdf(){
     return zdf;
   }
+  private boolean hasZf;
+  public boolean isHasZf(){
+    return hasZf;
+  }
+  private boolean whereZf;
+  public boolean isWhereZf(){
+    return this.whereZf;
+  }
+  public void setWhereZf(boolean whereZf){
+    this.whereZf = whereZf;
+  }
+  private double zf;
+  public void setZf(double zf){
+    this.hasZf = true;
+    this.zf = zf;
+  }
+  public double getZf(){
+    return zf;
+  }
   private boolean hasHsl;
   public boolean isHasHsl(){
     return hasHsl;
@@ -191,6 +210,44 @@ public class StockdailyinfoVO implements java.io.Serializable{
   }
   public double getLowestprice(){
     return lowestprice;
+  }
+  private boolean hasCje;
+  public boolean isHasCje(){
+    return hasCje;
+  }
+  private boolean whereCje;
+  public boolean isWhereCje(){
+    return this.whereCje;
+  }
+  public void setWhereCje(boolean whereCje){
+    this.whereCje = whereCje;
+  }
+  private double cje;
+  public void setCje(double cje){
+    this.hasCje = true;
+    this.cje = cje;
+  }
+  public double getCje(){
+    return cje;
+  }
+  private boolean hasCjl;
+  public boolean isHasCjl(){
+    return hasCjl;
+  }
+  private boolean whereCjl;
+  public boolean isWhereCjl(){
+    return this.whereCjl;
+  }
+  public void setWhereCjl(boolean whereCjl){
+    this.whereCjl = whereCjl;
+  }
+  private double cjl;
+  public void setCjl(double cjl){
+    this.hasCjl = true;
+    this.cjl = cjl;
+  }
+  public double getCjl(){
+    return cjl;
   }
   private boolean hasCreatedtime;
   public boolean isHasCreatedtime(){

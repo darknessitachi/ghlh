@@ -75,6 +75,14 @@ public class DateUtil {
 		return result;
 	}
 
+	public static Date getLatestMarketOpenDay(Date date) {
+		Date result = date;
+		while (!StockMarketUtil.isMarketOpen(result)) {
+			result = getPreviousNDay(result, 1);
+		}
+		return result;
+	}
+
 	public static Date getNextMarketOpenDay(Date date, int n) {
 		if (n == 0) {
 			return date;

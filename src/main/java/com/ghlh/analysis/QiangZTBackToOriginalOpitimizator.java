@@ -20,7 +20,7 @@ public class QiangZTBackToOriginalOpitimizator {
 		yinLi = 0;
 		kuiSun = 0;
 
-		Date date = DateUtil.getDate(2014, 3, 1);
+		Date date = DateUtil.getDate(2014, 3, 10);
 		int zdts = 20;
 		double minZdf = -5;
 		double maxZdf = 5;

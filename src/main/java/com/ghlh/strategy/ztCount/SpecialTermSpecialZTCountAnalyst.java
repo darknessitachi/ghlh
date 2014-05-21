@@ -12,17 +12,17 @@ public class SpecialTermSpecialZTCountAnalyst {
 
 	public static void main(String[] args) {
 
-		Date now = DateUtil.getDate(2014, 03, 10);
-		int previousDays = 7;
+		Date now = new Date();
+		int previousDays = 5;
 		Date latest = DateUtil.getNextMarketOpenDay(now);
 		Date previous = DateUtil
 				.getPreviousMarketOpenDay(now, previousDays - 1);
 
 		String sql = "SELECT stockid, ztgs FROM ( "
-				+ " SELECT stockid, COUNT(zdf) ztgs FROM stockdailyinfo WHERE zdf > 5 AND DATE > '"
+				+ " SELECT stockid, COUNT(zdf) ztgs FROM stockdailyinfo WHERE zdf > 9.9 AND DATE > '"
 				+ DateUtil.formatDay(previous) + "' AND DATE < '"
 				+ DateUtil.formatDay(latest) + "'"
-				+ " GROUP BY stockid) a WHERE a.ztgs >= 2 ORDER BY a.ztgs DESC ";
+				+ " GROUP BY stockid) a WHERE a.ztgs >= 1 ORDER BY a.ztgs DESC ";
 		System.out.println("Sql = " + sql);
 
 		List stocks = GhlhDAO.list(sql, "com.ghlh.strategy.ztCount.ZTBean");

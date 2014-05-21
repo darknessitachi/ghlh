@@ -106,7 +106,7 @@ public class StockTradeIntradyUtil {
 				if (TradeUtil.isStopTrade(sqb)) {
 					return false;
 				}
-				if (sqb.getCurrentPrice() <= stVO.getBuyprice()) {
+				if (sqb.getLowestPrice() <= stVO.getBuyprice()) {
 					String message = TradeUtil.getConfirmedBuyMessage(monitor
 							.getMonitorstockVO().getStockid(),
 							stVO.getNumber(), stVO.getBuyprice());

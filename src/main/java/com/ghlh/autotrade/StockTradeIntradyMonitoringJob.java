@@ -52,12 +52,12 @@ public class StockTradeIntradyMonitoringJob {
 					setMonitoringStatus();
 					monitoringIntrady(stockMonitors);
 					TimeUtil.pause(200);
-					int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-					int mins = Calendar.getInstance().get(Calendar.MINUTE);
-					if (hour == 14 && mins == 58) {
-						processBeforeCloseBuy(monitorStocksList);
-						break;
-					}
+//					int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+//					int mins = Calendar.getInstance().get(Calendar.MINUTE);
+//					if (hour == 14 && mins == 58) {
+//						processBeforeCloseBuy(monitorStocksList);
+//						break;
+//					}
 				} catch (Exception ex) {
 					logger.error("Stock Monitoring Trade throw : ", ex);
 				}

@@ -9,6 +9,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.ghlh.conf.ConfigurationAccessor;
+import com.ghlh.util.ImageCaptureUtil;
 import com.ghlh.util.TimeUtil;
 
 public class TradeSoftwareController extends
@@ -82,6 +84,14 @@ public class TradeSoftwareController extends
 				this.inputTab();
 			} else {
 				this.inputString(data);
+			}
+		}
+		if (ConfigurationAccessor.getInstance().isTradeLog()) {
+			if (cmd.indexOf("CaptureImage") == 0) {
+				ImageCaptureUtil.catputeTradeImage();
+			}
+			if (cmd.indexOf("CaptureScreen") == 0) {
+				ImageCaptureUtil.catputeScreen();
 			}
 		}
 	}

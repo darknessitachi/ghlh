@@ -16,7 +16,7 @@ public class StockdailyinfoDAO {
 	public static List getDaysInfo(String stockId, int count, Date date) {
 		String sql = "select * from stockdailyinfo where stockid = '" + stockId
 				+ "' AND DATE < '" + DateUtil.formatDay(date)
-				+ "' order by date desc";
+				+ "' and currentprice != 0 order by date desc";
 
 		String className = "com.ghlh.data.db.StockdailyinfoVO";
 		return GhlhDAO.list(sql, className, 0, count);
@@ -31,5 +31,12 @@ public class StockdailyinfoDAO {
 		return GhlhDAO.list(sql, className);
 	}
 
+	public static List getDaysInfo(String stockId) {
+		String sql = "select * from stockdailyinfo where stockid = '" + stockId
+				+ "' and currentPrice != 0 order by date asc";
+		String className = "com.ghlh.data.db.StockdailyinfoVO";
+		return GhlhDAO.list(sql, className);
+	}
 
+	
 }

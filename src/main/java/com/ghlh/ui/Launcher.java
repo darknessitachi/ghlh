@@ -111,6 +111,15 @@ public class Launcher extends DefaultDockableBarHolder {
 			}
 			if (args.length > 1) {
 				ConfigurationAccessor.getInstance().setTradeWay(args[1]);
+				if (args.length > 2) {
+					String openTradeLog = args[2];
+					if (openTradeLog.toLowerCase().equals("closeTradeLog")) {
+						ConfigurationAccessor.getInstance().setTradeLog(false);
+					}
+					if (openSoftware.toLowerCase().equals("openTradeLog")) {
+						ConfigurationAccessor.getInstance().setTradeLog(true);
+					}
+				}
 			}
 		}
 		// setNative(true) will make the color used by action framework to be

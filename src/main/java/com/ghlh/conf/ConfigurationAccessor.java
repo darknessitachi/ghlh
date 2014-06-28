@@ -84,5 +84,14 @@ public class ConfigurationAccessor {
 		this.tradeWay = tradeWay;
 	}
 	
+	private boolean tradeLog = false;
 
+	public boolean isTradeLog() {
+		return tradeLog;
+	}
+
+	public void setTradeLog(boolean tradeLog) {
+		this.tradeLog = tradeLog;
+	}
+	
 }

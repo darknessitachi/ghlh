@@ -10,14 +10,16 @@ import com.ghlh.util.MathUtil;
 public class StairAnalysis {
 
 	public final static int STAIR_COUNT = 4;
-	public final static double STAIR_PERCENTAGE = 0.05;
+	public final static double STAIR_PERCENTAGE = 0.01;
 	public final static double STAIR_MONEY = 80000;
 	public static int buyTimes = 0;
 	public static int sellTimes = 0;
 
 	public static void main(String[] args) {
 
-		String sql = "SELECT * FROM stockdailyinfo WHERE  Date > '2014-02-24'  AND stockid = '002103'";
+		
+		
+		String sql = "SELECT * FROM stockdailyinfo WHERE  Date > '2014-05-05'  AND stockid = '600036'";
 		List list = GhlhDAO.list(sql, "com.ghlh.data.db.StockdailyinfoVO");
 		StockdailyinfoVO firstDay = (StockdailyinfoVO) list.get(0);
 		initBuy(firstDay);

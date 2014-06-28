@@ -19,10 +19,10 @@ public class SpecialTermSpecialZTCountAnalyst {
 				.getPreviousMarketOpenDay(now, previousDays - 1);
 
 		String sql = "SELECT stockid, ztgs FROM ( "
-				+ " SELECT stockid, COUNT(zdf) ztgs FROM stockdailyinfo WHERE zdf > 9.9 AND DATE > '"
+				+ " SELECT stockid, COUNT(zdf) ztgs FROM stockdailyinfo WHERE zdf > 3 AND DATE > '"
 				+ DateUtil.formatDay(previous) + "' AND DATE < '"
 				+ DateUtil.formatDay(latest) + "'"
-				+ " GROUP BY stockid) a WHERE a.ztgs >= 1 ORDER BY a.ztgs DESC ";
+				+ " GROUP BY stockid) a WHERE a.ztgs >= 3 ORDER BY a.ztgs DESC ";
 		System.out.println("Sql = " + sql);
 
 		List stocks = GhlhDAO.list(sql, "com.ghlh.strategy.ztCount.ZTBean");

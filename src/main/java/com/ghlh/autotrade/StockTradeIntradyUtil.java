@@ -59,7 +59,8 @@ public class StockTradeIntradyUtil {
 
 		StocktradeDAO.updateStocktradeFinished(stocktradeVO.getId());
 		if (Boolean.valueOf(monitor.getMonitorstockVO().getOnmonitoring())) {
-			reBuy(stocktradeVO, pendingBuyList);
+//以最低价格界定买入， 这里会有问题， so comment it temporarily.
+//			reBuy(stocktradeVO, pendingBuyList);
 		}
 	}
 

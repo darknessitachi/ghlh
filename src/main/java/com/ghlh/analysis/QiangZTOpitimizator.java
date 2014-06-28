@@ -45,7 +45,7 @@ public class QiangZTOpitimizator {
 					+ " AND minzdf > " + minZdf + " AND avgzdf > " + minAvg
 					+ " and avgzdf < " + maxAvg;
 
-			// System.out.println("sql = " + sql);
+			 System.out.println("sql = " + sql);
 			List<QiangZTBean> list = GhlhDAO.list(sql,
 					"com.ghlh.analysis.QiangZTBean");
 

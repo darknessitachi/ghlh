@@ -45,8 +45,44 @@ public class TradeSoftwareController extends
 		executeTradeSoftwareCMD(cmdName, cmdParameters);
 	}
 
+	private void executeActiveWindow() {
+		List<String> scripts = (List<String>) ControllScriptReader
+				.getInstance().getActiveWindowsScript();
+		for (int i = 0; i < scripts.size(); i++) {
+			String cmd = scripts.get(i);
+			if (cmd.indexOf("MouseClick") == 0) {
+				if (ConfigurationAccessor.getInstance().getPosition() != null) {
+					String pos = ConfigurationAccessor.getInstance()
+							.getPosition();
+					String xS = pos.substring(0, pos.indexOf("-"));
+					String yS = pos.substring(pos.indexOf("-") + 1);
+					this.mouseClick(Integer.parseInt(xS), Integer.parseInt(yS));
+				} else {
+					String pos = cmd.substring(cmd.indexOf(" ") + 1);
+					String xS = pos.substring(0, pos.indexOf(" "));
+					String yS = pos.substring(pos.indexOf(" ") + 1);
+					this.mouseClick(Integer.parseInt(xS), Integer.parseInt(yS));
+				}
+			}
+			if (cmd.indexOf("Sleep") == 0) {
+				String timeS = cmd.substring(cmd.indexOf(" ") + 1);
+				TimeUtil.pause(Integer.parseInt(timeS));
+			}
+			if (ConfigurationAccessor.getInstance().isTradeLog()) {
+				if (cmd.indexOf("CaptureImage") == 0) {
+					ImageCaptureUtil.catputeTradeImage();
+				}
+				if (cmd.indexOf("CaptureScreen") == 0) {
+					ImageCaptureUtil.catputeScreen();
+				}
+			}
+
+		}
+	}
+
 	private synchronized void executeTradeSoftwareCMD(String cmdName,
 			Map<String, Object> cmdParameters) {
+		this.executeActiveWindow();
 		List<String> scripts = (List<String>) ControllScriptReader
 				.getInstance().getCMDScripts(cmdName);
 		for (int i = 0; i < scripts.size(); i++) {

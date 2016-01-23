@@ -30,7 +30,7 @@ public class AutoTradeAfterCloseJob implements Job {
 			return;
 		}
 		processPredoneOrders();
-		collectStockDailyInfo();
+		//collectStockDailyInfo();
 		message = "结束15:05盘后处理";
 		EventRecorder.recordEvent(this.getClass(), message);
 	}

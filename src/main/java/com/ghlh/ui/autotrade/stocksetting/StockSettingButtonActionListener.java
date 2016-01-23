@@ -83,17 +83,17 @@ public class StockSettingButtonActionListener extends
 
 	private void saveForEdit() {
 		MonitorstockVO monitorStockVO = this.collectMonitorstockVO();
-		monitorStockVO.setOnmonitoring(((StockSettingContentPanel) this
-				.getContentPanel()).isSelectedMSBOnMonitoring() + "");
+//		monitorStockVO.setOnmonitoring(((StockSettingContentPanel) this
+//				.getContentPanel()).isSelectedMSBOnMonitoring() + "");
 		try {
-			monitorStockVO.setId(currentMsb.getId());
-			monitorStockVO.setWhereId(true);
-			GhlhDAO.edit(monitorStockVO);
+//			monitorStockVO.setId(currentMsb.getId());
+//			monitorStockVO.setWhereId(true);
+			MonitorstockDAO.save(monitorStockVO);
 		} catch (Exception ex) {
 			logger.error("click save throw exception:", ex);
 		}
-		((StockSettingContentPanel) this.getContentPanel())
-				.updateStockInTableRow(monitorStockVO);
+//		((StockSettingContentPanel) this.getContentPanel())
+//				.updateStockInTableRow(monitorStockVO);
 	}
 
 	private void saveForNew() {
@@ -102,14 +102,14 @@ public class StockSettingButtonActionListener extends
 		monitorStockVO.setLastmodifiedtimestamp(new Date());
 		monitorStockVO.setOnmonitoring("true");
 		try {
-			int id = IDGenerator.generateId(MonitorstockVO.TABLE_NAME);
-			monitorStockVO.setId(id);
-			GhlhDAO.create(monitorStockVO);
+//			int id = IDGenerator.generateId(MonitorstockVO.TABLE_NAME);
+//			monitorStockVO.setId(id);
+			MonitorstockDAO.save(monitorStockVO);
 		} catch (Exception ex) {
 			logger.error("click save throw exception:", ex);
 		}
-		((StockSettingContentPanel) this.getContentPanel())
-				.addStockInTable(monitorStockVO);
+//		((StockSettingContentPanel) this.getContentPanel())
+//				.addStockInTable(monitorStockVO);
 
 	}
 

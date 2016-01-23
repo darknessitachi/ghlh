@@ -70,7 +70,7 @@ public class SoftwareTrader implements StockTrader {
 	public static void main(String[] args) {
 //		SoftwareTrader.getInstance().buyStock("600036",100);	
 //		SoftwareTrader.getInstance().sellStock("300056",100);	
-//		SoftwareTrader.getInstance().activateTradeSoft();
+		SoftwareTrader.getInstance().activateTradeSoft();
 	}
 
 }

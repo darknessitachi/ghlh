@@ -120,11 +120,17 @@ public class ConnectionPool {
 
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			result = DriverManager
-					.getConnection("jdbc:mysql://localhost:3306/ghlh?"
-							+ "user=root&password=P@ss123&useUnicode=true&characterEncoding=UTF-8");
+					.getConnection("jdbc:mysql://kline123.mysql.rds.aliyuncs.com:3306/ghlh?"
+							+ "user=ghlh&password=GGaaooyyoouu456&useUnicode=true&characterEncoding=UTF-8");
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			// String db_url = "jdbc:mysql://"
+			// + DB_URL
+			// +
+			// ":3306/bgj?user=bgj&password=KLine123&useUnicode=true&characterEncoding=UTF-8";
+			// Class.forName("com.mysql.jdbc.Driver").newInstance();
+			// result = DriverManager.getConnection(db_url);
 		}
 		return result;
 	}

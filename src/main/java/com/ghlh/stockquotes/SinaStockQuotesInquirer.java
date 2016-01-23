@@ -16,6 +16,7 @@ public class SinaStockQuotesInquirer extends InternetStockQuotesInquirer {
 			url += "sh";
 		}
 		url += stockId;
+		System.out.println("url = " + url);
 		return url;
 	}
 

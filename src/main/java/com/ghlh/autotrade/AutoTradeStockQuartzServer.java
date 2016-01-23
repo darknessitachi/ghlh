@@ -49,20 +49,20 @@ public class AutoTradeStockQuartzServer {
 						AutoTradeSoftwareActivateJob.class);
 			}
 
-			scheduleJob(9, 15, "AutoDataCollectingJob915",
-					AutoDataCollectingJob.class);
-			scheduleJob(9, 20, "AutoDataCollectingJob920",
-					AutoDataCollectingJob.class);
-			scheduleJob(9, 25, "AutoDataCollectingJob925",
-					AutoDataCollectingJob.class);
-			scheduleJob(10, 0, "AutoDataCollectingJob10",
-					AutoDataCollectingJob.class);
-			scheduleJob(11, 0, "AutoDataCollectingJob11",
-					AutoDataCollectingJob.class);
-			scheduleJob(13, 30, "AutoDataCollectingJob133",
-					AutoDataCollectingJob.class);
-			scheduleJob(14, 30, "AutoDataCollectingJob143",
-					AutoDataCollectingJob.class);
+//			scheduleJob(9, 15, "AutoDataCollectingJob915",
+//					AutoDataCollectingJob.class);
+//			scheduleJob(9, 20, "AutoDataCollectingJob920",
+//					AutoDataCollectingJob.class);
+//			scheduleJob(9, 25, "AutoDataCollectingJob925",
+//					AutoDataCollectingJob.class);
+//			scheduleJob(10, 0, "AutoDataCollectingJob10",
+//					AutoDataCollectingJob.class);
+//			scheduleJob(11, 0, "AutoDataCollectingJob11",
+//					AutoDataCollectingJob.class);
+//			scheduleJob(13, 30, "AutoDataCollectingJob133",
+//					AutoDataCollectingJob.class);
+//			scheduleJob(14, 30, "AutoDataCollectingJob143",
+//					AutoDataCollectingJob.class);
 			
 		
 		} catch (SchedulerException ex) {

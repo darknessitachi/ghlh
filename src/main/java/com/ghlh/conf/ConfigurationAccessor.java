@@ -93,5 +93,16 @@ public class ConfigurationAccessor {
 	public void setTradeLog(boolean tradeLog) {
 		this.tradeLog = tradeLog;
 	}
+	private String position;
+
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+	
+	
 	
 }

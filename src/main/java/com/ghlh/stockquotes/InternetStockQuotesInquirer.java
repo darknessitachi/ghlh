@@ -19,7 +19,7 @@ public abstract class InternetStockQuotesInquirer implements
 	private static Logger logger = Logger
 			.getLogger(InternetStockQuotesInquirer.class);
 
-	private static StockQuotesInquirer instance = new SinaStockQuotesInquirer();
+	private static StockQuotesInquirer instance = new EastMoneyStockQuotesInquirer();
 
 	public static StockQuotesInquirer getInstance() {
 		return instance;

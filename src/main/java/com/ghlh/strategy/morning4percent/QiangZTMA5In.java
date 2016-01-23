@@ -40,7 +40,7 @@ public class QiangZTMA5In {
 					+ " AND minzdf > " + minZdf + " AND avgzdf > " + minAvg
 					+ " and avgzdf < " + maxAvg;
 
-			// System.out.println("SQL = " + sql);
+			 System.out.println("SQL = " + sql);
 			List<QiangZTBean> list = GhlhDAO.list(sql,
 					"com.ghlh.analysis.QiangZTBean");
 			if (list == null) {

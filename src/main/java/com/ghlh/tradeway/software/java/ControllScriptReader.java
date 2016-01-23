@@ -17,6 +17,8 @@ public class ControllScriptReader {
 
 	private Map<String, List<String>> scriptMap = new HashMap<String, List<String>>();
 
+	private List<String> activeWindowList = null;
+
 	private static ControllScriptReader instance = new ControllScriptReader();
 
 	public static ControllScriptReader getInstance() {
@@ -66,4 +68,37 @@ public class ControllScriptReader {
 	public List<String> getCMDScripts(String cmdName) {
 		return (List<String>) scriptMap.get(cmdName);
 	}
+
+	
+	public List<String> getActiveWindowsScript() {
+		if (this.activeWindowList == null) {
+			String active = "activewindow.properties";
+			try {
+				activeWindowList = new ArrayList<String>();
+				InputStream is = ControllScriptReader.class
+						.getResourceAsStream(active);
+				String line = null;
+				if (is != null) {
+					BufferedReader br = new BufferedReader(
+							new InputStreamReader(is));
+					while ((line = br.readLine()) != null
+							&& !line.trim().equals("")) {
+						if (line.indexOf("###") < 0) {
+							activeWindowList.add(line);
+						}
+					}
+					br.close();
+					is.close();
+
+				} else {
+					logger.error("The software script " + active
+							+ " could not be found");
+				}
+			} catch (Exception e) {
+				logger.error("Read software script: " + active + " throw : ", e);
+			}
+		}
+		return activeWindowList;
+	}
+
 }

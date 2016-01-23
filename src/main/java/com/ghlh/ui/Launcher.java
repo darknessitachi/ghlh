@@ -102,22 +102,29 @@ public class Launcher extends DefaultDockableBarHolder {
 
 	public static void main(String[] args) {
 		if (args.length > 0) {
-			String openSoftware = args[0];
-			if (openSoftware.toLowerCase().equals("close")) {
-				ConfigurationAccessor.getInstance().setOpenSoftwareTrade(false);
-			}
-			if (openSoftware.toLowerCase().equals("open")) {
-				ConfigurationAccessor.getInstance().setOpenSoftwareTrade(true);
-			}
+			ConfigurationAccessor.getInstance().setPosition(args[0]);
 			if (args.length > 1) {
-				ConfigurationAccessor.getInstance().setTradeWay(args[1]);
+				String openSoftware = args[1];
+				if (openSoftware.toLowerCase().equals("close")) {
+					ConfigurationAccessor.getInstance().setOpenSoftwareTrade(
+							false);
+				}
+				if (openSoftware.toLowerCase().equals("open")) {
+					ConfigurationAccessor.getInstance().setOpenSoftwareTrade(
+							true);
+				}
 				if (args.length > 2) {
-					String openTradeLog = args[2];
-					if (openTradeLog.toLowerCase().equals("closeTradeLog")) {
-						ConfigurationAccessor.getInstance().setTradeLog(false);
-					}
-					if (openSoftware.toLowerCase().equals("openTradeLog")) {
-						ConfigurationAccessor.getInstance().setTradeLog(true);
+					ConfigurationAccessor.getInstance().setTradeWay(args[2]);
+					if (args.length > 2) {
+						String openTradeLog = args[3];
+						if (openTradeLog.toLowerCase().equals("closetradelog")) {
+							ConfigurationAccessor.getInstance().setTradeLog(
+									false);
+						}
+						if (openTradeLog.toLowerCase().equals("opentradelog")) {
+							ConfigurationAccessor.getInstance().setTradeLog(
+									true);
+						}
 					}
 				}
 			}

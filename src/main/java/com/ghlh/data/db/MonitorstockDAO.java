@@ -35,5 +35,6 @@ public class MonitorstockDAO {
 	public static MonitorstockVO get(String stockId){
 		return monitorStockDao.get(stockId);
 	}
+	
 
 }

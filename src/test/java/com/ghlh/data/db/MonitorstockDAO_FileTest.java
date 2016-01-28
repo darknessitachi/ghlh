@@ -1,5 +1,7 @@
 package com.ghlh.data.db;
 
+import java.util.List;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -12,7 +14,7 @@ public class MonitorstockDAO_FileTest {
 		MonitorstockVO monitorstockVO = new MonitorstockVO();
 		monitorstockVO.setAdditioninfo("50 50 100");
 		monitorstockVO.setStockid("600036");
-		monitorstockVO.setName("ÕÐÉÌÒøÐÐ");
+		monitorstockVO.setName("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 		monitorstockVO.setOnmonitoring("true");
 		monitorstockVO.setTradealgorithm("Stairs");
 		monitorstockDAO.save(monitorstockVO);
@@ -22,6 +24,15 @@ public class MonitorstockDAO_FileTest {
 		Assert.assertEquals(monitorstockVO.getName(), monitorstockVOGet.getName());
 		Assert.assertEquals(monitorstockVO.getOnmonitoring(), monitorstockVOGet.getOnmonitoring());
 		Assert.assertEquals(monitorstockVO.getTradealgorithm(), monitorstockVOGet.getTradealgorithm());
+		
+		List stockList = monitorstockDAO.getMonitorStock();
+		monitorstockVOGet = (MonitorstockVO)stockList.get(0);
+		Assert.assertEquals(monitorstockVO.getStockid(), monitorstockVOGet.getStockid());
+		Assert.assertEquals(monitorstockVO.getAdditioninfo(), monitorstockVOGet.getAdditioninfo());
+		Assert.assertEquals(monitorstockVO.getName(), monitorstockVOGet.getName());
+		Assert.assertEquals(monitorstockVO.getOnmonitoring(), monitorstockVOGet.getOnmonitoring());
+		Assert.assertEquals(monitorstockVO.getTradealgorithm(), monitorstockVOGet.getTradealgorithm());
+		
 	}
 
 }

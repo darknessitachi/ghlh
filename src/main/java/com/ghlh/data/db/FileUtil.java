@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -17,6 +18,23 @@ public class FileUtil {
 	private static Logger logger = Logger.getLogger(FileUtil.class);
 	public final static String MONITOR_STOCK_DIRECTORY = "MonitorStocks";
 
+	
+	public static String[] getFilesList(){
+		File file = new File(MONITOR_STOCK_DIRECTORY);
+		if(file.isDirectory()){
+			String[] subNames = file.list();
+			return subNames;
+		}else{
+			throw new RuntimeException("MonitorStocks isn't directory");
+		}
+	}
+	
+	public static boolean isHidenFile(String fileName){
+		File file = new File(MONITOR_STOCK_DIRECTORY + "/" + fileName);
+		return file.isHidden();
+	}
+	
+	
 	public static void updatePropertiesToFile(String fileName, Properties props) {
 		File monitorStockFile = new File(MONITOR_STOCK_DIRECTORY + "/" + fileName);
 		try {

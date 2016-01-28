@@ -13,6 +13,7 @@ public class AdditionalInfoBean {
 		stairZDF = Double.parseDouble(additionalInfoSegs[0]);
 		stairMoney = Double.parseDouble(additionalInfoSegs[1]);
 		stairNumber = Integer.parseInt(additionalInfoSegs[2]);
+		
 	}
 
 	private double stairZDF;

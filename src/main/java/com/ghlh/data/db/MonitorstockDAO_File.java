@@ -1,13 +1,21 @@
 package com.ghlh.data.db;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 public class MonitorstockDAO_File implements MonitorstockDAO_I {
 
 	public List getMonitorStock() {
-		String sql = "SELECT * FROM monitorstock ";
-		List result = GhlhDAO.list(sql, "com.ghlh.data.db.MonitorstockVO");
+		String[] stocks = FileUtil.getFilesList();
+		List result = new ArrayList();
+		for (int i = 0; i < stocks.length; i++) {
+			if (!FileUtil.isHidenFile(stocks[i])) {
+				result.add(FileUtil.convertPropertiesToObject(
+						FileUtil.loadPropertiesFromFile(stocks[i]),
+						"com.ghlh.data.db.MonitorstockVO"));
+			}
+		}
 		return result;
 	}
 

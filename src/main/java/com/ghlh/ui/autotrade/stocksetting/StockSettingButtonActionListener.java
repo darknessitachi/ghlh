@@ -92,8 +92,8 @@ public class StockSettingButtonActionListener extends
 		} catch (Exception ex) {
 			logger.error("click save throw exception:", ex);
 		}
-//		((StockSettingContentPanel) this.getContentPanel())
-//				.updateStockInTableRow(monitorStockVO);
+		((StockSettingContentPanel) this.getContentPanel())
+				.updateStockInTableRow(monitorStockVO);
 	}
 
 	private void saveForNew() {
@@ -108,8 +108,8 @@ public class StockSettingButtonActionListener extends
 		} catch (Exception ex) {
 			logger.error("click save throw exception:", ex);
 		}
-//		((StockSettingContentPanel) this.getContentPanel())
-//				.addStockInTable(monitorStockVO);
+		((StockSettingContentPanel) this.getContentPanel())
+				.addStockInTable(monitorStockVO);
 
 	}
 
@@ -190,10 +190,11 @@ public class StockSettingButtonActionListener extends
 		if (confirm == 0) {
 			try {
 				//new FileStockPoolAccessor().deleteMonitorStock(this.currentRow);
-				MonitorstockVO monitorstockVO = new MonitorstockVO();
-				monitorstockVO.setId(this.currentMsb.getId());
-				monitorstockVO.setWhereId(true);
-				GhlhDAO.remove(monitorstockVO);
+//				MonitorstockVO monitorstockVO = new MonitorstockVO();
+//				monitorstockVO.setId(this.currentMsb.getId());
+//				monitorstockVO.setWhereId(true);
+//				GhlhDAO.remove(monitorstockVO);
+				MonitorstockDAO.delete(this.currentMsb.getStockid());
 			} catch (Exception ex) {
 				logger.error("click save throw exception:", ex);
 			}

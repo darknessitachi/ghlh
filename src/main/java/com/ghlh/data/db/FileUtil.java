@@ -34,6 +34,12 @@ public class FileUtil {
 		return file.isHidden();
 	}
 	
+	public static void deleteFile(String fileName){
+		File file = new File(MONITOR_STOCK_DIRECTORY + "/" + fileName);
+		file.delete();
+	}
+
+	
 	
 	public static void updatePropertiesToFile(String fileName, Properties props) {
 		File monitorStockFile = new File(MONITOR_STOCK_DIRECTORY + "/" + fileName);

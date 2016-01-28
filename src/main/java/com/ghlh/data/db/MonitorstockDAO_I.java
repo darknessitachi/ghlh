@@ -18,6 +18,8 @@ public interface MonitorstockDAO_I {
 	void save(MonitorstockVO monitorstockVO);
 
 	MonitorstockVO get(String stockId);
+	
+	void delete(String stockId);
 
 	
 	

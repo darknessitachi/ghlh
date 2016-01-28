@@ -28,13 +28,17 @@ public class MonitorstockDAO {
 	public static void turnOnorOffMonitorStock(int id, boolean on) {
 		monitorStockDao.turnOnorOffMonitorStock(id, on);
 	}
-	public static void save(MonitorstockVO monitorstockVO){
+
+	public static void save(MonitorstockVO monitorstockVO) {
 		monitorStockDao.save(monitorstockVO);
 	}
 
-	public static MonitorstockVO get(String stockId){
+	public static MonitorstockVO get(String stockId) {
 		return monitorStockDao.get(stockId);
 	}
-	
+
+	public static void delete(String stockId) {
+		monitorStockDao.delete(stockId);
+	}
 
 }

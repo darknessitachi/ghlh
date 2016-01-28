@@ -58,6 +58,12 @@ public class MonitorstockDAO_File implements MonitorstockDAO_I {
 		FileUtil.updatePropertiesToFile(monitorstockVO.getStockid(), props);
 	}
 
+
+	public void delete(String stockId) {
+		FileUtil.deleteFile(stockId);
+	}
+
+	
 	public MonitorstockVO get(String stockId) {
 		Properties props = FileUtil.loadPropertiesFromFile(stockId);
 		MonitorstockVO result = (MonitorstockVO) FileUtil

@@ -12,7 +12,7 @@ public class AutoTradeTestingUICompomentsImpl implements UIComponentsI {
 	public ComponentsBean getComponentsBean() {
 		List buttons = new ArrayList();
 		buttons.add("买入");
-		buttons.add("卖 出");
+		buttons.add("卖出");
 		ComponentsBean result = new ComponentsBean();
 		result.setButtons(buttons);
 		List components = new ArrayList();

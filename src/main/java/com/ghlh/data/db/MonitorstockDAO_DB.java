@@ -53,4 +53,11 @@ public class MonitorstockDAO_DB implements MonitorstockDAO_I {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public void delete(String stockId) {
+		MonitorstockVO monitorstockVO = new MonitorstockVO();
+		monitorstockVO.setStockid(stockId);
+		monitorstockVO.setWhereStockid(true);
+		GhlhDAO.remove(monitorstockVO);
+	}
 }

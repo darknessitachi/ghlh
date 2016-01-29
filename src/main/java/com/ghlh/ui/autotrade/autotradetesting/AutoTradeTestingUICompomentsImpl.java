@@ -11,21 +11,21 @@ import com.ghlh.ui.bean.ComponentsBean;
 public class AutoTradeTestingUICompomentsImpl implements UIComponentsI {
 	public ComponentsBean getComponentsBean() {
 		List buttons = new ArrayList();
-		buttons.add("ÂòÈë");
-		buttons.add("Âô ³ö");
+		buttons.add("ï¿½ï¿½ï¿½ï¿½");
+		buttons.add("ï¿½ï¿½ ï¿½ï¿½");
 		ComponentsBean result = new ComponentsBean();
 		result.setButtons(buttons);
 		List components = new ArrayList();
 
 		UIComponentMetadata component1 = new UIComponentMetadata();
-		component1.setLabel("¹ÉÆ±´úÂë");
+		component1.setLabel("ï¿½ï¿½Æ±ï¿½ï¿½ï¿½ï¿½");
 		component1.setCompomentType(UIComponentType.INT_FIELD);
 		UIComponentMetadata component2 = new UIComponentMetadata();
-		component2.setLabel("¹ÉÆ±Ãû³Æ");
+		component2.setLabel("ï¿½ï¿½Æ±ï¿½ï¿½ï¿½ï¿½");
 		component2.setCompomentType(UIComponentType.TEXT_FIELD);
 
 		UIComponentMetadata component3 = new UIComponentMetadata();
-		component3.setLabel("ÊýÁ¿");
+		component3.setLabel("ï¿½ï¿½ï¿½ï¿½");
 		component3.setCompomentType(UIComponentType.INT_FIELD);
 
 		components.add(component1);

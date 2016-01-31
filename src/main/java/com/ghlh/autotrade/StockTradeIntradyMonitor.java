@@ -24,6 +24,17 @@ public class StockTradeIntradyMonitor {
 
 	}
 
+	public StockTradeIntradyMonitor(MonitorstockVO monitorstockVO,
+			List canSellList) {
+		this.monitorstockVO = monitorstockVO;
+		this.canSellList = canSellList;
+		this.monitorStrategy = (MonitoringStrategy) ReflectUtil
+				.getClassInstance("com.ghlh.strategy",
+						monitorstockVO.getTradealgorithm(), "IntradayStrategy");
+
+	}
+
+	
 	private MonitoringStrategy monitorStrategy;
 
 	private MonitorstockVO monitorstockVO;
@@ -45,6 +56,17 @@ public class StockTradeIntradyMonitor {
 	}
 
 	private List possibleSellList;
+
+	private List canSellList;
+
+	
+	public List getCanSellList() {
+		return canSellList;
+	}
+
+	public void setCanSellList(List canSellList) {
+		this.canSellList = canSellList;
+	}
 
 	public List getPossibleSellList() {
 		return possibleSellList;

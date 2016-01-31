@@ -75,4 +75,15 @@ public class AdditionalInfoBean {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	public int getCurrentStair() {
+		return currentStair;
+	}
+
+	public void setCurrentStair(int currentStair) {
+		this.currentStair = currentStair;
+	}
+
+	private int currentStair;
+	
 }

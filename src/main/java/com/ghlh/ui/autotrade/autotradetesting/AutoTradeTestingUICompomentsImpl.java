@@ -11,21 +11,21 @@ import com.ghlh.ui.bean.ComponentsBean;
 public class AutoTradeTestingUICompomentsImpl implements UIComponentsI {
 	public ComponentsBean getComponentsBean() {
 		List buttons = new ArrayList();
-		buttons.add("买入");
-		buttons.add("卖出");
+		buttons.add("Buy");
+		buttons.add("Sell");
 		ComponentsBean result = new ComponentsBean();
 		result.setButtons(buttons);
 		List components = new ArrayList();
 
 		UIComponentMetadata component1 = new UIComponentMetadata();
-		component1.setLabel("股票代码");
+		component1.setLabel("StockNo");
 		component1.setCompomentType(UIComponentType.INT_FIELD);
 		UIComponentMetadata component2 = new UIComponentMetadata();
-		component2.setLabel("股票名称");
+		component2.setLabel("StockName");
 		component2.setCompomentType(UIComponentType.TEXT_FIELD);
 
 		UIComponentMetadata component3 = new UIComponentMetadata();
-		component3.setLabel("数量");
+		component3.setLabel("Count");
 		component3.setCompomentType(UIComponentType.INT_FIELD);
 
 		components.add(component1);

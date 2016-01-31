@@ -1,5 +1,6 @@
 package com.ghlh.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -8,6 +9,16 @@ public class DateUtil {
 	public static String formatDate(Date date) {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		return df.format(date);
+	}
+
+	public static Date parseDate(String sDate) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		try {
+			return df.parse(sDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public static String formatDay(Date date) {

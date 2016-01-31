@@ -52,12 +52,13 @@ public class StockTradeIntradyMonitoringJob {
 					setMonitoringStatus();
 					monitoringIntrady(stockMonitors);
 					TimeUtil.pause(200);
-//					int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-//					int mins = Calendar.getInstance().get(Calendar.MINUTE);
-//					if (hour == 14 && mins == 58) {
-//						processBeforeCloseBuy(monitorStocksList);
-//						break;
-//					}
+					// int hour =
+					// Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+					// int mins = Calendar.getInstance().get(Calendar.MINUTE);
+					// if (hour == 14 && mins == 58) {
+					// processBeforeCloseBuy(monitorStocksList);
+					// break;
+					// }
 				} catch (Exception ex) {
 					logger.error("Stock Monitoring Trade throw : ", ex);
 				}
@@ -135,14 +136,10 @@ public class StockTradeIntradyMonitoringJob {
 		for (int i = 0; i < monitorStocksList.size(); i++) {
 			MonitorstockVO monitorstockVO = (MonitorstockVO) monitorStocksList
 					.get(i);
-			List possibleSell = StocktradeDAO.getPossibleSellTradeRecords(
-					monitorstockVO.getStockid(),
-					monitorstockVO.getTradealgorithm());
-			List pendingBuy = StocktradeDAO.getPendingBuyTradeRecords(
-					monitorstockVO.getStockid(),
-					monitorstockVO.getTradealgorithm());
+			List canSellList = StocktradeDAO
+					.readCanSellStockTrade(monitorstockVO.getStockid());
 			StockTradeIntradyMonitor stockTradeIntradyMonitor = new StockTradeIntradyMonitor(
-					monitorstockVO, possibleSell, pendingBuy);
+					monitorstockVO, canSellList);
 			stockMonitors.add(stockTradeIntradyMonitor);
 		}
 		return stockMonitors;

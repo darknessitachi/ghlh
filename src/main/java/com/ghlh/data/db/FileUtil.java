@@ -18,31 +18,34 @@ public class FileUtil {
 	private static Logger logger = Logger.getLogger(FileUtil.class);
 	public final static String MONITOR_STOCK_DIRECTORY = "MonitorStocks";
 
-	
-	public static String[] getFilesList(){
+	public static String[] getFilesList() {
 		File file = new File(MONITOR_STOCK_DIRECTORY);
-		if(file.isDirectory()){
+		if (file.isDirectory()) {
 			String[] subNames = file.list();
 			return subNames;
-		}else{
+		} else {
 			throw new RuntimeException("MonitorStocks isn't directory");
 		}
 	}
-	
-	public static boolean isHidenFile(String fileName){
+
+	public static boolean isHidenFile(String fileName) {
 		File file = new File(MONITOR_STOCK_DIRECTORY + "/" + fileName);
 		return file.isHidden();
 	}
-	
-	public static void deleteFile(String fileName){
+
+	public static void deleteFile(String fileName) {
 		File file = new File(MONITOR_STOCK_DIRECTORY + "/" + fileName);
 		file.delete();
 	}
 
-	
-	
 	public static void updatePropertiesToFile(String fileName, Properties props) {
-		File monitorStockFile = new File(MONITOR_STOCK_DIRECTORY + "/" + fileName);
+		File monitorDir = new File(MONITOR_STOCK_DIRECTORY);
+		if (!monitorDir.exists()) {
+			monitorDir.mkdirs();
+		}
+
+		File monitorStockFile = new File(MONITOR_STOCK_DIRECTORY + "/"
+				+ fileName);
 		try {
 			OutputStream out = new FileOutputStream(monitorStockFile);
 			props.store(out, "Stock is created at : " + new Date());

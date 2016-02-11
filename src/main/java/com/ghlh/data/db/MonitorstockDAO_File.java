@@ -10,7 +10,7 @@ public class MonitorstockDAO_File implements MonitorstockDAO_I {
 		String[] stocks = FileUtil.getFilesList();
 		List result = new ArrayList();
 		for (int i = 0; i < stocks.length; i++) {
-			if (!FileUtil.isHidenFile(stocks[i])) {
+			if (stocks[i].indexOf("_stock") > 0) {
 				result.add(FileUtil.convertPropertiesToObject(
 						FileUtil.loadPropertiesFromFile(stocks[i]),
 						"com.ghlh.data.db.MonitorstockVO"));
@@ -55,17 +55,17 @@ public class MonitorstockDAO_File implements MonitorstockDAO_I {
 
 	public void save(MonitorstockVO monitorstockVO) {
 		Properties props = FileUtil.convertObjectToProperties(monitorstockVO);
-		FileUtil.updatePropertiesToFile(monitorstockVO.getStockid(), props);
+		FileUtil.updatePropertiesToFile(monitorstockVO.getStockid() + "_stock", props);
 	}
 
 
 	public void delete(String stockId) {
-		FileUtil.deleteFile(stockId);
+		FileUtil.deleteFile(stockId + "_stock");
 	}
 
 	
 	public MonitorstockVO get(String stockId) {
-		Properties props = FileUtil.loadPropertiesFromFile(stockId);
+		Properties props = FileUtil.loadPropertiesFromFile(stockId + "_stock");
 		MonitorstockVO result = (MonitorstockVO) FileUtil
 				.convertPropertiesToObject(props,
 						"com.ghlh.data.db.MonitorstockVO");

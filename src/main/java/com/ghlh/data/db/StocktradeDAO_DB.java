@@ -175,5 +175,8 @@ public class StocktradeDAO_DB implements StocktradeDAO_I {
 		
 	}
 
+	public void updateStocktradeToCanSell() {
+		
+	}
 
 }

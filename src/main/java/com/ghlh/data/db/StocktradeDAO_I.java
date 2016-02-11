@@ -47,4 +47,6 @@ public interface StocktradeDAO_I {
 
 	void saveTradeHistory(StocktradeVOFile stocktradeVO, Date soldDate);
 
+	 void updateStocktradeToCanSell();
+
 }

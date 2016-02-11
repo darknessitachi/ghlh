@@ -22,8 +22,12 @@ import com.ghlh.util.MathUtil;
 public class StairIntradayStrategy implements MonitoringStrategy {
 	public void processSell(StockTradeIntradyMonitor monitor,
 			StockQuotesBean sqb) {
+		MonitorstockVO monitorstockVO = monitor.getMonitorstockVO();
+		String additionInfo = monitorstockVO.getAdditioninfo();
+		AdditionalInfoBean additionalBean = (AdditionalInfoBean) AdditionInfoUtil
+				.parseAdditionalInfoBean(additionInfo,
+						monitorstockVO.getTradealgorithm());
 		List canSellList = monitor.getCanSellList();
-
 		for (int i = 0; i < canSellList.size(); i++) {
 			StocktradeVOFile stocktradeVO = (StocktradeVOFile) canSellList
 					.get(i);
@@ -32,12 +36,20 @@ public class StairIntradayStrategy implements MonitoringStrategy {
 						stocktradeVO.getStockid(), stocktradeVO.getNumber(),
 						stocktradeVO.getSellPrice());
 				EventRecorder.recordEvent(StockTradeIntradyUtil.class, message);
-				SoftwareTrader.getInstance().sellStock(stocktradeVO.getStockid(),
-						stocktradeVO.getNumber());
+				SoftwareTrader.getInstance().sellStock(
+						stocktradeVO.getStockid(), stocktradeVO.getNumber());
 				canSellList.remove(i);
 				i--;
 				StocktradeDAO.removeSoldStockTrade(stocktradeVO);
 				StocktradeDAO.saveTradeHistory(stocktradeVO, new Date());
+				additionalBean
+				.setCurrentStair(additionalBean.getCurrentStair() - 1);
+				String additionalInfo = AdditionInfoUtil
+						.parseAdditionalInfoBeanBack(additionalBean,
+								monitorstockVO.getTradealgorithm());
+				monitorstockVO.setAdditioninfo(additionalInfo);
+				MonitorstockDAO.save(monitorstockVO);
+
 			}
 		}
 	}
@@ -73,9 +85,8 @@ public class StairIntradayStrategy implements MonitoringStrategy {
 			StocktradeVOFile stVO = new StocktradeVOFile();
 			stVO.setStockid(monitor.getMonitorstockVO().getStockid());
 			stVO.setBuyPrice(buyPrice);
-			stVO.setSellPrice(buyPrice
-					* MathUtil.formatDoubleWith2(buyPrice
-							* (1 + additionalBean.getStairZDF())));
+			stVO.setSellPrice(MathUtil.formatDoubleWith2(buyPrice
+					* (1 + additionalBean.getStairZDF())));
 			stVO.setDate(new Date());
 			stVO.setNumber(number);
 			stVO.setStatus(0);

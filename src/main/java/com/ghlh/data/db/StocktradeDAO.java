@@ -89,5 +89,10 @@ public class StocktradeDAO {
 	public static void saveTradeHistory(StocktradeVOFile stocktradeVO, Date soldDate) {
 		stocktradeDao.saveTradeHistory(stocktradeVO, soldDate);
 	}
+	
+	public static void updateStocktradeToCanSell() {
+		stocktradeDao.updateStocktradeToCanSell();
+	}
+
 
 }

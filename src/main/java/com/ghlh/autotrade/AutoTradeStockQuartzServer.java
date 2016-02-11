@@ -35,8 +35,8 @@ public class AutoTradeStockQuartzServer {
 	private AutoTradeStockQuartzServer() {
 		try {
 			scheduler = StdSchedulerFactory.getDefaultScheduler();
-			scheduleJob(8, 0, "BeforeOpenAutoTradeJob",
-					AutoTradeBeforeOpenJob.class);
+//			scheduleJob(8, 0, "BeforeOpenAutoTradeJob",
+//					AutoTradeBeforeOpenJob.class);
 			scheduleJob(9, 30, "MorningAutoTradeMonitoring",
 					AutoTradeIntradayJob.class);
 			scheduleJob(13, 0, "AfternoonAutoTradeMonitoring",

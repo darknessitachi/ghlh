@@ -20,6 +20,9 @@ public class FileUtil {
 
 	public static String[] getFilesList() {
 		File file = new File(MONITOR_STOCK_DIRECTORY);
+		if(!file.exists()){
+			file.mkdirs();
+		}
 		if (file.isDirectory()) {
 			String[] subNames = file.list();
 			return subNames;

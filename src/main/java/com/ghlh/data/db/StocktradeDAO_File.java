@@ -248,4 +248,30 @@ public class StocktradeDAO_File implements StocktradeDAO_I {
 		}
 	}
 
+	public void updateStocktradeToCanSell() {
+		String[] stocks = FileUtil.getFilesList();
+		List result = new ArrayList();
+		for (int i = 0; i < stocks.length; i++) {
+			if (stocks[i].indexOf("_trade") > 0) {
+				String stockId = stocks[i].substring(0, stocks[i].indexOf("_"));
+				updateStocktradeToCanSell(stockId);
+			}
+		}
+	}
+
+	private void updateStocktradeToCanSell(String stockId) {
+		List result = readTrackFromFile(stockId, false);
+		boolean isHaveNewBuy = false;
+		for (int i = 0; i < result.size(); i++) {
+			StocktradeVOFile vo = (StocktradeVOFile) result.get(i);
+			if (vo.getStatus() == 0) {
+				vo.setStatus(1);
+				isHaveNewBuy = true;
+			}
+		}
+		if (isHaveNewBuy) {
+			saveStocktradeToFile(stockId, result);
+		}
+	}
+
 }

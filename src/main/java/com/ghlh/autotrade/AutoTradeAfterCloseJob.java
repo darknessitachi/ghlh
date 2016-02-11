@@ -29,8 +29,9 @@ public class AutoTradeAfterCloseJob implements Job {
 		if (StockMarketUtil.isMarketRest()) {
 			return;
 		}
-		processPredoneOrders();
-		//collectStockDailyInfo();
+		// processPredoneOrders();
+		// collectStockDailyInfo();
+		updateNewBuyToCanSell();
 		message = "结束15:05盘后处理";
 		EventRecorder.recordEvent(this.getClass(), message);
 	}
@@ -89,5 +90,9 @@ public class AutoTradeAfterCloseJob implements Job {
 				EventRecorder.recordEvent(this.getClass(), eventMessage);
 			}
 		}
+	}
+
+	private void updateNewBuyToCanSell() {
+		StocktradeDAO.updateStocktradeToCanSell();
 	}
 }

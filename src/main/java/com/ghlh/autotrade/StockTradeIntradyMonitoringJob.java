@@ -40,8 +40,6 @@ public class StockTradeIntradyMonitoringJob {
 		}
 		try {
 			List monitorStocksList = MonitorstockDAO.getMonitorStock();
-			processIntraFirstBuy(monitorStocksList);
-
 			List stockMonitors = retrieveStockMonitors(monitorStocksList);
 
 			while (AutoTradeSwitch.getInstance().isStart()) {
@@ -51,14 +49,7 @@ public class StockTradeIntradyMonitoringJob {
 					}
 					setMonitoringStatus();
 					monitoringIntrady(stockMonitors);
-					TimeUtil.pause(200);
-					// int hour =
-					// Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-					// int mins = Calendar.getInstance().get(Calendar.MINUTE);
-					// if (hour == 14 && mins == 58) {
-					// processBeforeCloseBuy(monitorStocksList);
-					// break;
-					// }
+					TimeUtil.pause(2000);
 				} catch (Exception ex) {
 					logger.error("Stock Monitoring Trade throw : ", ex);
 				}

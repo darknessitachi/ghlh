@@ -68,7 +68,7 @@ public class StairIntradayStrategy implements MonitoringStrategy {
 		buyPrice = additionalBean.getFirstBuyPrice();
 
 		if (additionalBean.getCurrentStair() == 0 && buyPrice == 0
-				&& !additionalBean.getFirstBuyPriceStrategy().equals("开盘价")) {
+				&& !additionalBean.getFirstBuyPriceStrategy().equals("设定价")) {
 			buyPrice = sqb.getCurrentPrice();
 			additionalBean.setFirstBuyPrice(buyPrice);
 		}

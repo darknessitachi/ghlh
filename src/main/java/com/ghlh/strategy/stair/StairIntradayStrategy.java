@@ -43,7 +43,7 @@ public class StairIntradayStrategy implements MonitoringStrategy {
 				StocktradeDAO.removeSoldStockTrade(stocktradeVO);
 				StocktradeDAO.saveTradeHistory(stocktradeVO, new Date());
 				additionalBean
-				.setCurrentStair(additionalBean.getCurrentStair() - 1);
+						.setCurrentStair(additionalBean.getCurrentStair() - 1);
 				String additionalInfo = AdditionInfoUtil
 						.parseAdditionalInfoBeanBack(additionalBean,
 								monitorstockVO.getTradealgorithm());
@@ -66,6 +66,13 @@ public class StairIntradayStrategy implements MonitoringStrategy {
 
 		double buyPrice = 0;
 		buyPrice = additionalBean.getFirstBuyPrice();
+
+		if (additionalBean.getCurrentStair() == 0 && buyPrice == 0
+				&& !additionalBean.getFirstBuyPriceStrategy().equals("¿ªÅÌ¼Û")) {
+			buyPrice = sqb.getCurrentPrice();
+			additionalBean.setFirstBuyPrice(buyPrice);
+		}
+
 		for (int i = 0; i < additionalBean.getCurrentStair(); i++) {
 			buyPrice = MathUtil.formatDoubleWith2(buyPrice
 					* (1 - additionalBean.getStairZDF()));

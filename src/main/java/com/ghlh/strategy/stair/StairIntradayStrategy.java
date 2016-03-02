@@ -81,7 +81,7 @@ public class StairIntradayStrategy implements MonitoringStrategy {
 		if (TradeUtil.isStopTrade(sqb)) {
 			return;
 		}
-		if (sqb.getLowestPrice() <= buyPrice) {
+		if (sqb.getCurrentPrice() <= buyPrice) {
 			int number = TradeUtil.getTradeNumber(
 					additionalBean.getStairMoney(), buyPrice);
 			String message = TradeUtil.getConfirmedBuyMessage(monitor
